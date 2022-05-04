@@ -1,3 +1,5 @@
 # file: i_prod
 
 [prod]
+argon-240
+argon-480
