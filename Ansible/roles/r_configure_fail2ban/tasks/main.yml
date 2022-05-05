@@ -16,7 +16,7 @@
   rescue:
     - name: fail
       ansible.builtin.debug:
-        msg: "error: install_fail2ban"
+        msg: "error: configure_fail2ban"
 
   tags:
     - configure_fail2ban
