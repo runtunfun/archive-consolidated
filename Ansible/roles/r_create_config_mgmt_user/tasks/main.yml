@@ -1,0 +1,39 @@
+---
+# tasks file for r_create_config_mgmt_user
+- name: "create group, user, ssh-key, sudo for config_mgmt_user"
+  block:
+  - name: "create group {{ config_mgmt_user.group }}:{{ config_mgmt_user.gid }}"
+    ansible.builtin.group:
+      name: "{{ config_mgmt_user.group }}"
+      gid: "{{ config_mgmt_user.gid }}"
+      state: present
+
+  - name: "create user {{ config_mgmt_user.name }}:{{ config_mgmt_user.uid }}"
+    ansible.builtin.user:
+      name: "{{ config_mgmt_user.name }}"
+      uid: "{{ config_mgmt_user.uid }}"
+      state: present
+
+  - name: "create /etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
+    ansible.builtin.file:
+        path: "/etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
+        state: present
+        mode: 0644
+        modification_time: preserve
+        access_time: preserve
+
+  - name: "add entry {{ config_mgmt_user.sudo_entry }} to /etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
+    ansible.builtin.lineinfile:
+      path: "/etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
+      state: present
+      regexp: "^{{ config_mgmt_user.name }}"
+      line: "{{ config_mgmt_user.sudo_entry }}"
+      validate: "visudo -cf %s"
+
+    rescue:
+    - name: "fail"
+      ansible.builtin.debug:
+        msg: "create {{ config_mgmt_user }} user failed"
+
+    tags:
+    - create_config_mgmt_user
