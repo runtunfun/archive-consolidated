@@ -16,11 +16,11 @@
 
   - name: "create /etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
     ansible.builtin.file:
-        path: "/etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
-        state: present
-        mode: 0644
-        modification_time: preserve
-        access_time: preserve
+      path: "/etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
+      state: touch
+      mode: 0644
+      modification_time: preserve
+      access_time: preserve
 
   - name: "add entry {{ config_mgmt_user.sudo_entry }} to /etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
     ansible.builtin.lineinfile:
@@ -30,10 +30,13 @@
       line: "{{ config_mgmt_user.sudo_entry }}"
       validate: "visudo -cf %s"
 
-    rescue:
+  rescue:
     - name: "fail"
       ansible.builtin.debug:
         msg: "create {{ config_mgmt_user }} user failed"
 
-    tags:
+  tags:
     - create_config_mgmt_user
+
+  become: true
+  become_user: root

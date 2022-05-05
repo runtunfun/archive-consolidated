@@ -10,6 +10,6 @@ config_mgmt_user:
   sudo_file: ansible
   sudo_entry: "ansible ALL=(ALL) NOPASSWD: ALL"
 checkmk_user: checkmk
-useful.software:
+useful_software:
   - fail2ban
   - yadm
