@@ -2,3 +2,6 @@
 #file: group_vars/all.yml
 config_user: ansible
 checkmk_user: checkmk
+useful.software:
+  - fail2ban
+  - yadm
