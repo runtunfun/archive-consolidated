@@ -1,0 +1,26 @@
+---
+# tasks file for r_configure_fail2ban
+- name: install, configure and start fail2ban
+  block:
+  - name: "install fail2ban"
+    ansible.builtin.apt:
+      name: fail2ban
+      state: present
+
+  - name: "check fail2ban service"
+    ansible.builtin.service:
+      name: fail2ban
+      state: started
+      enabled: true
+
+  rescue:
+    - name: fail
+      ansible.builtin.debug:
+        msg: "error: install_fail2ban"
+
+  tags:
+    - configure_fail2ban
+
+  when: ansible_facts['distribution'] == 'Debian'
+  become: true
+  become_user: root

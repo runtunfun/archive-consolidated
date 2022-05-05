@@ -1,0 +1,5 @@
+# file: p_config_fail2ban.yml
+---
+- hosts: all
+  roles:
+  - r_configure_fail2ban
