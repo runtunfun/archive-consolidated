@@ -1,4 +1,4 @@
 ---
 #file: group_vars/all.yml
-ansible_user: ansible
+config_user: ansible
 checkmk_user: checkmk
