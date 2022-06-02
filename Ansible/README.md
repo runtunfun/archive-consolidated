@@ -9,4 +9,6 @@ i_ stands for an inventory
 p_ marks playbooks  
 r_ describes a role  
 
-Roles are always initially generated via ansible-galaxy
+Roles are always initially generated via ansible-galaxy  
+E.g.: ~: ansible-galaxy init test-role-1  
+Afterwards populate meat/main.yml file with role_name, author, description and company   
