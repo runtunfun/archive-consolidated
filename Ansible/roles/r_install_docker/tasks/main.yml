@@ -1,0 +1,88 @@
+---
+# tasks file for r_install_docker
+- name: "install prereq software, cretae group and install docker"
+  block:
+  - name: "Update all packages to their latest version"
+    ansible.builtin.apt:
+      name: "*"
+      state: latest
+      update_cache: true
+
+  - name: "Install prereq software"
+    ansible.builtin.apt:
+      pkg:
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+
+#  - name: "make sure /etc/apt/keyrings exists"
+#    ansible.builtin.file:
+#      path: "/etc/apt/keyrings"
+#      state: directory
+#      mode: 0644
+
+#  - name: "get docker signing key (armored gpg)"
+#    ansible.builtin.get_url:
+#      url: https://download.docker.com/linux/debian/gpg
+#      dest: /tmp/docker.gpg
+#      mode: 0644
+#    register: result
+
+#  - name: "add docker apt-key"
+#    ansible.builtin.command: "cat /tmp/docker.gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+#    when: result.changed
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_key_module.html#examples
+  - name: "add docker apt key"
+    ansible.builtin.apt_key:
+      url: https://download.docker.com/linux/debian/gpg
+      state: present
+      keyring: /etc/apt/trusted.gpg.d/docker.gpg
+
+#  - name: "set up repository"
+#    ansible.builtin.command: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+#    when: result.changed
+  - name: "set up repository"
+    ansible.builtin.apt_repository:
+      repo: deb https://download.docker.com/linux/debian/ bullseye stable
+#      repo: deb [arch=arm64 https://download.docker.com/linux/debian bullseye stable
+      state: present
+      filename: docker.list
+
+  - name: "Install docker software"
+    ansible.builtin.apt:
+      pkg:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-compose-plugin
+      state: latest
+      update_cache: true
+
+  - name: "Ensure docker service is started and enabled"
+    ansible.builtin.systemd:
+      name: docker.service
+      state: started
+      enabled: true
+
+  - name: "Ensure containerd service is started and enabled"
+    ansible.builtin.systemd:
+      name: containerd.service
+      state: started
+      enabled: true
+
+  - name: "Ensure group docker exists"
+    ansible.builtin.group:
+      name: docker
+      state: present
+
+  rescue:
+    - name: "fail"
+      ansible.builtin.debug:
+        msg: "install docker failed"
+
+  tags:
+    - install_docker
+
+  become: true
+  become_user: root
