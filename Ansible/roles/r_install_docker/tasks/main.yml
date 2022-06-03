@@ -56,6 +56,13 @@
       name: docker
       state: present
 
+  - name: "Ensure Dir for docker data exists"
+    ansible.builtin.file:
+      path: /data/docker
+      state: directory
+      group: 'docker'
+      mode: '0775'
+
   rescue:
     - name: "fail"
       ansible.builtin.debug:
