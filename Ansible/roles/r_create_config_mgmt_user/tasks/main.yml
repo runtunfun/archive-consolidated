@@ -5,6 +5,7 @@
   - name: "create group {{ config_mgmt_user.group }}:{{ config_mgmt_user.gid }}"
     ansible.builtin.group:
       name: "{{ config_mgmt_user.group }}"
+#      comment: "{{ config_mgmt_user.comment }}"
       gid: "{{ config_mgmt_user.gid }}"
       state: present
 
@@ -13,6 +14,12 @@
       name: "{{ config_mgmt_user.name }}"
       uid: "{{ config_mgmt_user.uid }}"
       state: present
+
+  - name: "add authorized key from file to {{ config_mgmt_user.name }}"
+    ansible.posix.authorized_key:
+      user: "{{ config_mgmt_user.name }}"
+      state: present
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
   - name: "create /etc/sudoers.d/{{ config_mgmt_user.sudo_file }}"
     ansible.builtin.file:
@@ -28,7 +35,7 @@
       state: present
       regexp: "^{{ config_mgmt_user.name }}"
       line: "{{ config_mgmt_user.sudo_entry }}"
-      validate: "visudo -cf %s"
+#      validate: "visudo -cf %s"
 
   rescue:
     - name: "fail"
