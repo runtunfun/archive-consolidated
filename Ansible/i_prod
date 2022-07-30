@@ -1,6 +1,7 @@
 # file: i_prod
 
 [prod]
-argon-240
-argon-480
+admin-prod
 vpn
+pve01
+pve02
