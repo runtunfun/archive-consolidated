@@ -28,7 +28,7 @@
       state: present
       regexp: "^{{ config_mgmt_user.name }}"
       line: "{{ config_mgmt_user.sudo_entry }}"
-      validate: "visudo -cf %s"
+#      validate: "visudo -cf %s"
 
   rescue:
     - name: "fail"
