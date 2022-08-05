@@ -1,0 +1,5 @@
+# file: p_install_docker.yml
+---
+- hosts: all
+  roles:
+  - r_apt_update
