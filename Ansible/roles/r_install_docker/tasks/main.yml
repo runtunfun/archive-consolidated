@@ -2,11 +2,11 @@
 # tasks file for r_install_docker
 - name: "install prereq software, cretae group and install docker"
   block:
-  - name: "Update all packages to their latest version"
-    ansible.builtin.apt:
-      name: "*"
-      state: latest
-      update_cache: true
+          #  - name: "Update all packages to their latest version"
+          #    ansible.builtin.apt:
+          #      name: "*"
+          #      state: latest
+          #      update_cache: true
 
   - name: "Install prereq software"
     ansible.builtin.apt:

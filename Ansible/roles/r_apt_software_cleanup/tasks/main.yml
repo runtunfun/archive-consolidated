@@ -1,0 +1,60 @@
+---
+# tasks file for r_apt_software_cleanup
+- name: "Install needed and uninstall unwanted software packages"
+  block:
+  - name: "Install needed software packages"
+    ansible.builtin.apt:
+      name:
+        - apparmor
+        - apt-listchanges
+        - bash-completion
+        - bzip2
+        - distro-info-data
+        - git
+        - git-man
+        - installation-report
+        - lsb-release
+        - manpages
+        - p7zip
+        - p7zip-full
+        - parted
+        - systemd-timesyncd
+        - unzip
+        - wget
+        - zip
+      state: present
+      update_cache: true
+
+  - name: "Uninstall unwanted software packages"
+    ansible.builtin.apt:
+      name:
+        - alsa-topology-conf
+        - alsa-ucm-conf
+        - alsa-utils
+        - bluez
+        - bluez-firmware
+        - dos2unix
+        - dosfstools
+        - emacsen-common
+        - iamerican
+        - ibritish
+        - ienglish-common
+        - ispell
+        - laptop-detect
+        - os-prober
+        - pi-bluetooth
+        - task-english
+        - wamerican
+      state: absent
+      update_cache: true
+
+  rescue:
+    - name: "fail"
+      ansible.builtin.debug:
+        msg: "apt cleanup failed"
+
+  tags:
+    - apt_software_cleanup
+
+  become: true
+  become_user: root
