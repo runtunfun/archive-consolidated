@@ -1,0 +1,42 @@
+---
+# tasks file for r_docker_install_traefik
+- name: "install traefik"
+  block:
+  - name: "Create traefik network"
+    community.docker.docker_network:
+      name: traefik
+
+  - name: "adure data/docker/traefik exists"
+    ansible.builtin.file:
+      path: /data/docker/traefik
+      state: directory
+      group: 'docker'
+      mode: '0775'
+
+  - name: Template docker-compose
+    template:
+      src: "{{ role_path }}/files/docker-compose.yml
+      dest: /data/docker/traefik/docker-compose.yml
+      group: 'docker'
+      mode: '0775'
+
+  # - name: Tear down existing services
+  #   docker_compose:
+  #     project_src: /data/docker/traefik
+  #     state: absent
+  #     remove_orphans: yes
+
+  - name: Create and start services
+    docker_compose:
+      project_src: /data/docker/traefik
+
+  rescue:
+    - name: "fail"
+      ansible.builtin.debug:
+        msg: "install traefik failed"
+
+  tags:
+    - install_traefik
+
+  become: true
+  become_user: root
