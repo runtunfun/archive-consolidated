@@ -3,29 +3,41 @@ version: "3.3"
 services:
 
   traefik:
-    image: "traefik:v2.2"
+    image: "traefik:v2.8"
     container_name: "traefik"
     command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - --entrypoints.web.http.redirections.entryPoint.to=websecure
-      - --entrypoints.web.http.redirections.entryPoint.scheme=https
-      - --entrypoints.web.http.redirections.entrypoint.permanent=true
-      - "--entrypoints.websecure.address=:443"
-#      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-#      - "--certificatesresolvers.myresolver.acme.email=ssl@jurrevriesen.nl"
-#      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"   
-    networks:
-      - traefik  
+    command:
+      # - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      # - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      # - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      # - "--entrypoints.websecure.address=:443"
+      # - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      # - "--certificatesresolvers.myresolver.acme.email=ssl@jurrevriesen.nl"
+      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"   
+    # networks:
+    #   - traefik  
     ports:
       - "80:80"
-      - "443:443"
+      - "8080:8080"
+      # - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./letsencrypt:/letsencrypt"  
+      # - "./letsencrypt:/letsencrypt"
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
 
 
-networks:
-  traefik:
-    external: true
+# networks:
+#   traefik:
+#     external: true
