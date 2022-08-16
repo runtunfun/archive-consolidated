@@ -20,11 +20,11 @@
       group: docker
       mode: 0775
 
-   - name: "Tear down existing services"
-     docker_compose:
-       project_src: /data/docker/traefik
-       state: absent
-       remove_orphans: yes
+  - name: "Tear down existing services"
+    docker_compose:
+      project_src: /data/docker/traefik
+      state: absent
+      remove_orphans: true
 
   - name: "Create and start services"
     community.docker.docker_compose:
