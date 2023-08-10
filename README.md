@@ -8,4 +8,4 @@
 4. Create and solidify documentation.
 5. Fully automate the setup, operation, and configuration of at least one laboratory environment.
 
-{Documentation}(https://infrastructure-management.readthedocs.io/en/latest/)
+[Documentation](https://infrastructure-management.readthedocs.io/en/latest/)
