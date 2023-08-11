@@ -1,1 +1,4 @@
-faq.md
+--- 
+weight: 9
+title: FAQ
+--- 

@@ -1,3 +1,7 @@
+--- 
+title: git conventional commit messages
+weight: 8.5
+--- 
 # git comments
 
 A standardized commit message convention provides a consistent way to describe the nature of changes made in a commit. It helps make the change history more understandable and readable, and plays a vital role in automated tools like Semantic Release and Conventional Changelog.

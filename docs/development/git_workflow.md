@@ -1,3 +1,8 @@
+--- 
+title: git workflow models
+weight: 8.4
+--- 
+
 # git workflow models
 
 ## Trunk-Based Development

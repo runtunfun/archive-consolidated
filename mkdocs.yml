@@ -4,4 +4,5 @@ edit_uri: '?query=docs/'
 theme: readthedocs
 plugins:
   - search
-    #  - mkdocstrings
+  - mkdocstrings
+  - mkdocs-nav-weight

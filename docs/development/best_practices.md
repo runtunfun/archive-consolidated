@@ -1,3 +1,7 @@
+---
+title: Best Practises
+weight: 8.3
+--- 
 # Best Practices
 
 In this guide, we will outline a set of best practices for software development, focusing on key design principles to ensure efficient and organized collaboration using Git and GitHub. These principles include:
