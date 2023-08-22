@@ -16,7 +16,7 @@ update_and_install() {
     fi
     
     # Install packages if not already installed
-    for pkg in curl git unzip wget yadm zip zsh; do
+    for pkg in curl git unzip sudo wget yadm zip zsh; do
         if ! command -v $pkg >/dev/null 2>&1; then
             echo "Installing $pkg..."
             if [ "$1" = "redhat" ]; then
