@@ -1,0 +1,16 @@
+sudo apt-get install logwatch
+sudo logwatch --detail low --range today
+sudo logwatch --detail high --range yesterday --format html --mailto root
+sudo logwatch --detail high --range today --mailto root
+
+cat /etc/cron.daily/00logwatch
+#!/bin/bash
+
+#Check if removed-but-not-purged
+test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
+
+#execute
+/usr/sbin/logwatch --output mail
+
+#Note: It's possible to force the recipient in above command
+#Just pass --mailto address@a.com instead of --output mail
