@@ -28,7 +28,7 @@ mailbox_size_limit = 0
 recipient_delimiter = +
 inet_interfaces = all
 inet_protocols = all
-
+virtual_alias_maps = lmdb:/etc/postfix/virtual
 
 sudo vi /etc/postfix/sasl_passwd
 sudo postmap /etc/postfix/sasl_passwd
@@ -43,12 +43,16 @@ sudo grep -v ^# /etc/postfix/sender_canonical
 /.+@olc.runtunfun.de/ server@runtunfun.de
 /.+@runtunfun.de/ server@runtunfun.de
 
+sudo vi /etc/postfix/virtual
+sudo cat /etc/postfix/virtual
+server@runtunfun.de Server olc.runtunfun.de
+
 sudo vi /etc/aliases
 sudo newaliases
 sudo grep -v ^# /etc/aliases
 postmaster:     root
 webmaster:      root
-root: ste.enzmann@gmail.com
+root: runtunfun@gmail.com
 
 sudo service postfix restart
 sudo service postfix status
