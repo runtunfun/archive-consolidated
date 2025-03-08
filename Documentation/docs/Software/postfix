@@ -59,3 +59,4 @@ sudo service postfix status
 sudo journalctl -u postfix -xe -f
    
 https://forum.netcup.de/administration-eines-server-vserver/server-konfiguration/imap-pop3/14335-postfix-f%C3%BCr-smtp-%C3%BCber-netcup-email/
+https://wiki.archlinux.org/title/Postfix
