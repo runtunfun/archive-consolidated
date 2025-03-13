@@ -10,7 +10,7 @@ cat /etc/cron.daily/00logwatch
 test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
 
 #execute
-/usr/sbin/logwatch --output mail
+/usr/sbin/logwatch --output mail --hostname $(hostname -f) --detail 1
 
 #Note: It's possible to force the recipient in above command
 #Just pass --mailto address@a.com instead of --output mail
