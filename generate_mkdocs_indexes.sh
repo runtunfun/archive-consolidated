@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Load variables from .env_structure file
-if [ -f .env_strucure ]; then
-  export $(grep -v '^#' .env_strucure | xargs)
+if [ -f .env_structure ]; then
+  export $(grep -v '^#' .env_structure | xargs)
 else
-  echo ".env_strucure file not found. Exiting!"
+  echo ".env_structure file not found. Exiting!"
   exit 1
 fi
 
