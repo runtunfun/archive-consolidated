@@ -14,5 +14,4 @@ theme:
   language: en
 nav:
   - Home: index.md
-  - Playbooks: playbooks.md
 
