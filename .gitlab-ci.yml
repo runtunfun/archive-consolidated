@@ -1,0 +1,21 @@
+image: mkdocs-env
+
+   stages:
+     - build
+     - deploy
+
+   build:
+     stage: build
+     script:
+       - mkdocs build
+     artifacts:
+       paths:
+         - site
+
+   deploy:
+     stage: deploy
+     script:
+       - apt-get update && apt-get install -y lftp
+       - lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; mirror -R site/ /target-directory/"
+     only:
+       - main

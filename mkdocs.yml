@@ -1,0 +1,18 @@
+site_name: Ansible Project
+plugins:
+  - search
+  - mermaid2:
+      arguments:
+        theme: default
+  - i18n:
+      languages:
+        en: English
+        de: Deutsch
+      default_language: en
+theme:
+  name: material
+  language: en
+nav:
+  - Home: index.md
+  - Playbooks: playbooks.md
+
