@@ -8,7 +8,7 @@ The project adheres to the structure outlined in the `project-structure` documen
 
 ### Available Versions
 - [English Version: project-structure.md](docs/en/project-structure.md)
-- [Deutsche Version: projekt-struktur.md](docs/de/project-structure.md)
+- [Deutsche Version: project-structure.md](docs/de/project-structure.md)
 
 Both documents are essential for understanding and contributing to this project.
 
