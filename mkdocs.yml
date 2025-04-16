@@ -12,6 +12,18 @@ plugins:
 theme:
   name: material
   language: en
+  features:
+    - navigation.top
+    - navigation.tabs
 nav:
-  - Home: index.md
-
+  - Home (English): en/index.md
+  - Home (Deutsch): de/index.md
+  - ansible:
+      - ansible.cfg (EN): en/ansible.cfg.md
+      - ansible.cfg (DE): de/ansible.cfg.md
+  - Playbooks:
+      - Playbooks (EN): en/playbooks/playbooks_overview.md
+      - Playbooks (DE): de/playbooks/playbooks_overview.md
+  - Roles:
+      - Roles (EN): en/roles/roles_overview.md
+      - Rollen (DE): de/roles/roles_overview.md
