@@ -1,10 +1,10 @@
 # Projektübersicht
 
 ## Rollen
-- [role_fail2ban](roles/role_fail2ban/)
+- roles/*
 
 ## Playbooks
-- [playbook_fail2ban](playbooks/playbook_fail2ban.yml)
+- playbooks/*
 
 ## Variablen
-- vars_fail2ban
+- vars/*

@@ -1,11 +1,12 @@
 site_name: Ansible Project
 plugins:
   - search
-  - mermaid2:
-      arguments:
-        theme: default
+#  - mermaid2:
+#      arguments:
+#        theme: default
   - i18n:
       docs_structure: folder
+      reconfigure_material: true
       languages:
         - locale: en
           default: true
@@ -14,21 +15,22 @@ plugins:
         - locale: de
           name: Deutsch
           build: true
+          nav_translations:
+            Home: Startseite
+            Project structure: Projekt Struktur
 theme:
-  name: material
+  name: readthedocs
   language: en
   features:
     - navigation.top
     - navigation.tabs
 nav:
-  - Home (English): en/index.md
-  - Home (Deutsch): de/index.md
-  - ansible:
-      - ansible.cfg (EN): en/ansible.cfg.md
-      - ansible.cfg (DE): de/ansible.cfg.md
-  - Playbooks:
-      - Playbooks (EN): en/playbooks/playbooks_overview.md
-      - Playbooks (DE): de/playbooks/playbooks_overview.md
-  - Roles:
-      - Roles (EN): en/roles/roles_overview.md
-      - Rollen (DE): de/roles/roles_overview.md
+  - Home: index.md
+  - Project structure: project-structure.md
+  - ansible.cfg: ansible.cfg.md
+#  - Playbooks:
+#      playbooks/*
+#  - Roles:
+#      roles/*
+#  - Variables:
+#      vars/*
