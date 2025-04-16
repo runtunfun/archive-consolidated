@@ -5,10 +5,15 @@ plugins:
       arguments:
         theme: default
   - i18n:
+      docs_structure: folder
       languages:
-        en: English
-        de: Deutsch
-      default_language: en
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: de
+          name: Deutsch
+          build: true
 theme:
   name: material
   language: en
