@@ -20,7 +20,8 @@ plugins:
             Home: Startseite
             Project structure: Projekt Struktur
 theme:
-  name: readthedocs
+  name: material
+#  custom_dir: docs/overrides
   language: en
   features:
     - navigation.top
