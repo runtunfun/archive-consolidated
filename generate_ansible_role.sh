@@ -66,7 +66,7 @@ echo "Creating documentation for role: $DOCS_EN and $DOCS_DE"
 cat <<EOF >"$DOCS_EN_ROLE"
 # Role: $ROLE_NAME
 
-This role configures the ${ROLE_NAME}. Details of tasks and templates are included in the role structure.
+This role configures ${ROLE_NAME}. Details of tasks and templates are included in the role structure.
 EOF
 
 cat <<EOF >"$DOCS_EN_PLAYBOOK"

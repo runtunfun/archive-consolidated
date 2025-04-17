@@ -1,3 +1,3 @@
-# Role: fail2ban
+# Playbook: fail2ban
 
 This playbooks calls fail2ban.
