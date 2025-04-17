@@ -1,6 +1,7 @@
 site_name: Ansible Project
 plugins:
   - search
+  - awesome-nav
 #  - mermaid2:
 #      arguments:
 #        theme: default
@@ -28,9 +29,4 @@ nav:
   - Home: index.md
   - Project structure: project-structure.md
   - ansible.cfg: ansible.cfg.md
-#  - Playbooks:
-#      playbooks/*
-#  - Roles:
-#      roles/*
-#  - Variables:
-#      vars/*
+  - MkDocs: https://mkdocs.org
