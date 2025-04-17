@@ -1,0 +1,5 @@
+---
+- name: Configure test
+  hosts: all
+  roles:
+    - r_test
