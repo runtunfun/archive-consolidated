@@ -10,11 +10,18 @@
 **DHCP-Bereich:** 192.168.1.100 - 192.168.1.200 (für automatische Zuweisung)
 
 ### IOT-VLAN
-**VLAN ID:** 10 (IOT-VLAN)  
-**Subnetz:** 192.168.10.0/22  
-**Gateway:** 192.168.10.1  
-**DNS:** 192.168.10.1, 8.8.8.8  
-**DHCP-Bereich:** 192.168.12.1 - 192.168.12.254 (für automatische Zuweisung)
+**VLAN ID:** 100 (IOT-VLAN)  
+**Subnetz:** 192.168.100.0/22  
+**Gateway:** 192.168.100.1  
+**DNS:** 192.168.100.1, 8.8.8.8  
+**DHCP-Bereich:** 192.168.102.1 - 192.168.102.254 (für automatische Zuweisung)
+
+### Gäste-VLAN
+**VLAN ID:** 200 (Gäste-VLAN)  
+**Subnetz:** 192.168.200.0/24  
+**Gateway:** 192.168.200.1  
+**DNS:** 192.168.1.3 (Pi-hole für Ad-Blocking)  
+**DHCP-Bereich:** 192.168.200.10 - 192.168.200.250 (für automatische Zuweisung)
 
 ## Netzwerkaufteilung und IP-Bereiche
 
@@ -27,21 +34,31 @@
 | Homelab Core | 192.168.1.21 - 192.168.1.40 | 20 | Proxmox Hosts, Storage |
 | Homelab Services | 192.168.1.41 - 192.168.1.99 | 59 | VMs, Docker Container, Services |
 | DHCP Pool | 192.168.1.100 - 192.168.1.200 | 101 | Automatische Zuweisung |
-| Client Devices | 192.168.1.201 - 192.168.1.220 | 20 | Desktop, Laptop, Management |
+| Client Devices | 192.168.1.201 - 192.168.1.220 | 20 | Desktop, Laptop (kabelgebunden + WiFi), Management |
 | Reserve | 192.168.1.221 - 192.168.1.254 | 34 | Für zukünftige Erweiterungen |
 
-### IOT-VLAN (192.168.10.0/22) - Smart Home Geräte
+### IOT-VLAN (192.168.100.0/22) - Smart Home Geräte + Mobile Clients
 
 | Raum | IP-Bereich | Anzahl IPs | Verwendung |
 |------|------------|------------|------------|
-| Unterverteilung | 192.168.10.1 - 192.168.10.62 | 62 | Zentrale Steuergeräte, Homematic CCU |
-| Flur | 192.168.10.65 - 192.168.10.126 | 62 | Shelly Schalter, Homematic Sensoren |
-| Arbeitszimmer | 192.168.10.129 - 192.168.10.190 | 62 | Shelly Relais, Hue Arbeitsplatz |
-| Schlafzimmer | 192.168.10.193 - 192.168.10.254 | 62 | Hue Lampen, Klimasensoren, Jalousien |
-| Wohnzimmer | 192.168.11.1 - 192.168.11.62 | 62 | Hue Lampen, Sonos Lautsprecher, TV-Geräte |
-| Küche | 192.168.11.65 - 192.168.11.126 | 62 | Küchengeräte, Sonos, Hue Unterschrank |
-| Bad | 192.168.11.129 - 192.168.11.190 | 62 | Feuchtigkeitssensoren, Lüftungssteuerung |
-| Reserve | 192.168.11.193 - 192.168.13.254 | 574 | Für zukünftige Erweiterungen |
+| Unterverteilung | 192.168.100.1 - 192.168.100.62 | 62 | Zentrale Steuergeräte, Homematic CCU |
+| Flur | 192.168.100.65 - 192.168.100.126 | 62 | Shelly Schalter, Homematic Sensoren |
+| Arbeitszimmer | 192.168.100.129 - 192.168.100.190 | 62 | Shelly Relais, Hue Arbeitsplatz |
+| Schlafzimmer | 192.168.100.193 - 192.168.100.254 | 62 | Hue Lampen, Klimasensoren, Jalousien |
+| Wohnzimmer | 192.168.101.1 - 192.168.101.62 | 62 | Hue Lampen, Sonos Lautsprecher, TV-Geräte |
+| Küche | 192.168.101.65 - 192.168.101.126 | 62 | Küchengeräte, Sonos, Hue Unterschrank |
+| Bad | 192.168.101.129 - 192.168.101.190 | 62 | Feuchtigkeitssensoren, Lüftungssteuerung |
+| Mobile Clients | 192.168.101.191 - 192.168.101.230 | 40 | **Smartphones, Tablets, Smart-TVs** |
+| Reserve | 192.168.101.231 - 192.168.103.254 | 536 | Für zukünftige Erweiterungen |
+
+### Gäste-VLAN (192.168.200.0/24) - Gast-Zugang
+
+| Bereich | IP-Bereich | Anzahl IPs | Verwendung |
+|---------|------------|------------|------------|
+| Gateway | 192.168.200.1 | 1 | VLAN Gateway |
+| Reserve | 192.168.200.2 - 192.168.200.9 | 8 | Für spezielle Konfiguration |
+| DHCP Pool | 192.168.200.10 - 192.168.200.250 | 241 | Gäste-Geräte (automatische Zuweisung) |
+| Reserve | 192.168.200.251 - 192.168.200.254 | 4 | Für zukünftige Erweiterungen |
 
 ## DNS-Naming-Konvention
 
@@ -116,31 +133,355 @@ hm-window-sz-01.iot.enzmann.online          → Homematic Fensterkontakt Schlafz
    - Subnetz: 192.168.1.0/24
    - DHCP aktivieren: Ja
 
+### Standard-LAN Einstellungen
+1. **Standard-Netzwerk (Default):**
+   - Name: "Standard-LAN" 
+   - VLAN: Untagged/Default
+   - Subnetz: 192.168.1.0/24
+   - DHCP aktivieren: Ja
+
+2. **WiFi-Netzwerk:**
+   - Name: "Enzian"
+   - Sicherheit: WPA2/WPA3
+   - VLAN: Standard-LAN (Default)
+   - Bandsteuerung: Dual-Band (2.4 + 5 GHz)
+
 ### IOT-VLAN Einstellungen
 1. **Netzwerk erstellen:**
    - Name: "IOT-VLAN"
-   - VLAN ID: 10
-   - Subnetz: 192.168.10.0/22
+   - VLAN ID: 100
+   - Subnetz: 192.168.100.0/22
    - DHCP aktivieren: Ja (für Fallback)
 
 2. **WiFi-Netzwerk:**
-   - Name: "IOT-WiFi"
+   - Name: "Enzian-IOT"
    - Sicherheit: WPA2/WPA3
-   - VLAN: IOT-VLAN (10)
+   - VLAN: IOT-VLAN (100)
    - Gast-Isolation: Aktiviert
 
-### Firewall-Regeln
-1. **Standard-LAN → IOT-VLAN:** Erlaubt (für Home Assistant)
-2. **IOT-VLAN → Standard-LAN:** Blockiert (außer DNS/NTP)
-3. **IOT-VLAN → Internet:** Erlaubt
-4. **Standard-LAN → Internet:** Erlaubt
+### Gäste-VLAN Einstellungen
+1. **Netzwerk erstellen:**
+   - Name: "Gäste-VLAN"
+   - VLAN ID: 200
+   - Subnetz: 192.168.200.0/24
+   - DHCP aktivieren: Ja
 
-#### Spezifische Regeln für Home Assistant
+2. **WiFi-Netzwerk:**
+   - Name: "Enzian-Gast"
+   - Sicherheit: WPA2/WPA3 (einfaches Passwort)
+   - VLAN: Gäste-VLAN (200)
+   - Gast-Isolation: Aktiviert
+   - Bandbreiten-Limit: Optional (z.B. 50 Mbit/s)
+
+## UniFi Zone Matrix Konfiguration
+
+### Übersicht Zone Matrix
+Die Zone Matrix bietet eine **grafische Oberfläche** zur einfachen Konfiguration von VLAN-zu-VLAN Kommunikation ohne komplexe Firewall-Regeln.
+
+### Zone-Definitionen
+
+#### 1. Zonen konfigurieren (Settings → Security → Zones)
+
+**Zone 1: "Internal" (Built-in)**
+- **Netzwerke:** Standard-LAN (192.168.1.0/24)
+- **Beschreibung:** Vorkonfigurierte UniFi Zone für interne Netzwerke
+- **Farbe:** Blau (Standard)
+- **Status:** Bereits vorhanden, nur Netzwerk zuweisen
+
+**Zone 2: "IOT" (Neu erstellen)**  
+- **Netzwerke:** IOT-VLAN (192.168.100.0/22)
+- **Beschreibung:** Smart Home Geräte + Mobile Clients
+- **Farbe:** Grün
+- **Status:** Neu erstellen
+
+**Zone 3: "Hotspot" (Built-in)**
+- **Netzwerke:** Gäste-VLAN (192.168.200.0/24)  
+- **Beschreibung:** Vorkonfigurierte UniFi Zone für Gäste-Zugang
+- **Farbe:** Orange (Standard)
+- **Status:** Bereits vorhanden, nur Netzwerk zuweisen
+
+#### 2. Zone Matrix konfigurieren (Settings → Security → Zone Matrix)
+
+```
+Zone Matrix Tabelle:
+                   | Internal | IOT | Hotspot | Internet |
+-------------------|----------|-----|---------|----------|
+Internal           |    ✅    | ✅  |   ❌    |    ✅    |
+IOT                |    🔸    | ✅  |   ❌    |    ✅    |
+Hotspot            |    🔸    | ❌  |   ✅    |    ✅    |
+Internet           |    ✅    | ✅  |   ✅    |    ✅    |
+
+Legende:
+✅ = Erlaubt (Allow)
+❌ = Blockiert (Block) 
+🔸 = Begrenzt (Limited) - nur spezifische Ports
+```
+
+### Zone Matrix Einstellungen im Detail
+
+#### Internal → IOT: ✅ Allow
+- **Begründung:** Home Assistant muss auf IOT-Geräte zugreifen
+- **Ports:** Alle (für Administration und Setup)
+
+#### IOT → Internal: 🔸 Limited  
+- **Begründung:** Mobile Apps brauchen Zugriff auf Home Assistant
+- **Erlaubte Ports:**
+  - `53` (DNS zu Pi-hole: 192.168.1.3)
+  - `123` (NTP für Zeitserver)
+  - `8123` (Home Assistant Web-Interface)
+  - `1883/8883` (MQTT Broker)
+  - `5353` (mDNS für Device Discovery)
+
+#### Internal → Hotspot: ❌ Block
+- **Begründung:** Keine Verwaltung von Gäste-Geräten nötig
+
+#### IOT → Hotspot: ❌ Block  
+- **Begründung:** Smart Home soll nicht mit Gäste-Netz kommunizieren
+
+#### Hotspot → Internal: 🔸 Limited
+- **Begründung:** Gäste brauchen nur DNS-Auflösung  
+- **Erlaubte Ports:**
+  - `53` (DNS zu Pi-hole: 192.168.1.3)
+  - `123` (NTP für Zeitserver)
+- **Vorteil:** Hotspot-Zone hat bereits optimierte Gäste-Einstellungen
+
+#### Hotspot → IOT: ❌ Block
+- **Begründung:** Gäste sollen keinen Zugriff auf Smart Home haben
+
+#### Alle → Internet: ✅ Allow
+- **Begründung:** Internet-Zugang für alle Zonen erforderlich
+
+### Vorteile der Zone Matrix mit Built-in Zonen
+
+#### Nutzt UniFi-Standards optimal
+- **Internal-Zone:** Bereits für interne Netzwerke optimiert
+- **Hotspot-Zone:** Bereits für Gäste-Zugang konfiguriert (Bandbreiten-Limits, Isolation)
+- **Nur eine neue Zone:** "IOT" muss erstellt werden
+
+#### Weniger Konfigurationsaufwand
+- **Vorkonfigurierte Einstellungen** der Built-in Zonen nutzen
+- **Bewährte UniFi-Praktiken** werden automatisch angewendet
+- **Konsistent mit UniFi-Dokumentation**
+
+#### Automatische Optimierungen
+- **Hotspot-Zone** bringt bereits Gäste-spezifische Einstellungen mit
+- **Internal-Zone** ist für Verwaltungsaufgaben optimiert
+- **Standard-Firewall-Templates** werden angewendet
+
+### Einfache Konfiguration
+- **Grafische Oberfläche** statt komplexer Firewall-Regeln
+- **Matrix-Ansicht** macht Beziehungen sofort sichtbar  
+- **Ein Klick** zum Ändern von Allow/Block/Limited
+
+### Automatische Firewall-Regeln
+- **UniFi generiert automatisch** die entsprechenden Firewall-Regeln
+- **Bidirektionale Regeln** werden automatisch erstellt
+- **Konsistente Regelanwendung** auf alle Geräte in einer Zone
+
+### Troubleshooting
+- **Übersichtliche Darstellung** aller Zonen-Beziehungen
+- **Einfache Änderungen** für Tests
+- **Logging** zeigt blockierte Verbindungen pro Zone
+
+## Alternative Architektur: Dedizierte IOT-Services
+
+### Konzept-Übersicht
+Anstatt alle Services im Standard-LAN zu betreiben und über Firewall-Regeln auf das IOT-VLAN zuzugreifen, werden **IOT-spezifische Services direkt in der IOT-Zone** bereitgestellt.
+
+### Service-Aufteilung nach Zonen
+
+#### Internal Zone (192.168.1.x) - Core Infrastructure
+```bash
+# Reine Infrastruktur-Services
+192.168.1.21   → pve-01.lab.enzmann.online (Proxmox Host 1)
+192.168.1.22   → pve-02.lab.enzmann.online (Proxmox Host 2)
+192.168.1.25   → nas-01.lab.enzmann.online (Storage)
+192.168.1.3    → pihole-01.lab.enzmann.online (DNS)
+192.168.1.48   → traefik-01.lab.enzmann.online (Reverse Proxy)
+192.168.1.50   → portainer-01.lab.enzmann.online (Docker Management)
+192.168.1.51   → grafana-01.lab.enzmann.online (Monitoring)
+192.168.1.52   → influx-01.lab.enzmann.online (Monitoring DB)
+```
+
+#### IOT Zone (192.168.100.x) - Smart Home Services
+```bash
+# IOT-spezifische Services (dedizierte VMs/Container)
+192.168.100.41 → ha-prod-01.iot.enzmann.online (Home Assistant)
+192.168.100.42 → ha-test-01.iot.enzmann.online (Home Assistant Test)
+192.168.100.45 → mqtt-01.iot.enzmann.online (MQTT Broker)
+192.168.100.46 → nodered-01.iot.enzmann.online (Node-RED)
+192.168.100.47 → zigbee2mqtt-01.iot.enzmann.online (Zigbee Bridge)
+192.168.100.48 → esphome-01.iot.enzmann.online (ESP Home)
+192.168.100.50 → influx-iot-01.iot.enzmann.online (IOT Metrics DB)
+
+# Smart Home Hardware
+192.168.100.10 → hm-ccu-uv-01.iot.enzmann.online (Homematic CCU)
+192.168.101.1  → hue-wz-bridge01.iot.enzmann.online (Hue Bridge)
+# ... weitere IOT-Geräte
+```
+
+### Technische Umsetzung
+
+#### Proxmox VM-Deployment
+```bash
+# Home Assistant VM in IOT-Zone
+VM-Name: HA-Prod-IOT
+vCPUs: 4
+RAM: 8GB
+Storage: 100GB SSD
+Network: IOT-VLAN (VLAN 100)
+IP: 192.168.100.41
+
+# MQTT Broker VM in IOT-Zone  
+VM-Name: MQTT-IOT
+vCPUs: 2
+RAM: 4GB
+Storage: 50GB SSD
+Network: IOT-VLAN (VLAN 100)
+IP: 192.168.100.45
+```
+
+#### Docker Swarm in IOT-Zone
+```yaml
+# docker-compose-iot.yml (deployed on IOT network)
+version: '3.8'
+services:
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    networks:
+      - iot-services
+    ports:
+      - "192.168.100.41:8123:8123"
+    
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    networks:
+      - iot-services
+    ports:
+      - "192.168.100.45:1883:1883"
+      
+  nodered:
+    image: nodered/node-red:latest
+    networks:
+      - iot-services
+    ports:
+      - "192.168.100.46:1880:1880"
+
+networks:
+  iot-services:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/22
+```
+
+### Vereinfachte Firewall-Regeln
+
+#### Zone Matrix (deutlich einfacher)
+```
+                | Internal | IOT | Hotspot |
+----------------|----------|-----|---------|
+Internal        |    ✅    | 🔸  |   ❌    |
+IOT             |    🔸    | ✅  |   ❌    |
+Hotspot         |    🔸    | ❌  |   ✅    |
+```
+
+#### Spezifische Regeln (weniger komplex)
+```bash
+# Internal → IOT (Limited)
+Port 22:   SSH für VM-Management
+Port 443:  HTTPS für Web-Interfaces via Traefik
+Port 3000: Grafana → InfluxDB-IOT für Monitoring
+
+# IOT → Internal (Limited)  
+Port 53:   DNS zu Pi-hole
+Port 123:  NTP für Zeitserver
+Port 443:  Backup/Update Services
+```
+
+### Vorteile der dedizierten IOT-Services
+
+#### Sicherheit
+- **Vollständige Isolation** - IOT-Services laufen komplett getrennt
+- **Kein Cross-Zone-Traffic** für normale IOT-Operationen
+- **Minimale Firewall-Regeln** zwischen Zonen
+- **Blast Radius Reduction** - Kompromittierung bleibt in einer Zone
+
+#### Performance
+- **Lokaler Traffic** zwischen IOT-Geräten und Services
+- **Reduzierte Latenz** für Smart Home Operationen
+- **Keine VLAN-Routing** Overhead für häufige Zugriffe
+
+#### Verwaltung
+- **Klare Service-Zuordnung** pro Zone
+- **Einfachere Troubleshooting** - Services sind dort wo sie gebraucht werden
+- **Zonenbezogene Backups** möglich
+
+### Nachteile der dedizierten IOT-Services
+
+#### Ressourcen-Overhead
+- **Doppelte Services** (z.B. InfluxDB in beiden Zonen)
+- **Mehr VMs/Container** zu verwalten
+- **Höherer Speicher/CPU-Verbrauch**
+
+#### Komplexität
+- **Service-Synchronisation** zwischen Zonen bei Bedarf
+- **Zentrale Überwachung** wird schwieriger
+- **Backup-Strategie** muss zonenbezogen sein
+
+#### Monitoring-Herausforderung
+- **Grafana in Internal** kann nicht direkt auf IOT-InfluxDB zugreifen
+- **Separate Monitoring-Stacks** oder komplexe Datenreplikation nötig
+
+### Hybrid-Ansatz (Empfehlung)
+
+#### Core Services bleiben Internal
+```bash
+Proxmox, NAS, Pi-hole, Traefik → Internal Zone
+Zentrale Überwachung (Grafana, InfluxDB) → Internal Zone
+```
+
+#### IOT-spezifische Services in IOT Zone
+```bash
+Home Assistant, MQTT, Node-RED → IOT Zone
+IOT-Hardware (Hue, Homematic) → IOT Zone
+Mobile Clients → IOT Zone
+```
+
+#### Minimale Cross-Zone-Kommunikation
+```bash
+IOT Home Assistant → Internal Grafana (für Dashboards)
+Internal Backup → IOT Services (für Datensicherung)
+Mobile Clients → Internal Traefik (für Admin-Interfaces)
+```
+
+### Praktische Umsetzung
+
+1. **Phase 1:** Services identifizieren die nur IOT brauchen
+2. **Phase 2:** Diese Services in IOT-Zone migrieren  
+3. **Phase 3:** Firewall-Regeln entsprechend reduzieren
+4. **Phase 4:** Monitoring und Backup anpassen
+
+### WiFi-Netzwerke Übersicht
+
+| WiFi-Name | VLAN | Zweck | Geräte | Passwort-Typ |
+|-----------|------|--------|--------|--------------|
+| **Enzian** | Standard-LAN (Default) | Administration, Laptops, Homelab | Admin-Laptops, Management-Geräte | Starkes Passwort |
+| **Enzian-IOT** | IOT-VLAN (100) | Smart Home + Mobile Clients | Smartphones, Tablets, Smart-TVs | Mittleres Passwort |
+| **Enzian-Gast** | Gäste-VLAN (200) | Gäste-Zugang | Gäste-Geräte | Einfaches Passwort |
+
+#### Spezifische Regeln für Mobile Geräte (IOT-VLAN)
 - **Port 8123:** IOT → Standard-LAN (Home Assistant Web-Interface)
-- **mDNS:** Bidirektional für Device Discovery
+- **mDNS:** Bidirektional zwischen Standard-LAN ↔ IOT für Device Discovery
 - **MQTT:** IOT → Standard-LAN Port 1883/8883
+- **Chromecast/AirPlay:** IOT-interne Kommunikation erlaubt
 
-## Lokales DNS mit Pi-hole
+#### Spezifische Regeln für Gäste-VLAN
+- **DNS:** Gäste-VLAN → Standard-LAN Port 53 (zu Pi-hole 192.168.1.3)
+- **NTP:** Gäste-VLAN → Standard-LAN Port 123 (Zeitserver)
+- **Alle anderen Ports:** Gäste-VLAN → Standard-LAN/IOT-VLAN blockiert
+
+## Lokales DNS mit Pi-hole + Unbound auf Raspberry Pi
 
 ### Übersicht
 Lokale DNS-Auflösung erfolgt über Pi-hole anstatt öffentlicher DNS-Einträge bei netcup:
@@ -148,6 +489,232 @@ Lokale DNS-Auflösung erfolgt über Pi-hole anstatt öffentlicher DNS-Einträge 
 - **Performance:** Lokale Auflösung ohne Internet-Abhängigkeit  
 - **Zusatznutzen:** Ad-Blocking, Malware-Schutz, DNS-Statistiken
 - **Flexibilität:** Einfache Verwaltung über Web-Interface
+
+### Architektur-Entscheidung: Dedizierte Hardware
+
+#### Warum Raspberry Pi statt VMs?
+- **Bootstrap-Problem vermeiden:** VMs brauchen DNS zum Starten
+- **Unabhängigkeit:** DNS läuft getrennt vom Proxmox Cluster
+- **Hochverfügbarkeit:** Zwei Raspberry Pis für Redundanz
+- **Kostengünstig:** ~€160 für zwei Pis vs. VM-Ressourcen
+
+#### Hardware-Spezifikation (pro Pi)
+```bash
+Raspberry Pi 4B (4GB RAM)
+SSD via USB 3.0 (bessere Performance als SD-Karte)
+Gigabit Ethernet (kein WiFi für kritische Infrastruktur)
+USV/Powerbank (optional für Stromausfälle)
+```
+
+### Raspberry Pi DNS-Cluster Setup
+
+#### IP-Adresszuweisung
+```bash
+Pi-hole Primary:   192.168.1.3 → pihole-01.lab.enzmann.online
+Pi-hole Secondary: 192.168.1.4 → pihole-02.lab.enzmann.online
+
+# UniFi DHCP DNS-Server Einstellungen:
+Primary DNS:   192.168.1.3
+Secondary DNS: 192.168.1.4  
+Tertiary DNS:  8.8.8.8 (ultimativer Fallback)
+```
+
+#### Docker Compose Konfiguration (pro Pi)
+```yaml
+# /opt/dns-stack/docker-compose.yml (identisch auf beiden Pis)
+version: '3.8'
+
+services:
+  unbound:
+    image: mvance/unbound-rpi:latest  # ARM-optimiert
+    hostname: unbound-${PI_NUMBER}
+    environment:
+      TZ: 'Europe/Berlin'
+    volumes:
+      - unbound_config:/opt/unbound/etc/unbound
+      - ./unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro
+    networks:
+      dns-internal:
+        ipv4_address: 172.20.0.2
+    restart: unless-stopped
+
+  pihole:
+    image: pihole/pihole:latest
+    hostname: pihole-${PI_NUMBER}
+    environment:
+      TZ: 'Europe/Berlin'
+      WEBPASSWORD: '${PIHOLE_PASSWORD}'
+      VIRTUAL_HOST: 'pihole-${PI_NUMBER}.lab.enzmann.online'
+      FTLCONF_LOCAL_IPV4: '${PI_IP}'
+      PIHOLE_DNS_: '172.20.0.2#5053'  # Lokaler Unbound
+    volumes:
+      - pihole_config:/etc/pihole
+      - pihole_dnsmasq:/etc/dnsmasq.d
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"  # Web-Interface
+    networks:
+      dns-internal:
+        ipv4_address: 172.20.0.3
+    depends_on:
+      - unbound
+    restart: unless-stopped
+
+  gravity-sync:
+    image: vmstan/gravity-sync:latest
+    hostname: gravity-sync-${PI_NUMBER}
+    environment:
+      GS_REMOTE_HOST: "${REMOTE_PI_IP}"
+      GS_REMOTE_USER: "pi"
+      GS_AUTO_MODE: "true"
+    volumes:
+      - pihole_config:/etc/pihole
+      - ./gravity-sync:/root/gravity-sync
+      - ~/.ssh:/root/.ssh:ro
+    depends_on:
+      - pihole
+    restart: unless-stopped
+
+volumes:
+  pihole_config:
+  pihole_dnsmasq:
+  unbound_config:
+
+networks:
+  dns-internal:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+```
+
+#### Environment-Konfiguration
+```bash
+# Pi #1: /opt/dns-stack/.env
+PI_NUMBER=01
+PI_IP=192.168.1.3
+REMOTE_PI_IP=192.168.1.4
+PIHOLE_PASSWORD=secure-admin-password
+
+# Pi #2: /opt/dns-stack/.env  
+PI_NUMBER=02
+PI_IP=192.168.1.4
+REMOTE_PI_IP=192.168.1.3
+PIHOLE_PASSWORD=secure-admin-password
+```
+
+#### Unbound Konfiguration
+```bash
+# ./unbound.conf (identisch auf beiden Pis)
+server:
+    interface: 0.0.0.0
+    port: 5053
+    do-ip4: yes
+    do-ip6: no
+    do-udp: yes
+    do-tcp: yes
+    harden-glue: yes
+    harden-dnssec-stripped: yes
+    use-caps-for-id: no
+    edns-buffer-size: 1232
+    prefetch: yes
+    num-threads: 2
+    so-rcvbuf: 1m
+    private-address: 192.168.0.0/16
+    private-address: 172.16.0.0/12
+    private-address: 10.0.0.0/8
+    verbosity: 1
+    log-queries: no
+    hide-identity: yes
+    hide-version: yes
+    qname-minimisation: yes
+    minimal-responses: yes
+    msg-cache-size: 50m
+    rrset-cache-size: 100m
+    cache-max-ttl: 86400
+
+# Forward zones für lokale Domains
+forward-zone:
+    name: "lab.enzmann.online"
+    forward-addr: 172.20.0.3@53
+
+forward-zone:
+    name: "iot.enzmann.online"  
+    forward-addr: 172.20.0.3@53
+
+forward-zone:
+    name: "guest.enzmann.online"
+    forward-addr: 172.20.0.3@53
+```
+
+### Deployment-Strategie
+
+#### Phase 1: Erstes Raspberry Pi
+```bash
+# 1. Raspberry Pi OS installieren
+# 2. Docker installieren
+sudo curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker pi
+
+# 3. DNS-Stack deployen
+git clone <your-dns-config-repo>
+cd dns-stack
+docker-compose up -d
+
+# 4. Als Primary DNS in UniFi eintragen
+# 5. Stabilität für 1-2 Wochen testen
+```
+
+#### Phase 2: Zweites Raspberry Pi  
+```bash
+# 1. Identische Installation wie Pi #1
+# 2. SSH-Keys für Gravity Sync einrichten
+# 3. Als Secondary DNS in UniFi hinzufügen
+# 4. Gravity Sync zwischen beiden Pis aktivieren
+# 5. Load Balancing testen
+```
+
+### Hochverfügbarkeit und Synchronisation
+
+#### Automatische Konfigurationssync
+- **Gravity Sync** synchronisiert Pi-hole Einstellungen zwischen beiden Pis
+- **Blocklisten, DNS-Einträge, Whitelist** werden automatisch abgeglichen
+- **Query-Logs** bleiben lokal pro Pi für bessere Performance
+
+#### Failover-Verhalten
+```bash
+# Primärer Pi (192.168.1.3) fällt aus:
+# → Clients nutzen automatisch sekundären Pi (192.168.1.4)
+# → Keine Unterbrechung der DNS-Auflösung
+# → Pi-hole Web-Interface über sekundären Pi verfügbar
+
+# Sekundärer Pi (192.168.1.4) fällt aus:
+# → Primärer Pi übernimmt alle Anfragen
+# → Gravity Sync pausiert automatisch
+# → Nach Wiederherstellung: Automatische Resync
+```
+
+### Wartung und Updates
+
+#### Docker Container Updates
+```bash
+# Einzelner Pi (Rolling Update):
+cd /opt/dns-stack
+docker-compose pull
+docker-compose up -d
+
+# Automatisierung via Cron:
+0 3 * * 0 cd /opt/dns-stack && docker-compose pull && docker-compose up -d
+```
+
+#### Backup-Strategie
+```bash
+# Pi-hole Konfiguration backup
+docker-compose exec pihole pihole -a -t
+
+# Volume Backup
+sudo cp -r /var/lib/docker/volumes/dns-stack_pihole_config /backup/
+```
 
 ### Pi-hole + Unbound Setup
 
@@ -326,9 +893,9 @@ EOF'
 192.168.1.206  laptop-admin-01.lab.enzmann.online
 
 # IOT-VLAN (Smart Home) - wichtigste Geräte
-192.168.10.10  hm-ccu-uv-01.iot.enzmann.online
-192.168.11.1   hue-wz-bridge01.iot.enzmann.online
-192.168.11.2   sonos-wz-bridge01.iot.enzmann.online
+192.168.100.10  hm-ccu-uv-01.iot.enzmann.online
+192.168.101.1   hue-wz-bridge01.iot.enzmann.online
+192.168.101.2   sonos-wz-bridge01.iot.enzmann.online
 ```
 
 ##### Wildcard-Domains (via dnsmasq config)
@@ -338,6 +905,10 @@ address=/lab.enzmann.online/192.168.1.48
 
 # /etc/dnsmasq.d/03-iot-wildcard.conf  
 address=/iot.enzmann.online/192.168.1.48
+
+# /etc/dnsmasq.d/04-guest-wildcard.conf
+address=/guest.enzmann.online/192.168.1.48
+address=/guest.enzmann.online/192.168.1.48
 ```
 
 ### UniFi Integration
@@ -347,10 +918,23 @@ address=/iot.enzmann.online/192.168.1.48
 2. **DHCP → DNS Server:** `192.168.1.3` (Pi-hole IP)
 3. **DHCP → Domain Name:** `lab.enzmann.online`
 
+### UniFi Integration
+
+#### Standard-LAN DHCP-Einstellungen
+1. **Standard-Netzwerk (Default) bearbeiten**
+2. **DHCP → DNS Server:** `192.168.1.3` (Pi-hole IP)
+3. **DHCP → Domain Name:** `lab.enzmann.online`
+
 #### IOT-VLAN DHCP-Einstellungen
 1. **IOT-VLAN Netzwerk bearbeiten**  
 2. **DHCP → DNS Server:** `192.168.1.3` (Pi-hole IP)
 3. **DHCP → Domain Name:** `iot.enzmann.online`
+
+#### Gäste-VLAN DHCP-Einstellungen
+1. **Gäste-VLAN Netzwerk bearbeiten**  
+2. **DHCP → DNS Server:** `192.168.1.3` (Pi-hole IP)
+3. **DHCP → Domain Name:** `guest.enzmann.online`
+4. **DHCP → Lease Time:** 4 Stunden (kürzer für Gäste)
 
 ### Vorteile der Pi-hole + Unbound Lösung
 
@@ -605,6 +1189,14 @@ forward-zone:
 forward-zone:
     name: "iot.enzmann.online"  
     forward-addr: 10.0.1.3@53
+
+forward-zone:
+    name: "guest.enzmann.online"
+    forward-addr: 10.0.1.3@53
+
+forward-zone:
+    name: "guest.enzmann.online"
+    forward-addr: 10.0.1.3@53
 EOF'
 
 # Unbound neu starten für Konfiguration
@@ -662,11 +1254,20 @@ Docker Swarm Manager: 192.168.1.45 → docker-01.lab.enzmann.online
 Traefik Reverse Proxy: 192.168.1.48 → traefik-01.lab.enzmann.online
 ```
 
-#### IOT-VLAN (Smart Home)
+#### IOT-VLAN (Smart Home + Mobile Clients)
 ```
-Homematic CCU: 192.168.10.10 → hm-ccu-uv-01.iot.enzmann.online
-Hue Bridge: 192.168.11.1 → hue-wz-bridge01.iot.enzmann.online
-Sonos Bridge: 192.168.11.2 → sonos-wz-bridge01.iot.enzmann.online
+Homematic CCU: 192.168.100.10 → hm-ccu-uv-01.iot.enzmann.online
+Hue Bridge: 192.168.101.1 → hue-wz-bridge01.iot.enzmann.online
+Sonos Bridge: 192.168.101.2 → sonos-wz-bridge01.iot.enzmann.online
+iPhone Admin: 192.168.101.200 → iphone-admin-01.iot.enzmann.online
+iPad Wohnzimmer: 192.168.101.201 → ipad-wz-01.iot.enzmann.online
+Samsung TV: 192.168.101.210 → tv-wz-01.iot.enzmann.online
+```
+
+#### Gäste-VLAN (Gast-Zugang)
+```
+# Automatische DHCP-Zuweisung (192.168.200.10-250)
+# Keine statischen Reservierungen für Gäste
 ```
 
 ## Geräte-Inventar
@@ -711,9 +1312,9 @@ Sonos Bridge: 192.168.11.2 → sonos-wz-bridge01.iot.enzmann.online
 #### Client Devices (192.168.1.201 - 192.168.1.220)
 | Gerät | IP | DNS-Name | Öffentlicher Zugang | Notizen |
 |-------|----|---------|--------------------|---------|
-| Admin Desktop | 192.168.1.205 | desktop-admin-01.lab.enzmann.online | - | Management PC |
-| Admin Laptop | 192.168.1.206 | laptop-admin-01.lab.enzmann.online | - | Mobile Management |
-| **Weitere Clients** | 192.168.1.207-220 | - | - | **14 weitere IPs verfügbar** |
+| Admin Desktop | 192.168.1.205 | desktop-admin-01.lab.enzmann.online | - | Management PC (kabelgebunden) |
+| Admin Laptop | 192.168.1.206 | laptop-admin-01.lab.enzmann.online | - | Mobile Management (WiFi: "Enzian") |
+| **Weitere Clients** | 192.168.1.207-220 | - | - | **Laptops, Drucker (kabelgebunden + WiFi)** |
 
 ### IOT-VLAN - Smart Home Geräte
 
@@ -884,6 +1485,33 @@ Sonos Bridge: 192.168.11.2 → sonos-wz-bridge01.iot.enzmann.online
      docker exec -it $(docker ps | grep unbound | cut -d' ' -f1) cat /opt/unbound/etc/unbound/unbound.conf | grep -A2 "forward-zone"
      ```
 
+6. **Gäste-VLAN Probleme:**
+   - **Gäste haben keinen Internet-Zugang:**
+     ```bash
+     # VLAN-Zuordnung prüfen
+     # UniFi Controller → Clients → VLAN-Status kontrollieren
+     
+     # Firewall-Regeln für Gäste-VLAN → Internet prüfen
+     # Gateway-Routing für 192.168.200.0/24 kontrollieren
+     ```
+   - **Gäste können auf lokale Ressourcen zugreifen:**
+     ```bash
+     # Firewall-Regeln überprüfen:
+     # Gäste-VLAN → Standard-LAN: Blockiert (außer DNS)
+     # Gäste-VLAN → IOT-VLAN: Blockiert
+     
+     # WiFi Gast-Isolation prüfen ("Enzian-Gast")
+     # VLAN-Zuordnung von "Enzian-Gast" → VLAN 200 kontrollieren
+     ```
+   - **DNS funktioniert nicht für Gäste:**
+     ```bash
+     # Pi-hole Firewall-Regel prüfen
+     # Gäste-VLAN → 192.168.1.3:53 erlaubt?
+     
+     # DNS-Auflösung von Gäste-VLAN testen
+     nslookup google.com 192.168.1.3
+     ```
+
 ### IOT-spezifische Probleme
 1. **Gerät nicht erreichbar:**
    - VLAN-Zuordnung prüfen
@@ -913,4 +1541,4 @@ Sonos Bridge: 192.168.11.2 → sonos-wz-bridge01.iot.enzmann.online
 ---
 **Erstellt:** [Datum]  
 **Letzte Aktualisierung:** [Datum]  
-**Version:** 3.0 (erweitert um lokales DNS mit Pi-hole)
+**Version:** 4.0 (erweitert um Gäste-VLAN und Mobile Clients)
