@@ -293,10 +293,11 @@ Anstatt alle Services im Standard-LAN zu betreiben und über Firewall-Regeln auf
 #### Internal Zone (192.168.1.x) - Core Infrastructure
 ```bash
 # Reine Infrastruktur-Services
+192.168.1.3    → pihole-01.lab.enzmann.online (DNS)
+192.168.1.4    → pihole-02.lab.enzmann.online (DNS)
 192.168.1.21   → pve-01.lab.enzmann.online (Proxmox Host 1)
 192.168.1.22   → pve-02.lab.enzmann.online (Proxmox Host 2)
 192.168.1.25   → nas-01.lab.enzmann.online (Storage)
-192.168.1.3    → pihole-01.lab.enzmann.online (DNS)
 192.168.1.48   → traefik-01.lab.enzmann.online (Reverse Proxy)
 192.168.1.50   → portainer-01.lab.enzmann.online (Docker Management)
 192.168.1.51   → grafana-01.lab.enzmann.online (Monitoring)
