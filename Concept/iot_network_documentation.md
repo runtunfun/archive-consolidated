@@ -293,11 +293,10 @@ Anstatt alle Services im Standard-LAN zu betreiben und über Firewall-Regeln auf
 #### Internal Zone (192.168.1.x) - Core Infrastructure
 ```bash
 # Reine Infrastruktur-Services
-192.168.1.3    → pihole-01.lab.enzmann.online (DNS)
-192.168.1.4    → pihole-02.lab.enzmann.online (DNS)
 192.168.1.21   → pve-01.lab.enzmann.online (Proxmox Host 1)
 192.168.1.22   → pve-02.lab.enzmann.online (Proxmox Host 2)
 192.168.1.25   → nas-01.lab.enzmann.online (Storage)
+192.168.1.3    → pihole-01.lab.enzmann.online (DNS)
 192.168.1.48   → traefik-01.lab.enzmann.online (Reverse Proxy)
 192.168.1.50   → portainer-01.lab.enzmann.online (Docker Management)
 192.168.1.51   → grafana-01.lab.enzmann.online (Monitoring)
@@ -526,6 +525,64 @@ Tertiary DNS:  8.8.8.8 (ultimativer Fallback)
 version: '3.8'
 
 services:
+  traefik:
+    image: traefik:v3.0
+    hostname: traefik-pi-${PI_NUMBER}
+    command:
+      # API und Dashboard
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      
+      # Provider
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      
+      # Let's Encrypt mit netcup DNS-Challenge
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      
+      # Logging
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    
+    environment:
+      # netcup API Credentials
+      NETCUP_CUSTOMER_NUMBER: "${NETCUP_CUSTOMER_NUMBER}"
+      NETCUP_API_KEY: "${NETCUP_API_KEY}"
+      NETCUP_API_PASSWORD: "${NETCUP_API_PASSWORD}"
+    
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    networks:
+      - dns-internal
+    
+    labels:
+      # Traefik Dashboard
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik-pi-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      
+      # Basic Auth für Dashboard
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$2y$10$..."  # htpasswd generiert
+    
+    restart: unless-stopped
+
   unbound:
     image: mvance/unbound-rpi:latest  # ARM-optimiert
     hostname: unbound-${PI_NUMBER}
@@ -554,12 +611,19 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "80:80/tcp"  # Web-Interface
+      # Port 80 entfällt - Traefik als HTTPS-Proxy
     networks:
       dns-internal:
         ipv4_address: 172.20.0.3
+    labels:
+      # Pi-hole über Traefik mit HTTPS
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
     depends_on:
       - unbound
+      - traefik
     restart: unless-stopped
 
   gravity-sync:
@@ -581,6 +645,7 @@ volumes:
   pihole_config:
   pihole_dnsmasq:
   unbound_config:
+  traefik_letsencrypt:
 
 networks:
   dns-internal:
@@ -597,11 +662,21 @@ PI_IP=192.168.1.3
 REMOTE_PI_IP=192.168.1.4
 PIHOLE_PASSWORD=secure-admin-password
 
+# netcup API Credentials (für Let's Encrypt DNS-Challenge)
+NETCUP_CUSTOMER_NUMBER=123456
+NETCUP_API_KEY=your-api-key
+NETCUP_API_PASSWORD=your-api-password
+
 # Pi #2: /opt/dns-stack/.env  
 PI_NUMBER=02
 PI_IP=192.168.1.4
 REMOTE_PI_IP=192.168.1.3
 PIHOLE_PASSWORD=secure-admin-password
+
+# netcup API Credentials (identisch auf beiden Pis)
+NETCUP_CUSTOMER_NUMBER=123456
+NETCUP_API_KEY=your-api-key
+NETCUP_API_PASSWORD=your-api-password
 ```
 
 #### Unbound Konfiguration
@@ -657,22 +732,41 @@ forward-zone:
 sudo curl -fsSL https://get.docker.com | sh
 sudo usermod -aG docker pi
 
-# 3. DNS-Stack deployen
+# 3. netcup API Credentials bereitlegen
+# (aus netcup Customer Control Panel → API)
+
+# 4. DNS-Stack mit Traefik deployen
 git clone <your-dns-config-repo>
 cd dns-stack
+# Environment-Datei mit netcup Credentials erstellen
+cp .env.example .env
+# .env editieren mit PI_NUMBER=01, IPs und netcup API
 docker-compose up -d
 
-# 4. Als Primary DNS in UniFi eintragen
-# 5. Stabilität für 1-2 Wochen testen
+# 5. HTTPS-Zugriff testen
+curl -k https://pihole-01.lab.enzmann.online
+
+# 6. Als Primary DNS in UniFi eintragen (192.168.1.3)
+# 7. Stabilität für 1-2 Wochen testen
 ```
 
 #### Phase 2: Zweites Raspberry Pi  
 ```bash
 # 1. Identische Installation wie Pi #1
-# 2. SSH-Keys für Gravity Sync einrichten
-# 3. Als Secondary DNS in UniFi hinzufügen
-# 4. Gravity Sync zwischen beiden Pis aktivieren
-# 5. Load Balancing testen
+# 2. Environment anpassen: PI_NUMBER=02, IP=192.168.1.4
+# 3. SSH-Keys für Gravity Sync einrichten
+ssh-keygen -t rsa -b 4096 -C "gravity-sync"
+ssh-copy-id pi@192.168.1.3  # Vom zweiten Pi zum ersten
+
+# 4. Docker Stack starten
+docker-compose up -d
+
+# 5. HTTPS-Zugriff testen
+curl -k https://pihole-02.lab.enzmann.online
+
+# 6. Als Secondary DNS in UniFi hinzufügen (192.168.1.4)
+# 7. Gravity Sync zwischen beiden Pis aktivieren
+# 8. Load Balancing und Failover testen
 ```
 
 ### Hochverfügbarkeit und Synchronisation
@@ -937,26 +1031,43 @@ address=/guest.enzmann.online/192.168.1.48
 3. **DHCP → Domain Name:** `guest.enzmann.online`
 4. **DHCP → Lease Time:** 4 Stunden (kürzer für Gäste)
 
-### Vorteile der Pi-hole + Unbound Lösung
+### Vorteile der Pi-hole + Unbound + Traefik Lösung
+
+#### Vollständige Autonomie
+- **Jeder Pi komplett unabhängig** - DNS + HTTPS + Zertifikate
+- **Kein Bootstrap-Problem** - Pi-hole HTTPS auch ohne Proxmox
+- **Kritische Infrastruktur isoliert** von restlicher Homelab-Infrastruktur
+- **Ausfallsicher** bei Problemen mit Docker Swarm oder Proxmox
 
 #### Sicherheit & Privatsphäre
-- **Keine externen DNS-Provider** - alle Anfragen bleiben lokal bis zu den Root-Servern
+- **Immer verschlüsselte Pi-hole Admin-Zugriffe** über HTTPS
 - **DNSSEC-Validierung** durch Unbound für sichere DNS-Auflösung
-- **Kein DNS-Logging** bei externen Anbietern (Google, Cloudflare)
-- **Qname-Minimisation** reduziert Datenleckage
+- **Lokale rekursive Auflösung** - keine externen DNS-Provider
+- **Automatische Let's Encrypt Zertifikate** pro Pi
 
 #### Performance  
 - **Lokales Caching** auf zwei Ebenen (Pi-hole + Unbound)
 - **Prefetching** von häufig genutzten Domains durch Unbound
-- **Rekursive Auflösung** direkt zu autoritativen Servern
-- **Optimierte Cache-Größen** für Homelab-Umgebung
+- **Direkte HTTPS-Terminierung** auf dem Pi (kein zusätzlicher Hop)
+- **Optimierte Cache-Größen** für Raspberry Pi Hardware
+
+#### Wartung und Verwaltung
+- **Einheitliche HTTPS-Konfiguration** wie im restlichen Homelab
+- **Gleiche netcup DNS-Challenge** Infrastruktur überall
+- **Web-Interfaces sicher zugänglich:**
+  ```bash
+  https://pihole-01.lab.enzmann.online      # Pi-hole Primary
+  https://pihole-02.lab.enzmann.online      # Pi-hole Secondary  
+  https://traefik-pi-01.lab.enzmann.online  # Traefik Dashboard Pi #1
+  https://traefik-pi-02.lab.enzmann.online  # Traefik Dashboard Pi #2
+  ```
 
 #### Zusatzfunktionen
 - **Ad-Blocking** für alle Geräte im Netzwerk (Pi-hole)
 - **Malware-Schutz** über Blocklisten (Pi-hole)
 - **Query-Logging** für Troubleshooting (Pi-hole)
-- **Statistiken** über DNS-Nutzung (Pi-hole)
-- **Lokale Domain-Auflösung** für `.lab` und `.iot` Subdomains
+- **Monitoring** über Traefik Dashboards pro Pi
+- **Lokale Domain-Auflösung** für `.lab`, `.iot` und `.guest` Subdomains
 
 ## HTTPS & Zertifikate mit Traefik
 
