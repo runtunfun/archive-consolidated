@@ -481,6 +481,103 @@ Mobile Clients → Internal Traefik (für Admin-Interfaces)
 - **NTP:** Gäste-VLAN → Standard-LAN Port 123 (Zeitserver)
 - **Alle anderen Ports:** Gäste-VLAN → Standard-LAN/IOT-VLAN blockiert
 
+## Einheitliche Ordnerstruktur (/opt/homelab/)
+
+### Übersicht
+Alle Docker-Services verwenden eine **konsistente Ordnerstruktur** unter `/opt/homelab/` für maximale Wartbarkeit und Automatisierung.
+
+### Standard-Ordnerstruktur
+```bash
+/opt/homelab/
+├── dns-stack/              # Raspberry Pi DNS (Pi-hole + Unbound + Traefik)
+│   ├── docker-compose.yml  # DNS-Service Stack
+│   ├── .env                 # Pi-spezifische Umgebungsvariablen
+│   ├── unbound.conf         # Unbound DNS-Konfiguration
+│   ├── gravity-sync/        # Synchronisation zwischen Pis
+│   └── backup/             # DNS-spezifische Backups
+├── traefik/                # Zentraler Reverse Proxy (Docker Swarm)
+│   ├── docker-compose.yml  # Traefik + SSL-Terminierung
+│   ├── .env                 # netcup API Credentials
+│   └── config/             # Traefik Konfigurationsdateien
+├── homeassistant/          # Home Assistant Stack
+│   ├── docker-compose.yml  # HA + Addons
+│   ├── .env                 # HA-spezifische Variablen
+│   └── config/             # Home Assistant Konfiguration
+├── monitoring/             # Monitoring-Suite (Grafana, InfluxDB, etc.)
+│   ├── docker-compose.yml  # Kompletter Monitoring-Stack
+│   ├── .env                 # Monitoring-Credentials
+│   └── config/             # Grafana Dashboards, InfluxDB Config
+├── portainer/              # Docker Management
+│   ├── docker-compose.yml  # Portainer CE
+│   └── .env                 # Portainer-spezifische Einstellungen
+└── backup/                 # Zentrale Backup-Infrastruktur
+    ├── backup-all.sh        # Automatisches Backup aller Services
+    ├── restore-all.sh       # Automatisches Restore aller Services
+    └── configs/            # Backup der Konfigurationsdateien
+```
+
+### Vorteile der einheitlichen Struktur
+
+#### Wartbarkeit
+- **Vorhersagbare Pfade** für alle Services
+- **Konsistente Navigation** zwischen verschiedenen Systemen
+- **Einfache Automatisierung** von Backup- und Update-Prozessen
+
+#### Git-Integration
+```bash
+# Komplette Homelab-Konfiguration versioniert
+cd /opt/homelab
+git init
+git add .
+git commit -m "Initial homelab infrastructure"
+
+# Service-spezifische Updates
+cd /opt/homelab/homeassistant
+git add docker-compose.yml .env
+git commit -m "Update Home Assistant to 2024.12"
+```
+
+#### Backup & Restore
+```bash
+# Ein Befehl für alle Konfigurationen
+sudo tar -czf homelab-configs-$(date +%Y%m%d).tar.gz /opt/homelab/
+
+# Selektive Backups pro Service
+sudo tar -czf dns-backup-$(date +%Y%m%d).tar.gz /opt/homelab/dns-stack/
+sudo tar -czf ha-backup-$(date +%Y%m%d).tar.gz /opt/homelab/homeassistant/
+```
+
+#### Berechtigungen & Sicherheit
+```bash
+# Einheitliche Berechtigungsstruktur
+sudo chown -R $USER:$USER /opt/homelab
+chmod 755 /opt/homelab
+
+# Sichere .env Dateien
+find /opt/homelab -name ".env" -exec chmod 600 {} \;
+
+# Lesbare docker-compose.yml Dateien
+find /opt/homelab -name "docker-compose.yml" -exec chmod 644 {} \;
+```
+
+### Service-spezifische Besonderheiten
+
+#### Raspberry Pi (DNS-Stack)
+```bash
+# Lokale Traefik-Instanz für autonome HTTPS
+/opt/homelab/dns-stack/docker-compose.yml  # Enthält Pi-hole + Unbound + Traefik
+```
+
+#### Docker Swarm (Zentrale Services)
+```bash
+# Shared Traefik für alle Swarm Services
+/opt/homelab/traefik/docker-compose.yml    # Zentraler Reverse Proxy
+
+# Service-spezifische Stacks
+/opt/homelab/homeassistant/                # Home Assistant Ecosystem
+/opt/homelab/monitoring/                   # Grafana + InfluxDB + Prometheus
+```
+
 ## Lokales DNS mit Pi-hole + Unbound auf Raspberry Pi
 
 ### Übersicht
@@ -656,7 +753,7 @@ networks:
 
 #### Environment-Konfiguration
 ```bash
-# Pi #1: /opt/dns-stack/.env
+# Pi #1: /opt/homelab/dns-stack/.env
 PI_NUMBER=01
 PI_IP=192.168.1.3
 REMOTE_PI_IP=192.168.1.4
@@ -667,7 +764,7 @@ NETCUP_CUSTOMER_NUMBER=123456
 NETCUP_API_KEY=your-api-key
 NETCUP_API_PASSWORD=your-api-password
 
-# Pi #2: /opt/dns-stack/.env  
+# Pi #2: /opt/homelab/dns-stack/.env  
 PI_NUMBER=02
 PI_IP=192.168.1.4
 REMOTE_PI_IP=192.168.1.3
@@ -681,7 +778,7 @@ NETCUP_API_PASSWORD=your-api-password
 
 #### Unbound Konfiguration
 ```bash
-# ./unbound.conf (identisch auf beiden Pis)
+# /opt/homelab/dns-stack/unbound.conf (identisch auf beiden Pis)
 server:
     interface: 0.0.0.0
     port: 5053
@@ -725,6 +822,18 @@ forward-zone:
 
 ### Deployment-Strategie
 
+#### Basis-Setup (beide Pis)
+```bash
+# Einheitliche Ordnerstruktur erstellen
+sudo mkdir -p /opt/homelab/{dns-stack,traefik,homeassistant,monitoring,backup}
+sudo chown -R $USER:$USER /opt/homelab
+chmod 755 /opt/homelab
+
+# Sichere Berechtigungen für sensible Dateien
+find /opt/homelab -name ".env" -exec chmod 600 {} \; 2>/dev/null || true
+find /opt/homelab -name "docker-compose.yml" -exec chmod 644 {} \; 2>/dev/null || true
+```
+
 #### Phase 1: Erstes Raspberry Pi
 ```bash
 # 1. Raspberry Pi OS installieren
@@ -735,38 +844,56 @@ sudo usermod -aG docker pi
 # 3. netcup API Credentials bereitlegen
 # (aus netcup Customer Control Panel → API)
 
-# 4. DNS-Stack mit Traefik deployen
-git clone <your-dns-config-repo>
-cd dns-stack
-# Environment-Datei mit netcup Credentials erstellen
-cp .env.example .env
-# .env editieren mit PI_NUMBER=01, IPs und netcup API
+# 4. Basis-Ordnerstruktur erstellen
+sudo mkdir -p /opt/homelab/dns-stack
+sudo chown -R pi:pi /opt/homelab
+
+# 5. DNS-Stack mit Traefik deployen
+cd /opt/homelab/dns-stack
+git clone <your-dns-config-repo> .
+# Oder manuell Dateien erstellen:
+# - docker-compose.yml
+# - .env (mit PI_NUMBER=01, IPs und netcup API)
+# - unbound.conf
+# - gravity-sync/
+
+# 6. Stack starten
 docker-compose up -d
 
-# 5. HTTPS-Zugriff testen
+# 7. HTTPS-Zugriff testen
 curl -k https://pihole-01.lab.enzmann.online
 
-# 6. Als Primary DNS in UniFi eintragen (192.168.1.3)
-# 7. Stabilität für 1-2 Wochen testen
+# 8. Als Primary DNS in UniFi eintragen (192.168.1.3)
+# 9. Stabilität für 1-2 Wochen testen
 ```
 
 #### Phase 2: Zweites Raspberry Pi  
 ```bash
 # 1. Identische Installation wie Pi #1
-# 2. Environment anpassen: PI_NUMBER=02, IP=192.168.1.4
-# 3. SSH-Keys für Gravity Sync einrichten
+# 2. Basis-Ordnerstruktur erstellen
+sudo mkdir -p /opt/homelab/dns-stack
+sudo chown -R pi:pi /opt/homelab
+
+# 3. Konfiguration von Pi #1 kopieren
+scp -r pi@192.168.1.3:/opt/homelab/dns-stack/* /opt/homelab/dns-stack/
+
+# 4. Environment für Pi #2 anpassen
+cd /opt/homelab/dns-stack
+# .env editieren: PI_NUMBER=02, IP=192.168.1.4, REMOTE_PI_IP=192.168.1.3
+
+# 5. SSH-Keys für Gravity Sync einrichten
 ssh-keygen -t rsa -b 4096 -C "gravity-sync"
 ssh-copy-id pi@192.168.1.3  # Vom zweiten Pi zum ersten
 
-# 4. Docker Stack starten
+# 6. Docker Stack starten
 docker-compose up -d
 
-# 5. HTTPS-Zugriff testen
+# 7. HTTPS-Zugriff testen
 curl -k https://pihole-02.lab.enzmann.online
 
-# 6. Als Secondary DNS in UniFi hinzufügen (192.168.1.4)
-# 7. Gravity Sync zwischen beiden Pis aktivieren
-# 8. Load Balancing und Failover testen
+# 8. Als Secondary DNS in UniFi hinzufügen (192.168.1.4)
+# 9. Gravity Sync zwischen beiden Pis aktivieren
+# 10. Load Balancing und Failover testen
 ```
 
 ### Hochverfügbarkeit und Synchronisation
@@ -794,21 +921,46 @@ curl -k https://pihole-02.lab.enzmann.online
 #### Docker Container Updates
 ```bash
 # Einzelner Pi (Rolling Update):
-cd /opt/dns-stack
+cd /opt/homelab/dns-stack
 docker-compose pull
 docker-compose up -d
 
 # Automatisierung via Cron:
-0 3 * * 0 cd /opt/dns-stack && docker-compose pull && docker-compose up -d
+0 3 * * 0 cd /opt/homelab/dns-stack && docker-compose pull && docker-compose up -d
 ```
 
 #### Backup-Strategie
 ```bash
-# Pi-hole Konfiguration backup
+# Komplette Homelab-Konfiguration backup
+sudo tar -czf /opt/homelab/backup/homelab-backup-$(date +%Y%m%d).tar.gz \
+  --exclude=/opt/homelab/backup \
+  /opt/homelab/
+
+# Pi-hole spezifisches Backup
+cd /opt/homelab/dns-stack
 docker-compose exec pihole pihole -a -t
 
-# Volume Backup
-sudo cp -r /var/lib/docker/volumes/dns-stack_pihole_config /backup/
+# Volume Backup (falls lokale Volumes verwendet)
+sudo cp -r /var/lib/docker/volumes/dns-stack_* /opt/homelab/backup/
+
+# Konfigurationsdateien separat sichern
+cp /opt/homelab/dns-stack/{.env,unbound.conf,docker-compose.yml} /opt/homelab/backup/
+```
+
+#### Restore-Prozedur
+```bash
+# Homelab-Konfiguration wiederherstellen
+sudo tar -xzf /opt/homelab/backup/homelab-backup-20241215.tar.gz -C /
+
+# Berechtigungen nach Restore korrigieren
+sudo chown -R pi:pi /opt/homelab
+find /opt/homelab -name ".env" -exec chmod 600 {} \;
+find /opt/homelab -name "docker-compose.yml" -exec chmod 644 {} \;
+
+# Services neu starten
+cd /opt/homelab/dns-stack
+docker-compose down
+docker-compose up -d
 ```
 
 ### Pi-hole + Unbound Setup
@@ -1178,7 +1330,7 @@ NETCUP_API_PASSWORD=your-api-password
 
 #### Home Assistant
 ```yaml
-# homeassistant/docker-compose.yml
+# /opt/homelab/homeassistant/docker-compose.yml
 services:
   homeassistant:
     image: homeassistant/home-assistant:stable
@@ -1199,7 +1351,7 @@ networks:
 
 #### Grafana
 ```yaml
-# monitoring/docker-compose.yml
+# /opt/homelab/monitoring/docker-compose.yml
 services:
   grafana:
     image: grafana/grafana:latest
@@ -1217,7 +1369,7 @@ services:
 
 #### Portainer
 ```yaml
-# portainer/docker-compose.yml
+# /opt/homelab/portainer/docker-compose.yml
 services:
   portainer:
     image: portainer/portainer-ce:latest
