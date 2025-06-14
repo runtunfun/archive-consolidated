@@ -9,7 +9,7 @@ VLAN: 200
 Subnetz: 192.168.200.0/24 (254 IPs)
 Gateway: 192.168.200.1
 DNS-Server: 192.168.1.3 (nur DNS-Auflösung)
-Domain: guest.enzmann.online
+Domain: guest.homelab.example
 WiFi-Netzwerk: "Enzian-Gast"
 WiFi-Passwort: [Einfaches, gästefreundliches Passwort]
 ```
@@ -45,7 +45,7 @@ WiFi-Passwort: [Einfaches, gästefreundliches Passwort]
 # UniFi Controller → Networks → Guest-VLAN
 DHCP-Server: Aktiviert
 Lease-Zeit: 4 Stunden (kurz für bessere Sicherheit)
-Domain-Name: guest.enzmann.online
+Domain-Name: guest.homelab.example
 DNS-Server: 192.168.1.3, 8.8.8.8 (Fallback)
 NTP-Server: 192.168.1.3 (falls verfügbar), pool.ntp.org
 Default-Gateway: 192.168.200.1
@@ -371,7 +371,7 @@ Bandbreite: Bis 50 Mbit/s
 **Digitales Portal (optional):**
 ```yaml
 Captive Portal:
-  URL: http://guest.enzmann.online
+  URL: http://guest.homelab.example
   Features:
     - Willkommens-Seite
     - Nutzungsbedingungen

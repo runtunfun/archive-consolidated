@@ -17,7 +17,7 @@ Das SSL/TLS-Setup stellt sicher, dass alle Homelab-Services über verschlüsselt
 
 ```bash
 # Wildcard für alle Services (automatisch von Traefik verwaltet)
-*.enzmann.online          → DNS-Challenge TXT Records
+*.homelab.example          → DNS-Challenge TXT Records
 
 # Keine manuellen A-Records für lokale Services nötig!
 # Traefik erstellt automatisch TXT-Records für Let's Encrypt
@@ -32,7 +32,7 @@ command:
   # Let's Encrypt mit netcup DNS-Challenge für Wildcards
   - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
   - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
-  - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+  - "--certificatesresolvers.letsencrypt.acme.email=admin@homelab.example"
   - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
 
 environment:
@@ -112,13 +112,13 @@ services:
   grafana:
     image: grafana/grafana:latest
     environment:
-      - GF_SERVER_ROOT_URL=https://grafana-01.lab.enzmann.online
+      - GF_SERVER_ROOT_URL=https://grafana-01.lab.homelab.example
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
     networks:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.enzmann.online`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.homelab.example`)"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 ```
@@ -138,7 +138,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer-01.lab.enzmann.online`)"
+      - "traefik.http.routers.portainer.rule=Host(`portainer-01.lab.homelab.example`)"
       - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       # IP-Whitelist für Management-Interface
@@ -169,7 +169,7 @@ docker service ls | grep traefik
 docker service logs traefik_traefik --tail 50
 
 # Dashboard-Zugriff testen
-curl -k https://traefik-01.lab.enzmann.online
+curl -k https://traefik-01.lab.homelab.example
 ```
 
 ### Service-Integration testen
@@ -183,7 +183,7 @@ docker stack deploy -c docker-compose.yml new-service
 docker service logs traefik_traefik --tail 50 -f
 
 # HTTPS-Zugriff testen
-curl -k https://new-service-01.lab.enzmann.online
+curl -k https://new-service-01.lab.homelab.example
 ```
 
 ## Troubleshooting
@@ -209,11 +209,11 @@ docker exec -it $(docker ps -q -f name=traefik) cat /letsencrypt/acme.json | jq 
 
 ```bash
 # DNS Auflösung testen (lokal)
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig ha-prod-01.lab.enzmann.online @192.168.1.3
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig ha-prod-01.lab.homelab.example @192.168.1.3
 
 # Traefik Dashboard prüfen
-curl -k https://traefik-01.lab.enzmann.online
+curl -k https://traefik-01.lab.homelab.example
 # Router und Services Status kontrollieren
 
 # Service Labels überprüfen
@@ -227,8 +227,8 @@ curl -v http://192.168.1.41:8123  # Direkter Service-Zugriff
 
 ```bash
 # DNS Challenge manuell testen
-dig TXT _acme-challenge.lab.enzmann.online
-dig TXT _acme-challenge.iot.enzmann.online
+dig TXT _acme-challenge.lab.homelab.example
+dig TXT _acme-challenge.iot.homelab.example
 
 # netcup DNS API manuell testen
 # (DNS-Record erstellen/löschen via API)

@@ -104,7 +104,7 @@ gpg --full-generate-key
 # - Schlüsseltyp: RSA (4096 bit)
 # - Gültigkeitsdauer: 2 Jahre  
 # - Name: Homelab Administration
-# - Email: admin@enzmann.online
+# - Email: admin@homelab.example
 ```
 
 ```bash title="Key-ID ermitteln"

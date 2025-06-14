@@ -63,7 +63,7 @@ services:
       - portainer_admin_password
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer-01.lab.enzmann.online`)"
+      - "traefik.http.routers.portainer.rule=Host(`portainer-01.lab.homelab.example`)"
       - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "homelab.service.name=portainer"
@@ -168,7 +168,7 @@ docker service ps portainer_portainer
 
 ### Erste Anmeldung
 
-1. **Web-Interface öffnen:** https://portainer-01.lab.enzmann.online
+1. **Web-Interface öffnen:** https://portainer-01.lab.homelab.example
 2. **Admin-User anlegen:** (Passwort aus .env verwenden)
 3. **Environment auswählen:** "Docker Swarm" 
 4. **Endpoint konfigurieren:** Lokaler Docker Socket bereits verbunden
@@ -250,8 +250,8 @@ services:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_INCLUDE_RESTARTING: "true"
       WATCHTOWER_NOTIFICATIONS: "email"
-      WATCHTOWER_NOTIFICATION_EMAIL_FROM: "watchtower@enzmann.online"
-      WATCHTOWER_NOTIFICATION_EMAIL_TO: "admin@enzmann.online"
+      WATCHTOWER_NOTIFICATION_EMAIL_FROM: "watchtower@homelab.example"
+      WATCHTOWER_NOTIFICATION_EMAIL_TO: "admin@homelab.example"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -283,7 +283,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dozzle.rule=Host(`logs-01.lab.enzmann.online`)"
+      - "traefik.http.routers.dozzle.rule=Host(`logs-01.lab.homelab.example`)"
       - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
       - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
       - "homelab.service.name=dozzle"
@@ -344,7 +344,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.registry.rule=Host(`registry-01.lab.enzmann.online`)"
+      - "traefik.http.routers.registry.rule=Host(`registry-01.lab.homelab.example`)"
       - "traefik.http.routers.registry.tls.certresolver=letsencrypt"
       - "traefik.http.services.registry.loadbalancer.server.port=5000"
       - "homelab.service.name=registry"
@@ -563,7 +563,7 @@ docker service ps portainer_portainer
 docker service logs portainer_portainer --tail 50
 
 # Traefik-Routing prüfen
-curl -k https://traefik-01.lab.enzmann.online/api/http/routers
+curl -k https://traefik-01.lab.homelab.example/api/http/routers
 
 # Direkter Zugriff (Fallback)
 docker ps | grep portainer

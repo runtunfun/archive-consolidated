@@ -395,7 +395,7 @@ ping 192.168.100.10  # Homematic CCU
 curl http://192.168.101.1  # Hue Bridge
 
 # Von IOT zu Standard-LAN (nur erlaubte Services)
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3  # DNS sollte funktionieren
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3  # DNS sollte funktionieren
 curl -m 5 http://192.168.1.48  # Traefik sollte funktionieren (falls erlaubt)
 curl -m 5 http://192.168.1.50  # Portainer sollte blockiert sein
 

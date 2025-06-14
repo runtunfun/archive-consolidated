@@ -23,26 +23,26 @@ Das Standard-LAN beherbergt die Homelab-Infrastruktur und Management-Geräte. Es
 ### Core Infrastructure (192.168.1.2-20)
 
 ```yaml
-192.168.1.2:    unifi-controller-01.lab.enzmann.online
-192.168.1.3:    pihole-01.lab.enzmann.online
-192.168.1.4:    pihole-02.lab.enzmann.online
-192.168.1.10:   switch-main-01.lab.enzmann.online
-192.168.1.11:   ap-wz-01.lab.enzmann.online
-192.168.1.12:   ap-sz-01.lab.enzmann.online
+192.168.1.2:    unifi-controller-01.lab.homelab.example
+192.168.1.3:    pihole-01.lab.homelab.example
+192.168.1.4:    pihole-02.lab.homelab.example
+192.168.1.10:   switch-main-01.lab.homelab.example
+192.168.1.11:   ap-wz-01.lab.homelab.example
+192.168.1.12:   ap-sz-01.lab.homelab.example
 # 192.168.1.13-20: Reserve für weitere Infrastructure
 ```
 
 ### Homelab Services (192.168.1.41-99)
 
 ```yaml
-192.168.1.41:   ha-prod-01.lab.enzmann.online
-192.168.1.42:   ha-test-01.lab.enzmann.online
-192.168.1.45:   docker-01.lab.enzmann.online
-192.168.1.48:   traefik-01.lab.enzmann.online
-192.168.1.50:   portainer-01.lab.enzmann.online
-192.168.1.51:   grafana-01.lab.enzmann.online
-192.168.1.52:   influx-01.lab.enzmann.online
-192.168.1.55:   mqtt-01.lab.enzmann.online
+192.168.1.41:   ha-prod-01.lab.homelab.example
+192.168.1.42:   ha-test-01.lab.homelab.example
+192.168.1.45:   docker-01.lab.homelab.example
+192.168.1.48:   traefik-01.lab.homelab.example
+192.168.1.50:   portainer-01.lab.homelab.example
+192.168.1.51:   grafana-01.lab.homelab.example
+192.168.1.52:   influx-01.lab.homelab.example
+192.168.1.55:   mqtt-01.lab.homelab.example
 # 192.168.1.60-99: Reserve für weitere Services
 ```
 
@@ -72,25 +72,25 @@ Das IOT-VLAN nutzt einen /22 Adressraum (1024 IPs) für umfangreiche Smart Home 
 #### Unterverteilung (192.168.100.1-62)
 
 ```yaml
-192.168.100.10:  hm-ccu-uv-01.iot.enzmann.online         # Homematic CCU
-192.168.100.11:  switch-uv-01.iot.enzmann.online         # IOT Switch (optional)
+192.168.100.10:  hm-ccu-uv-01.iot.homelab.example         # Homematic CCU
+192.168.100.11:  switch-uv-01.iot.homelab.example         # IOT Switch (optional)
 ```
 
 #### Wohnzimmer (192.168.101.1-62)
 
 ```yaml
-192.168.101.1:   hue-wz-bridge01.iot.enzmann.online      # Hue Bridge
-192.168.101.10:  sonos-wz-01.iot.enzmann.online          # Sonos One
-192.168.101.11:  hue-wz-01.iot.enzmann.online            # Hue Deckenlampe
-192.168.101.15:  tv-wz-01.iot.enzmann.online             # Samsung Smart TV
+192.168.101.1:   hue-wz-bridge01.iot.homelab.example      # Hue Bridge
+192.168.101.10:  sonos-wz-01.iot.homelab.example          # Sonos One
+192.168.101.11:  hue-wz-01.iot.homelab.example            # Hue Deckenlampe
+192.168.101.15:  tv-wz-01.iot.homelab.example             # Samsung Smart TV
 ```
 
 #### Mobile Clients (192.168.101.191-230)
 
 ```yaml
-192.168.101.200: iphone-admin-01.iot.enzmann.online      # iPhone Admin
-192.168.101.201: ipad-wz-01.iot.enzmann.online          # iPad Wohnzimmer
-192.168.101.202: tablet-android-01.iot.enzmann.online   # Android Tablet
+192.168.101.200: iphone-admin-01.iot.homelab.example      # iPhone Admin
+192.168.101.201: ipad-wz-01.iot.homelab.example          # iPad Wohnzimmer
+192.168.101.202: tablet-android-01.iot.homelab.example   # Android Tablet
 ```
 
 !!! tip "Raum-basierte Organisation"
@@ -115,7 +115,7 @@ Das Gäste-VLAN bietet isolierten Internet-Zugang ohne Zugriff auf lokale Ressou
 Lease-Zeit:       4 Stunden (kurz für bessere Sicherheit)
 DNS-Server:       192.168.1.3 (Pi-hole für Ad-Blocking)
 Gateway:          192.168.200.1
-Domäne:          guest.enzmann.online
+Domäne:          guest.homelab.example
 Client-Isolation: Aktiviert
 ```
 
@@ -187,24 +187,24 @@ Gäste-VLAN:    245 freie IPs (mehr als ausreichend)
 ```bash
 # Lokale DNS-Einträge für alle VLANs
 # Standard-LAN
-192.168.1.41    ha-prod-01.lab.enzmann.online
-192.168.1.48    traefik-01.lab.enzmann.online
+192.168.1.41    ha-prod-01.lab.homelab.example
+192.168.1.48    traefik-01.lab.homelab.example
 
 # IOT-VLAN
-192.168.100.10  hm-ccu-uv-01.iot.enzmann.online
-192.168.101.1   hue-wz-bridge01.iot.enzmann.online
+192.168.100.10  hm-ccu-uv-01.iot.homelab.example
+192.168.101.1   hue-wz-bridge01.iot.homelab.example
 
 # Gäste-VLAN (nur bei Bedarf)
-192.168.200.100 guest-device-01.guest.enzmann.online
+192.168.200.100 guest-device-01.guest.homelab.example
 ```
 
 ### Wildcard-Domains
 
 ```bash
 # dnsmasq Wildcard-Konfiguration
-address=/lab.enzmann.online/192.168.1.48      # → Traefik
-address=/iot.enzmann.online/192.168.1.48      # → Traefik
-address=/guest.enzmann.online/192.168.1.48    # → Traefik
+address=/lab.homelab.example/192.168.1.48      # → Traefik
+address=/iot.homelab.example/192.168.1.48      # → Traefik
+address=/guest.homelab.example/192.168.1.48    # → Traefik
 ```
 
 ## Aufwandsschätzung

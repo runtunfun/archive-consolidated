@@ -73,7 +73,7 @@ HA_TZ=Europe/Berlin
 
 # Database Configuration
 HA_DB_TYPE=postgresql
-HA_DB_HOST=postgres-01.lab.enzmann.online
+HA_DB_HOST=postgres-01.lab.homelab.example
 HA_DB_NAME=homeassistant
 HA_DB_USER=homeassistant
 HA_DB_PASSWORD=CHANGE_ME_TO_SECURE_DB_PASSWORD
@@ -82,12 +82,12 @@ HA_DB_PASSWORD=CHANGE_ME_TO_SECURE_DB_PASSWORD
 HA_ADMIN_PASSWORD=CHANGE_ME_TO_SECURE_ADMIN_PASSWORD
 
 # Integrations
-MQTT_BROKER=mqtt-01.lab.enzmann.online
+MQTT_BROKER=mqtt-01.lab.homelab.example
 MQTT_USER=homeassistant
 MQTT_PASSWORD=CHANGE_ME_TO_SECURE_MQTT_PASSWORD
 
 # Monitoring
-INFLUXDB_HOST=influx-01.lab.enzmann.online
+INFLUXDB_HOST=influx-01.lab.homelab.example
 INFLUXDB_TOKEN=CHANGE_ME_TO_SECURE_INFLUX_TOKEN
 ```
 
@@ -99,7 +99,7 @@ INFLUXDB_TOKEN=CHANGE_ME_TO_SECURE_INFLUX_TOKEN
 labels:
   # Traefik Integration (falls Web-Interface vorhanden)
   - "traefik.enable=true"
-  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.enzmann.online`)"
+  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.homelab.example`)"
   - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=letsencrypt"
   - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${SERVICE_PORT}"
   
@@ -266,11 +266,11 @@ docker service ls
 docker ps
 
 # DNS-Auflösung testen
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
 
 # HTTPS-Zugriff testen
-curl -k https://ha-prod-01.lab.enzmann.online
-curl -k https://grafana-01.lab.enzmann.online
+curl -k https://ha-prod-01.lab.homelab.example
+curl -k https://grafana-01.lab.homelab.example
 ```
 
 ## Service-Updates
@@ -388,7 +388,7 @@ HA_TZ=Europe/Berlin
 
 # Database Configuration
 HA_DB_TYPE=postgresql
-HA_DB_HOST=postgres-01.lab.enzmann.online
+HA_DB_HOST=postgres-01.lab.homelab.example
 HA_DB_NAME=homeassistant
 HA_DB_USER=homeassistant
 HA_DB_PASSWORD=CHANGE_ME_TO_SECURE_DB_PASSWORD
@@ -397,12 +397,12 @@ HA_DB_PASSWORD=CHANGE_ME_TO_SECURE_DB_PASSWORD
 HA_ADMIN_PASSWORD=CHANGE_ME_TO_SECURE_ADMIN_PASSWORD
 
 # Integrations
-MQTT_BROKER=mqtt-01.lab.enzmann.online
+MQTT_BROKER=mqtt-01.lab.homelab.example
 MQTT_USER=homeassistant
 MQTT_PASSWORD=CHANGE_ME_TO_SECURE_MQTT_PASSWORD
 
 # Monitoring
-INFLUXDB_HOST=influx-01.lab.enzmann.online
+INFLUXDB_HOST=influx-01.lab.homelab.example
 INFLUXDB_TOKEN=CHANGE_ME_TO_SECURE_INFLUX_TOKEN
 ```
 
@@ -414,7 +414,7 @@ INFLUXDB_TOKEN=CHANGE_ME_TO_SECURE_INFLUX_TOKEN
 labels:
   # Traefik Integration (falls Web-Interface vorhanden)
   - "traefik.enable=true"
-  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.enzmann.online`)"
+  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.homelab.example`)"
   - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=letsencrypt"
   - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${SERVICE_PORT}"
   
@@ -581,11 +581,11 @@ docker service ls
 docker ps
 
 # DNS-Auflösung testen
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
 
 # HTTPS-Zugriff testen
-curl -k https://ha-prod-01.lab.enzmann.online
-curl -k https://grafana-01.lab.enzmann.online
+curl -k https://ha-prod-01.lab.homelab.example
+curl -k https://grafana-01.lab.homelab.example
 ```
 
 ## Service-Updates

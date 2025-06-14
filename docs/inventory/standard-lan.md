@@ -9,7 +9,7 @@ VLAN: Default/1 (Untagged)
 Subnetz: 192.168.1.0/24
 Gateway: 192.168.1.1
 DNS-Server: 192.168.1.3, 192.168.1.4
-Domain: lab.enzmann.online
+Domain: lab.homelab.example
 ```
 
 !!! info "IP-Adressierung"
@@ -27,17 +27,17 @@ Domain: lab.enzmann.online
 
 | Gerät | IP | DNS-Name | Öffentlicher Zugang | Funktion |
 |-------|----|---------|--------------------|----------|
-| **UniFi Controller** | 192.168.1.2 | unifi-controller-01.lab.enzmann.online | https://unifi-controller-01.lab.enzmann.online:8443 | Zentrale Netzwerkverwaltung |
-| **UniFi Switch Main** | 192.168.1.10 | switch-main-01.lab.enzmann.online | - | Hauptswitch Arbeitszimmer |
-| **UniFi AP Wohnzimmer** | 192.168.1.11 | ap-wz-01.lab.enzmann.online | - | Access Point Wohnzimmer |
-| **UniFi AP Schlafzimmer** | 192.168.1.12 | ap-sz-01.lab.enzmann.online | - | Access Point Schlafzimmer |
+| **UniFi Controller** | 192.168.1.2 | unifi-controller-01.lab.homelab.example | https://unifi-controller-01.lab.homelab.example:8443 | Zentrale Netzwerkverwaltung |
+| **UniFi Switch Main** | 192.168.1.10 | switch-main-01.lab.homelab.example | - | Hauptswitch Arbeitszimmer |
+| **UniFi AP Wohnzimmer** | 192.168.1.11 | ap-wz-01.lab.homelab.example | - | Access Point Wohnzimmer |
+| **UniFi AP Schlafzimmer** | 192.168.1.12 | ap-sz-01.lab.homelab.example | - | Access Point Schlafzimmer |
 
 ### DNS-Infrastruktur
 
 | Gerät | IP | DNS-Name | Öffentlicher Zugang | Funktion |
 |-------|----|---------|--------------------|----------|
-| **Pi-hole Primary** | 192.168.1.3 | pihole-01.lab.enzmann.online | https://pihole-01.lab.enzmann.online | DNS + Ad-Blocking + Unbound |
-| **Pi-hole Secondary** | 192.168.1.4 | pihole-02.lab.enzmann.online | https://pihole-02.lab.enzmann.online | Redundante DNS (optional) |
+| **Pi-hole Primary** | 192.168.1.3 | pihole-01.lab.homelab.example | https://pihole-01.lab.homelab.example | DNS + Ad-Blocking + Unbound |
+| **Pi-hole Secondary** | 192.168.1.4 | pihole-02.lab.homelab.example | https://pihole-02.lab.homelab.example | Redundante DNS (optional) |
 
 !!! warning "Kritische Infrastruktur"
     Die DNS-Server sind essentiell für den Betrieb aller Services. Bei Ausfall sind alle HTTPS-Dienste über DNS-Namen nicht mehr erreichbar.
@@ -69,9 +69,9 @@ Services: Pi-hole, Unbound, Traefik
 
 | Gerät | IP | DNS-Name | Öffentlicher Zugang | Spezifikation | Funktion |
 |-------|----|---------|--------------------|---------------|----------|
-| **Proxmox Host 1** | 192.168.1.21 | pve-01.lab.enzmann.online | https://pve-01.lab.enzmann.online:8006 | 32GB RAM, 1TB NVMe | Hauptserver |
-| **Proxmox Host 2** | 192.168.1.22 | pve-02.lab.enzmann.online | https://pve-02.lab.enzmann.online:8006 | 16GB RAM, 500GB SSD | Backup/Cluster (optional) |
-| **TrueNAS Scale** | 192.168.1.25 | nas-01.lab.enzmann.online | https://nas-01.lab.enzmann.online | 16GB RAM, 4x4TB RAID-Z1 | Zentraler Storage |
+| **Proxmox Host 1** | 192.168.1.21 | pve-01.lab.homelab.example | https://pve-01.lab.homelab.example:8006 | 32GB RAM, 1TB NVMe | Hauptserver |
+| **Proxmox Host 2** | 192.168.1.22 | pve-02.lab.homelab.example | https://pve-02.lab.homelab.example:8006 | 16GB RAM, 500GB SSD | Backup/Cluster (optional) |
+| **TrueNAS Scale** | 192.168.1.25 | nas-01.lab.homelab.example | https://nas-01.lab.homelab.example | 16GB RAM, 4x4TB RAID-Z1 | Zentraler Storage |
 
 ### Hardware-Details
 
@@ -105,35 +105,35 @@ Netzwerk: 2x Gigabit Ethernet (LACP)
 
 | Service | IP | DNS-Name | Öffentlicher Zugang | Container | Funktion |
 |---------|----|---------|--------------------|-----------|----------|
-| **Home Assistant Prod** | 192.168.1.41 | ha-prod-01.lab.enzmann.online | https://ha-prod-01.lab.enzmann.online | Docker | Produktiv HA Instance |
-| **Home Assistant Test** | 192.168.1.42 | ha-test-01.lab.enzmann.online | - | Docker | Test/Development |
-| **MQTT Broker** | 192.168.1.55 | mqtt-01.lab.enzmann.online | - | Mosquitto | IOT Messaging |
+| **Home Assistant Prod** | 192.168.1.41 | ha-prod-01.lab.homelab.example | https://ha-prod-01.lab.homelab.example | Docker | Produktiv HA Instance |
+| **Home Assistant Test** | 192.168.1.42 | ha-test-01.lab.homelab.example | - | Docker | Test/Development |
+| **MQTT Broker** | 192.168.1.55 | mqtt-01.lab.homelab.example | - | Mosquitto | IOT Messaging |
 
 ### Container-Orchestrierung
 
 | Service | IP | DNS-Name | Öffentlicher Zugang | Typ | Funktion |
 |---------|----|---------|--------------------|-----|----------|
-| **Docker Swarm Manager** | 192.168.1.45 | docker-01.lab.enzmann.online | - | Host | Swarm Leader |
-| **Docker Swarm Worker 1** | 192.168.1.46 | docker-02.lab.enzmann.online | - | Host | Swarm Worker (optional) |
-| **Docker Swarm Worker 2** | 192.168.1.47 | docker-03.lab.enzmann.online | - | Host | Swarm Worker (optional) |
+| **Docker Swarm Manager** | 192.168.1.45 | docker-01.lab.homelab.example | - | Host | Swarm Leader |
+| **Docker Swarm Worker 1** | 192.168.1.46 | docker-02.lab.homelab.example | - | Host | Swarm Worker (optional) |
+| **Docker Swarm Worker 2** | 192.168.1.47 | docker-03.lab.homelab.example | - | Host | Swarm Worker (optional) |
 
 ### Reverse Proxy & Management
 
 | Service | IP | DNS-Name | Öffentlicher Zugang | Container | Funktion |
 |---------|----|---------|--------------------|-----------|----------|
-| **Traefik Reverse Proxy** | 192.168.1.48 | traefik-01.lab.enzmann.online | https://traefik-01.lab.enzmann.online | Docker | SSL-Terminierung |
-| **Portainer** | 192.168.1.50 | portainer-01.lab.enzmann.online | https://portainer-01.lab.enzmann.online | Docker | Docker Management |
+| **Traefik Reverse Proxy** | 192.168.1.48 | traefik-01.lab.homelab.example | https://traefik-01.lab.homelab.example | Docker | SSL-Terminierung |
+| **Portainer** | 192.168.1.50 | portainer-01.lab.homelab.example | https://portainer-01.lab.homelab.example | Docker | Docker Management |
 
 ### Monitoring & Observability
 
 | Service | IP | DNS-Name | Öffentlicher Zugang | Container | Funktion |
 |---------|----|---------|--------------------|-----------|----------|
-| **Grafana** | 192.168.1.51 | grafana-01.lab.enzmann.online | https://grafana-01.lab.enzmann.online | Docker | Dashboard |
-| **InfluxDB** | 192.168.1.52 | influx-01.lab.enzmann.online | - | Docker | Time Series DB |
-| **Prometheus** | 192.168.1.56 | prometheus-01.lab.enzmann.online | - | Docker | Metrics Collection |
-| **Node Exporter** | 192.168.1.57 | nodeexp-01.lab.enzmann.online | - | Docker | System Metrics |
-| **Loki** | 192.168.1.58 | loki-01.lab.enzmann.online | - | Docker | Log Aggregation |
-| **Jaeger** | 192.168.1.59 | jaeger-01.lab.enzmann.online | - | Docker | Distributed Tracing |
+| **Grafana** | 192.168.1.51 | grafana-01.lab.homelab.example | https://grafana-01.lab.homelab.example | Docker | Dashboard |
+| **InfluxDB** | 192.168.1.52 | influx-01.lab.homelab.example | - | Docker | Time Series DB |
+| **Prometheus** | 192.168.1.56 | prometheus-01.lab.homelab.example | - | Docker | Metrics Collection |
+| **Node Exporter** | 192.168.1.57 | nodeexp-01.lab.homelab.example | - | Docker | System Metrics |
+| **Loki** | 192.168.1.58 | loki-01.lab.homelab.example | - | Docker | Log Aggregation |
+| **Jaeger** | 192.168.1.59 | jaeger-01.lab.homelab.example | - | Docker | Distributed Tracing |
 
 ### Service-Architektur
 
@@ -141,7 +141,7 @@ Netzwerk: 2x Gigabit Ethernet (LACP)
 graph TB
     subgraph "External Access"
         Internet[Internet]
-        Domain[enzmann.online]
+        Domain[homelab.example]
     end
     
     subgraph "Core Infrastructure"
@@ -193,9 +193,9 @@ Mögliche Services:
 
 | Gerät | IP | DNS-Name | Zugriff | Funktion |
 |-------|----|---------|---------|---------| 
-| **Admin Desktop** | 192.168.1.205 | desktop-admin-01.lab.enzmann.online | Kabelgebunden | Management PC |
-| **Admin Laptop** | 192.168.1.206 | laptop-admin-01.lab.enzmann.online | WiFi "Enzian" | Mobile Management |
-| **Drucker** | 192.168.1.210 | printer-01.lab.enzmann.online | WiFi "Enzian" | Netzwerkdrucker |
+| **Admin Desktop** | 192.168.1.205 | desktop-admin-01.lab.homelab.example | Kabelgebunden | Management PC |
+| **Admin Laptop** | 192.168.1.206 | laptop-admin-01.lab.homelab.example | WiFi "Enzian" | Mobile Management |
+| **Drucker** | 192.168.1.210 | printer-01.lab.homelab.example | WiFi "Enzian" | Netzwerkdrucker |
 
 ### Reservierte Adressen
 
@@ -217,29 +217,29 @@ Verwendung:
 
 ```bash
 # Core Infrastructure
-192.168.1.2    unifi-controller-01.lab.enzmann.online
-192.168.1.3    pihole-01.lab.enzmann.online
-192.168.1.4    pihole-02.lab.enzmann.online
+192.168.1.2    unifi-controller-01.lab.homelab.example
+192.168.1.3    pihole-01.lab.homelab.example
+192.168.1.4    pihole-02.lab.homelab.example
 
 # Homelab Core
-192.168.1.21   pve-01.lab.enzmann.online
-192.168.1.22   pve-02.lab.enzmann.online
-192.168.1.25   nas-01.lab.enzmann.online
+192.168.1.21   pve-01.lab.homelab.example
+192.168.1.22   pve-02.lab.homelab.example
+192.168.1.25   nas-01.lab.homelab.example
 
 # Homelab Services
-192.168.1.41   ha-prod-01.lab.enzmann.online
-192.168.1.48   traefik-01.lab.enzmann.online
-192.168.1.50   portainer-01.lab.enzmann.online
-192.168.1.51   grafana-01.lab.enzmann.online
+192.168.1.41   ha-prod-01.lab.homelab.example
+192.168.1.48   traefik-01.lab.homelab.example
+192.168.1.50   portainer-01.lab.homelab.example
+192.168.1.51   grafana-01.lab.homelab.example
 ```
 
 ### Wildcard-Konfiguration
 
 ```bash
 # /etc/dnsmasq.d/02-lab-wildcard.conf
-address=/lab.enzmann.online/192.168.1.48
+address=/lab.homelab.example/192.168.1.48
 
-# Alle *.lab.enzmann.online Anfragen werden zu Traefik geleitet
+# Alle *.lab.homelab.example Anfragen werden zu Traefik geleitet
 # Traefik routet basierend auf Host-Header zu entsprechenden Services
 ```
 
@@ -247,12 +247,12 @@ address=/lab.enzmann.online/192.168.1.48
 
 ```bash
 # Lokale Auflösung testen
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig @192.168.1.3 ha-prod-01.lab.enzmann.online
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig @192.168.1.3 ha-prod-01.lab.homelab.example
 
 # Wildcard-Auflösung testen
-nslookup test.lab.enzmann.online 192.168.1.3
-dig @192.168.1.3 test.lab.enzmann.online
+nslookup test.lab.homelab.example 192.168.1.3
+dig @192.168.1.3 test.lab.homelab.example
 
 # Externe Auflösung über Unbound testen
 nslookup google.com 192.168.1.3

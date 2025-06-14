@@ -122,7 +122,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@homelab.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     environment:
       NETCUP_CUSTOMER_NUMBER: "${NETCUP_CUSTOMER_NUMBER}"
@@ -138,7 +138,7 @@ services:
       - dns-internal
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik-pi-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik-pi-${PI_NUMBER}.lab.homelab.example`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
     restart: unless-stopped
@@ -162,7 +162,7 @@ services:
     environment:
       TZ: 'Europe/Berlin'
       WEBPASSWORD: '${PIHOLE_PASSWORD}'
-      VIRTUAL_HOST: 'pihole-${PI_NUMBER}.lab.enzmann.online'
+      VIRTUAL_HOST: 'pihole-${PI_NUMBER}.lab.homelab.example'
       FTLCONF_LOCAL_IPV4: '${PI_IP}'
       PIHOLE_DNS_: '172.20.0.2#5053'
     volumes:
@@ -176,7 +176,7 @@ services:
         ipv4_address: 172.20.0.3
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pihole.rule=Host(`pihole-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.pihole.rule=Host(`pihole-${PI_NUMBER}.lab.homelab.example`)"
       - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     depends_on:
@@ -242,15 +242,15 @@ server:
     cache-max-ttl: 86400
 
 forward-zone:
-    name: "lab.enzmann.online"
+    name: "lab.homelab.example"
     forward-addr: 172.20.0.3@53
 
 forward-zone:
-    name: "iot.enzmann.online"  
+    name: "iot.homelab.example"  
     forward-addr: 172.20.0.3@53
 
 forward-zone:
-    name: "guest.enzmann.online"
+    name: "guest.homelab.example"
     forward-addr: 172.20.0.3@53
 ```
 
@@ -268,7 +268,7 @@ docker-compose ps
 ```
 
 !!! success "Checkpoint"
-    DNS sollte jetzt unter https://pihole-01.lab.enzmann.online erreichbar sein.
+    DNS sollte jetzt unter https://pihole-01.lab.homelab.example erreichbar sein.
 
 #### UniFi DNS umstellen
 
@@ -355,7 +355,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@homelab.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
@@ -369,7 +369,7 @@ services:
       - traefik_letsencrypt:/letsencrypt
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik-01.lab.enzmann.online`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik-01.lab.homelab.example`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
     networks:
@@ -436,7 +436,7 @@ services:
       - "8123:8123"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.enzmann.online`)"
+      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.homelab.example`)"
       - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
     deploy:
@@ -523,22 +523,22 @@ docker service logs homeassistant_homeassistant
 
 ```bash
 # Lokale Auflösung testen
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig @192.168.1.3 traefik-01.lab.enzmann.online
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig @192.168.1.3 traefik-01.lab.homelab.example
 
 # Pi-hole Web-Interface
-curl -k https://pihole-01.lab.enzmann.online
+curl -k https://pihole-01.lab.homelab.example
 ```
 
 #### HTTPS-Tests
 
 ```bash
 # Service-Erreichbarkeit
-curl -k https://ha-prod-01.lab.enzmann.online
-curl -k https://traefik-01.lab.enzmann.online
+curl -k https://ha-prod-01.lab.homelab.example
+curl -k https://traefik-01.lab.homelab.example
 
 # Zertifikat-Status prüfen
-openssl s_client -connect traefik-01.lab.enzmann.online:443 -servername traefik-01.lab.enzmann.online
+openssl s_client -connect traefik-01.lab.homelab.example:443 -servername traefik-01.lab.homelab.example
 ```
 
 #### Netzwerk-Tests
@@ -605,7 +605,7 @@ services:
     image: grafana/grafana:latest
     hostname: grafana-01
     environment:
-      GF_SERVER_ROOT_URL: "https://grafana-01.lab.enzmann.online"
+      GF_SERVER_ROOT_URL: "https://grafana-01.lab.homelab.example"
       GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD}"
     volumes:
       - grafana_data:/var/lib/grafana
@@ -614,7 +614,7 @@ services:
       - homelab-internal
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.enzmann.online`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.homelab.example`)"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     deploy:
@@ -716,12 +716,12 @@ echo "======================="
 
 # DNS-Tests
 echo "📡 DNS-Tests..."
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3 > /dev/null && echo "✅ DNS funktioniert" || echo "❌ DNS Problem"
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3 > /dev/null && echo "✅ DNS funktioniert" || echo "❌ DNS Problem"
 
 # Service-Tests
 echo "🌐 Service-Tests..."
-curl -s -k https://traefik-01.lab.enzmann.online > /dev/null && echo "✅ Traefik erreichbar" || echo "❌ Traefik Problem"
-curl -s -k https://ha-prod-01.lab.enzmann.online > /dev/null && echo "✅ Home Assistant erreichbar" || echo "❌ HA Problem"
+curl -s -k https://traefik-01.lab.homelab.example > /dev/null && echo "✅ Traefik erreichbar" || echo "❌ Traefik Problem"
+curl -s -k https://ha-prod-01.lab.homelab.example > /dev/null && echo "✅ Home Assistant erreichbar" || echo "❌ HA Problem"
 
 # Docker Swarm Status
 echo "🐳 Docker Swarm..."

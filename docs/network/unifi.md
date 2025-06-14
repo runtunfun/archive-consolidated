@@ -11,7 +11,7 @@ Die UniFi-Konfiguration bildet das Herzstück der Netzwerk-Infrastruktur. Diese 
 Nach der ersten Einrichtung des UniFi Controllers sind folgende Basis-Konfigurationen vorzunehmen:
 
 ```yaml
-Controller-URL:    https://unifi-controller-01.lab.enzmann.online:8443
+Controller-URL:    https://unifi-controller-01.lab.homelab.example:8443
 Admin-Account:     admin (starkes Passwort verwenden)
 Standort-Name:     Homelab
 Zeitzone:         Europe/Berlin
@@ -46,7 +46,7 @@ DHCP Mode:          UniFi
 DHCP Range:         192.168.1.100 - 192.168.1.200
 Lease Time:         24 Stunden
 DNS Server:         192.168.1.3, 192.168.1.4, 8.8.8.8
-Domain Name:        lab.enzmann.online
+Domain Name:        lab.homelab.example
 IPv6:              Deaktiviert (optional)
 ```
 
@@ -66,7 +66,7 @@ IPv6:              Deaktiviert (optional)
    - DNS Server 1: `192.168.1.3`
    - DNS Server 2: `192.168.1.4`
    - DNS Server 3: `8.8.8.8`
-   - Domain Name: `lab.enzmann.online`
+   - Domain Name: `lab.homelab.example`
 
 ### IOT-VLAN Erstellen
 
@@ -80,7 +80,7 @@ DHCP Mode:          UniFi
 DHCP Range:         192.168.100.50 - 192.168.103.200
 Lease Time:         8 Stunden (kürzer für IOT-Geräte)
 DNS Server:         192.168.1.3, 192.168.1.4
-Domain Name:        iot.enzmann.online
+Domain Name:        iot.homelab.example
 ```
 
 #### IOT-VLAN Konfiguration (GUI)
@@ -101,7 +101,7 @@ Domain Name:        iot.enzmann.online
 5. **DNS Settings**:
    - DNS Server 1: `192.168.1.3`
    - DNS Server 2: `192.168.1.4`
-   - Domain Name: `iot.enzmann.online`
+   - Domain Name: `iot.homelab.example`
 
 ### Gäste-VLAN Erstellen
 
@@ -115,7 +115,7 @@ DHCP Mode:          UniFi
 DHCP Range:         192.168.200.10 - 192.168.200.250
 Lease Time:         4 Stunden (kurz für Gäste)
 DNS Server:         192.168.1.3, 8.8.8.8
-Domain Name:        guest.enzmann.online
+Domain Name:        guest.homelab.example
 Guest Policy:       Aktiviert
 ```
 

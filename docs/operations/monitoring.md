@@ -72,15 +72,15 @@ scrape_configs:
   - job_name: 'node-exporter'
     static_configs:
       - targets: 
-        - 'nodeexporter-01.lab.enzmann.online:9100'
-        - 'nodeexporter-02.lab.enzmann.online:9100'
+        - 'nodeexporter-01.lab.homelab.example:9100'
+        - 'nodeexporter-02.lab.homelab.example:9100'
 
   # Pi-hole Exporter
   - job_name: 'pihole'
     static_configs:
       - targets:
-        - 'pihole-01.lab.enzmann.online:9617'
-        - 'pihole-02.lab.enzmann.online:9617'
+        - 'pihole-01.lab.homelab.example:9617'
+        - 'pihole-02.lab.homelab.example:9617'
 
   # UniFi Exporter
   - job_name: 'unifi'
@@ -90,7 +90,7 @@ scrape_configs:
   # Home Assistant
   - job_name: 'homeassistant'
     static_configs:
-      - targets: ['ha-prod-01.lab.enzmann.online:8123']
+      - targets: ['ha-prod-01.lab.homelab.example:8123']
     metrics_path: '/api/prometheus'
     bearer_token: 'YOUR_HA_LONG_LIVED_ACCESS_TOKEN'
 ```
@@ -203,7 +203,7 @@ groups:
 
 ```yaml
 influxdb:
-  host: influx-01.lab.enzmann.online
+  host: influx-01.lab.homelab.example
   port: 8086
   database: homeassistant
   username: homeassistant
@@ -280,12 +280,12 @@ sensor:
 
   # HTTPS Certificate Expiry
   - platform: cert_expiry
-    host: ha-prod-01.lab.enzmann.online
+    host: ha-prod-01.lab.homelab.example
     port: 443
     name: "HA Certificate"
 
   - platform: cert_expiry
-    host: grafana-01.lab.enzmann.online
+    host: grafana-01.lab.homelab.example
     port: 443
     name: "Grafana Certificate"
 
@@ -293,14 +293,14 @@ binary_sensor:
   # Service Health Checks
   - platform: rest
     name: "Traefik Health"
-    resource: "https://traefik-01.lab.enzmann.online/ping"
+    resource: "https://traefik-01.lab.homelab.example/ping"
     method: GET
     timeout: 5
     scan_interval: 60
 
   - platform: rest
     name: "Grafana Health"
-    resource: "https://grafana-01.lab.enzmann.online/api/health"
+    resource: "https://grafana-01.lab.homelab.example/api/health"
     method: GET
     timeout: 5
     scan_interval: 60
@@ -322,10 +322,10 @@ services:
   unifi-poller:
     image: golift/unifi-poller:latest
     environment:
-      UP_UNIFI_DEFAULT_URL: "https://unifi-controller-01.lab.enzmann.online:8443"
+      UP_UNIFI_DEFAULT_URL: "https://unifi-controller-01.lab.homelab.example:8443"
       UP_UNIFI_DEFAULT_USER: "monitoring-user"
       UP_UNIFI_DEFAULT_PASS: "monitoring-password"
-      UP_INFLUXDB_URL: "http://influx-01.lab.enzmann.online:8086"
+      UP_INFLUXDB_URL: "http://influx-01.lab.homelab.example:8086"
       UP_INFLUXDB_DB: "unifi"
     networks:
       - homelab-internal
@@ -369,7 +369,7 @@ services:
 # Home Assistant WiFi Quality Sensor
 sensor:
   - platform: unifi
-    host: unifi-controller-01.lab.enzmann.online
+    host: unifi-controller-01.lab.homelab.example
     username: !secret unifi_username
     password: !secret unifi_password
     monitored_conditions:
@@ -566,8 +566,8 @@ sensor:
 ```yaml
 global:
   smtp_smarthost: 'smtp.gmail.com:587'
-  smtp_from: 'homelab-alerts@enzmann.online'
-  smtp_auth_username: 'homelab-alerts@enzmann.online'
+  smtp_from: 'homelab-alerts@homelab.example'
+  smtp_auth_username: 'homelab-alerts@homelab.example'
   smtp_auth_password: 'app-specific-password'
 
 route:
@@ -591,7 +591,7 @@ receivers:
 
   - name: 'critical-alerts'
     email_configs:
-      - to: 'admin@enzmann.online'
+      - to: 'admin@homelab.example'
         subject: '🚨 Critical Homelab Alert'
         body: |
           Alert: {{ .GroupLabels.alertname }}
@@ -600,7 +600,7 @@ receivers:
 
   - name: 'warning-alerts'
     email_configs:
-      - to: 'admin@enzmann.online'
+      - to: 'admin@homelab.example'
         subject: '⚠️ Homelab Warning'
         body: |
           Alert: {{ .GroupLabels.alertname }}
@@ -707,9 +707,9 @@ def collect_dns_metrics():
 def collect_service_metrics():
     """Collect service response times"""
     services = {
-        'homeassistant': 'https://ha-prod-01.lab.enzmann.online',
-        'grafana': 'https://grafana-01.lab.enzmann.online',
-        'traefik': 'https://traefik-01.lab.enzmann.online'
+        'homeassistant': 'https://ha-prod-01.lab.homelab.example',
+        'grafana': 'https://grafana-01.lab.homelab.example',
+        'traefik': 'https://traefik-01.lab.homelab.example'
     }
     
     for service_name, url in services.items():

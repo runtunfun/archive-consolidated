@@ -26,8 +26,8 @@ Die DNS-Infrastruktur läuft auf dedizierten Raspberry Pi-Systemen statt in VMs 
 ### IP-Adresszuweisung
 
 ```bash
-Pi-hole Primary:   192.168.1.3 → pihole-01.lab.enzmann.online
-Pi-hole Secondary: 192.168.1.4 → pihole-02.lab.enzmann.online
+Pi-hole Primary:   192.168.1.3 → pihole-01.lab.homelab.example
+Pi-hole Secondary: 192.168.1.4 → pihole-02.lab.homelab.example
 
 UniFi DHCP DNS-Server:
 Primary DNS:   192.168.1.3
@@ -66,7 +66,7 @@ services:
       # Let's Encrypt mit netcup DNS-Challenge
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@homelab.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       
       # Logging
@@ -93,7 +93,7 @@ services:
     labels:
       # Traefik Dashboard
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik-pi-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik-pi-${PI_NUMBER}.lab.homelab.example`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.routers.dashboard.middlewares=auth"
@@ -122,7 +122,7 @@ services:
     environment:
       TZ: 'Europe/Berlin'
       WEBPASSWORD: '${PIHOLE_PASSWORD}'
-      VIRTUAL_HOST: 'pihole-${PI_NUMBER}.lab.enzmann.online'
+      VIRTUAL_HOST: 'pihole-${PI_NUMBER}.lab.homelab.example'
       FTLCONF_LOCAL_IPV4: '${PI_IP}'
       PIHOLE_DNS_: '172.20.0.2#5053'  # Lokaler Unbound
     volumes:
@@ -137,7 +137,7 @@ services:
     labels:
       # Pi-hole über Traefik mit HTTPS
       - "traefik.enable=true"
-      - "traefik.http.routers.pihole.rule=Host(`pihole-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.pihole.rule=Host(`pihole-${PI_NUMBER}.lab.homelab.example`)"
       - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     depends_on:
@@ -239,15 +239,15 @@ server:
 
 # Forward zones für lokale Domains
 forward-zone:
-    name: "lab.enzmann.online"
+    name: "lab.homelab.example"
     forward-addr: 172.20.0.3@53
 
 forward-zone:
-    name: "iot.enzmann.online"  
+    name: "iot.homelab.example"  
     forward-addr: 172.20.0.3@53
 
 forward-zone:
-    name: "guest.enzmann.online"
+    name: "guest.homelab.example"
     forward-addr: 172.20.0.3@53
 ```
 
@@ -261,33 +261,33 @@ forward-zone:
 **Core Infrastructure:**
 
 ```bash
-192.168.1.2    unifi-controller-01.lab.enzmann.online
-192.168.1.3    pihole-01.lab.enzmann.online
-192.168.1.4    pihole-02.lab.enzmann.online
+192.168.1.2    unifi-controller-01.lab.homelab.example
+192.168.1.3    pihole-01.lab.homelab.example
+192.168.1.4    pihole-02.lab.homelab.example
 ```
 
 **Homelab Core:**
 
 ```bash
-192.168.1.21   pve-01.lab.enzmann.online
-192.168.1.22   pve-02.lab.enzmann.online
-192.168.1.25   nas-01.lab.enzmann.online
+192.168.1.21   pve-01.lab.homelab.example
+192.168.1.22   pve-02.lab.homelab.example
+192.168.1.25   nas-01.lab.homelab.example
 ```
 
 **Homelab Services:**
 
 ```bash
-192.168.1.41   ha-prod-01.lab.enzmann.online
-192.168.1.48   traefik-01.lab.enzmann.online
-192.168.1.50   portainer-01.lab.enzmann.online
-192.168.1.51   grafana-01.lab.enzmann.online
+192.168.1.41   ha-prod-01.lab.homelab.example
+192.168.1.48   traefik-01.lab.homelab.example
+192.168.1.50   portainer-01.lab.homelab.example
+192.168.1.51   grafana-01.lab.homelab.example
 ```
 
 **IOT-Geräte (wichtigste):**
 
 ```bash
-192.168.100.10  hm-ccu-uv-01.iot.enzmann.online
-192.168.101.1   hue-wz-bridge01.iot.enzmann.online
+192.168.100.10  hm-ccu-uv-01.iot.homelab.example
+192.168.101.1   hue-wz-bridge01.iot.homelab.example
 ```
 
 ### Wildcard-Domains
@@ -296,13 +296,13 @@ forward-zone:
 
 ```bash
 # /etc/dnsmasq.d/02-lab-wildcard.conf
-address=/lab.enzmann.online/192.168.1.48
+address=/lab.homelab.example/192.168.1.48
 
 # /etc/dnsmasq.d/03-iot-wildcard.conf  
-address=/iot.enzmann.online/192.168.1.48
+address=/iot.homelab.example/192.168.1.48
 
 # /etc/dnsmasq.d/04-guest-wildcard.conf
-address=/guest.enzmann.online/192.168.1.48
+address=/guest.homelab.example/192.168.1.48
 ```
 
 !!! tip "Wildcard-Funktionalität"
@@ -330,7 +330,7 @@ cd /opt/homelab/dns-stack
 docker-compose up -d
 
 # 6. HTTPS-Zugriff testen
-curl -k https://pihole-01.lab.enzmann.online
+curl -k https://pihole-01.lab.homelab.example
 
 # 7. Als Primary DNS in UniFi eintragen (192.168.1.3)
 ```
@@ -381,8 +381,8 @@ docker logs $(docker ps -q -f name=pihole) --tail 50
 docker logs $(docker ps -q -f name=unbound) --tail 50
 
 # DNS-Auflösung manuell testen
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig @192.168.1.3 ha-prod-01.lab.enzmann.online
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig @192.168.1.3 ha-prod-01.lab.homelab.example
 ```
 
 ### Performance-Optimierung
@@ -408,7 +408,7 @@ docker exec -it $(docker ps -q -f name=unbound) unbound-control flush_zone .
 
 ```bash
 # Pi-hole Query-Log prüfen
-# Web-Interface: https://pihole-01.lab.enzmann.online → Query Log
+# Web-Interface: https://pihole-01.lab.homelab.example → Query Log
 
 # Forward-Zonen in Unbound prüfen
 docker exec -it $(docker ps -q -f name=unbound) cat /opt/unbound/etc/unbound/unbound.conf | grep -A2 "forward-zone"

@@ -242,8 +242,8 @@
 - [ ] **Zertifikat-Monitoring**
     ```bash
     # Zertifikat-Ablauf prüfen
-    openssl s_client -connect ha-prod-01.lab.enzmann.online:443 \
-      -servername ha-prod-01.lab.enzmann.online | \
+    openssl s_client -connect ha-prod-01.lab.homelab.example:443 \
+      -servername ha-prod-01.lab.homelab.example | \
       openssl x509 -noout -dates
     ```
 
@@ -401,10 +401,10 @@
 - [ ] **Funktions-Tests**
     ```bash
     # DNS-Resolution
-    nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
+    nslookup ha-prod-01.lab.homelab.example 192.168.1.3
     
     # Service-Availability
-    curl -k https://ha-prod-01.lab.enzmann.online
+    curl -k https://ha-prod-01.lab.homelab.example
     
     # IOT-Device-Connectivity
     # Home Assistant → Developer Tools → Services → device_tracker.see

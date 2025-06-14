@@ -72,7 +72,7 @@
 # Beispiel Alertmanager-Konfiguration
 global:
   smtp_smarthost: 'localhost:587'
-  smtp_from: 'alerts@enzmann.online'
+  smtp_from: 'alerts@homelab.example'
 
 route:
   group_by: ['alertname']
@@ -227,7 +227,7 @@ docker exec homeassistant ha config check
 
 ```bash
 # Traefik-Dashboard
-curl -k https://traefik-01.lab.enzmann.online/api/rawdata
+curl -k https://traefik-01.lab.homelab.example/api/rawdata
 
 # Service-Discovery
 docker service ls --format "table {{.Name}}\t{{.Replicas}}\t{{.Image}}"
@@ -236,7 +236,7 @@ docker service ls --format "table {{.Name}}\t{{.Replicas}}\t{{.Image}}"
 docker logs traefik_traefik | grep "acme"
 
 # Certificate-Status
-openssl s_client -connect <service>.lab.enzmann.online:443 -servername <service>.lab.enzmann.online
+openssl s_client -connect <service>.lab.homelab.example:443 -servername <service>.lab.homelab.example
 ```
 
 ### Häufige Probleme & Lösungen
@@ -275,7 +275,7 @@ openssl s_client -connect <service>.lab.enzmann.online:443 -servername <service>
     docker logs traefik_traefik | grep "challenge"
     
     # DNS-Challenge manuell testen
-    dig TXT _acme-challenge.lab.enzmann.online
+    dig TXT _acme-challenge.lab.homelab.example
     ```
 
 #### Docker Swarm-Probleme

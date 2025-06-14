@@ -196,7 +196,7 @@ services:
       - homelab-internal
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ha.rule=Host(`ha-prod-01.lab.enzmann.online`)"
+      - "traefik.http.routers.ha.rule=Host(`ha-prod-01.lab.homelab.example`)"
 ```
 
 !!! tip "Container-Best-Practices"
@@ -241,9 +241,9 @@ netcup-Integration:
 **Certificate-Management**
 ```yaml
 Zertifikat-Struktur:
-  *.lab.enzmann.online: Wildcard für Homelab-Services
-  *.iot.enzmann.online: Wildcard für IOT-Services  
-  *.guest.enzmann.online: Wildcard für Gäste-Services
+  *.lab.homelab.example: Wildcard für Homelab-Services
+  *.iot.homelab.example: Wildcard für IOT-Services  
+  *.guest.homelab.example: Wildcard für Gäste-Services
 
 Renewal-Prozess:
   - Automatisch alle 60 Tage

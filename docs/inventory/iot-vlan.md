@@ -9,7 +9,7 @@ VLAN: 100
 Subnetz: 192.168.100.0/22 (1024 IPs)
 Gateway: 192.168.100.1
 DNS-Server: 192.168.1.3, 192.168.1.4 (Standard-LAN)
-Domain: iot.enzmann.online
+Domain: iot.homelab.example
 WiFi-Netzwerk: "Enzian-IOT"
 ```
 
@@ -31,8 +31,8 @@ WiFi-Netzwerk: "Enzian-IOT"
 
 | Gerät | IP | DNS-Name | Web-Interface | Hersteller | Modell | Funktion |
 |-------|----|---------|--------------|-----------|---------|---------| 
-| **Homematic CCU** | 192.168.100.10 | hm-ccu-uv-01.iot.enzmann.online | http://192.168.100.10 | eQ-3 | CCU3 | Zentrale Homematic Steuerung |
-| **UniFi Switch IOT** | 192.168.100.11 | switch-uv-01.iot.enzmann.online | - | Ubiquiti | US-8-60W | POE Switch für IOT (optional) |
+| **Homematic CCU** | 192.168.100.10 | hm-ccu-uv-01.iot.homelab.example | http://192.168.100.10 | eQ-3 | CCU3 | Zentrale Homematic Steuerung |
+| **UniFi Switch IOT** | 192.168.100.11 | switch-uv-01.iot.homelab.example | - | Ubiquiti | US-8-60W | POE Switch für IOT (optional) |
 
 ### Technische Spezifikationen
 
@@ -60,9 +60,9 @@ Max. Geräte: 500 Homematic/IP Geräte
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Raum-Detail | Funktion |
 |-------|----|---------|-----------|---------|-----------|---------| 
-| **Shelly 1 Deckenlampe** | 192.168.100.70 | shelly-1-flur-01.iot.enzmann.online | Allterco | Shelly 1 | Hauptlicht | Deckenbeleuchtung |
-| **Homematic Bewegungsmelder** | 192.168.100.71 | hm-motion-flur-01.iot.enzmann.online | eQ-3 | HmIP-SMI | Eingangsbereich | Bewegungsdetection |
-| **Homematic Türkontakt** | 192.168.100.72 | hm-door-flur-01.iot.enzmann.online | eQ-3 | HmIP-SWDO | Haustür | Öffnungsüberwachung |
+| **Shelly 1 Deckenlampe** | 192.168.100.70 | shelly-1-flur-01.iot.homelab.example | Allterco | Shelly 1 | Hauptlicht | Deckenbeleuchtung |
+| **Homematic Bewegungsmelder** | 192.168.100.71 | hm-motion-flur-01.iot.homelab.example | eQ-3 | HmIP-SMI | Eingangsbereich | Bewegungsdetection |
+| **Homematic Türkontakt** | 192.168.100.72 | hm-door-flur-01.iot.homelab.example | eQ-3 | HmIP-SWDO | Haustür | Öffnungsüberwachung |
 
 ### Geräte-Konfiguration
 
@@ -95,9 +95,9 @@ CCU Integration: Via Funk 868 MHz
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Position | Funktion |
 |-------|----|---------|-----------|---------|---------|---------| 
-| **Shelly Dimmer** | 192.168.100.135 | shelly-dimmer-az-01.iot.enzmann.online | Allterco | Shelly Dimmer 2 | Schreibtisch | Dimmbare Arbeitsplatzleuchte |
-| **Hue Strip** | 192.168.100.136 | hue-az-01.iot.enzmann.online | Philips | Hue Lightstrip Plus | Monitor | RGB Backlight |
-| **Homematic Fenster** | 192.168.100.137 | hm-window-az-01.iot.enzmann.online | eQ-3 | HmIP-SWDO | Gartenfenster | Fensterüberwachung |
+| **Shelly Dimmer** | 192.168.100.135 | shelly-dimmer-az-01.iot.homelab.example | Allterco | Shelly Dimmer 2 | Schreibtisch | Dimmbare Arbeitsplatzleuchte |
+| **Hue Strip** | 192.168.100.136 | hue-az-01.iot.homelab.example | Philips | Hue Lightstrip Plus | Monitor | RGB Backlight |
+| **Homematic Fenster** | 192.168.100.137 | hm-window-az-01.iot.homelab.example | eQ-3 | HmIP-SWDO | Gartenfenster | Fensterüberwachung |
 
 ### Erweiterte Konfiguration
 
@@ -130,10 +130,10 @@ Synchronisation: Mit PC-Audio über Hue Sync
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Position | Funktion |
 |-------|----|---------|-----------|---------|---------|---------| 
-| **Hue Lampe Links** | 192.168.100.200 | hue-sz-01.iot.enzmann.online | Philips | Hue White and Color | Nachttisch links | Stimmungsbeleuchtung |
-| **Hue Lampe Rechts** | 192.168.100.201 | hue-sz-02.iot.enzmann.online | Philips | Hue White and Color | Nachttisch rechts | Stimmungsbeleuchtung |
-| **Homematic Fensterkontakt** | 192.168.100.202 | hm-window-sz-01.iot.enzmann.online | eQ-3 | HmIP-SWDO | Straßenfenster | Sicherheitsüberwachung |
-| **Homematic Thermostat** | 192.168.100.203 | hm-thermo-sz-01.iot.enzmann.online | eQ-3 | HmIP-eTRV | Heizkörper | Temperaturregelung |
+| **Hue Lampe Links** | 192.168.100.200 | hue-sz-01.iot.homelab.example | Philips | Hue White and Color | Nachttisch links | Stimmungsbeleuchtung |
+| **Hue Lampe Rechts** | 192.168.100.201 | hue-sz-02.iot.homelab.example | Philips | Hue White and Color | Nachttisch rechts | Stimmungsbeleuchtung |
+| **Homematic Fensterkontakt** | 192.168.100.202 | hm-window-sz-01.iot.homelab.example | eQ-3 | HmIP-SWDO | Straßenfenster | Sicherheitsüberwachung |
+| **Homematic Thermostat** | 192.168.100.203 | hm-thermo-sz-01.iot.homelab.example | eQ-3 | HmIP-eTRV | Heizkörper | Temperaturregelung |
 
 ### Smart Sleep Integration
 
@@ -161,11 +161,11 @@ Sicherheit:
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Position | Funktion |
 |-------|----|---------|-----------|---------|---------|---------| 
-| **Hue Bridge** | 192.168.101.1 | hue-wz-bridge01.iot.enzmann.online | Philips | Hue Bridge v2 | TV-Schrank | Zentrale Hue Steuerung |
-| **Sonos One** | 192.168.101.10 | sonos-wz-01.iot.enzmann.online | Sonos | Sonos One | Regal | Musikwiedergabe + Alexa |
-| **Hue Deckenlampe** | 192.168.101.11 | hue-wz-01.iot.enzmann.online | Philips | Hue White Ambiance | Decke | Hauptbeleuchtung |
-| **Hue Stehlampe** | 192.168.101.12 | hue-wz-02.iot.enzmann.online | Philips | Hue Go | Sofa-Ecke | Ambientelicht |
-| **Samsung TV** | 192.168.101.15 | tv-wz-01.iot.enzmann.online | Samsung | QE55Q80A | Wand | Smart TV + Gaming |
+| **Hue Bridge** | 192.168.101.1 | hue-wz-bridge01.iot.homelab.example | Philips | Hue Bridge v2 | TV-Schrank | Zentrale Hue Steuerung |
+| **Sonos One** | 192.168.101.10 | sonos-wz-01.iot.homelab.example | Sonos | Sonos One | Regal | Musikwiedergabe + Alexa |
+| **Hue Deckenlampe** | 192.168.101.11 | hue-wz-01.iot.homelab.example | Philips | Hue White Ambiance | Decke | Hauptbeleuchtung |
+| **Hue Stehlampe** | 192.168.101.12 | hue-wz-02.iot.homelab.example | Philips | Hue Go | Sofa-Ecke | Ambientelicht |
+| **Samsung TV** | 192.168.101.15 | tv-wz-01.iot.homelab.example | Samsung | QE55Q80A | Wand | Smart TV + Gaming |
 
 ### Entertainment-Integration
 
@@ -211,10 +211,10 @@ Gaming: Auto Game Mode + VRR
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Position | Funktion |
 |-------|----|---------|-----------|---------|---------|---------| 
-| **Shelly 1PM Dunstabzug** | 192.168.101.70 | shelly-pro1pm-kueche-01.iot.enzmann.online | Allterco | Shelly Pro 1PM | Dunstabzug | Automatische Lüftung |
-| **Hue Unterbauleuchte** | 192.168.101.71 | hue-kueche-01.iot.enzmann.online | Philips | Hue Lightstrip Plus | Arbeitsplatte | Küchenbeleuchtung |
-| **Sonos One SL** | 192.168.101.72 | sonos-kueche-01.iot.enzmann.online | Sonos | Sonos One SL | Regal | Küchenmusik |
-| **Homematic Temp** | 192.168.101.73 | hm-temp-kueche-01.iot.enzmann.online | eQ-3 | HmIP-STH | Küchenschrank | Temperatur/Luftfeuchte |
+| **Shelly 1PM Dunstabzug** | 192.168.101.70 | shelly-pro1pm-kueche-01.iot.homelab.example | Allterco | Shelly Pro 1PM | Dunstabzug | Automatische Lüftung |
+| **Hue Unterbauleuchte** | 192.168.101.71 | hue-kueche-01.iot.homelab.example | Philips | Hue Lightstrip Plus | Arbeitsplatte | Küchenbeleuchtung |
+| **Sonos One SL** | 192.168.101.72 | sonos-kueche-01.iot.homelab.example | Sonos | Sonos One SL | Regal | Küchenmusik |
+| **Homematic Temp** | 192.168.101.73 | hm-temp-kueche-01.iot.homelab.example | eQ-3 | HmIP-STH | Küchenschrank | Temperatur/Luftfeuchte |
 
 ### Küchenautomatisierung
 
@@ -251,9 +251,9 @@ Automatisierung:
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Position | Funktion |
 |-------|----|---------|-----------|---------|---------|---------| 
-| **Shelly 1 Lüftung** | 192.168.101.135 | shelly-1-bad-01.iot.enzmann.online | Allterco | Shelly 1 | Lüfter | Automatische Lüftung |
-| **Homematic Feuchte** | 192.168.101.136 | hm-humid-bad-01.iot.enzmann.online | eQ-3 | HmIP-STH | Wand | Luftfeuchtigkeitsüberwachung |
-| **Hue Spiegellampe** | 192.168.101.137 | hue-bad-01.iot.enzmann.online | Philips | Hue White | Spiegel | Funktionale Beleuchtung |
+| **Shelly 1 Lüftung** | 192.168.101.135 | shelly-1-bad-01.iot.homelab.example | Allterco | Shelly 1 | Lüfter | Automatische Lüftung |
+| **Homematic Feuchte** | 192.168.101.136 | hm-humid-bad-01.iot.homelab.example | eQ-3 | HmIP-STH | Wand | Luftfeuchtigkeitsüberwachung |
+| **Hue Spiegellampe** | 192.168.101.137 | hue-bad-01.iot.homelab.example | Philips | Hue White | Spiegel | Funktionale Beleuchtung |
 
 ### Bad-Automatisierung
 
@@ -275,9 +275,9 @@ Manuell: Schalter übersteuert Automatik
 
 | Gerät | IP | DNS-Name | Besitzer | Primäre Apps | Funktion |
 |-------|----|---------|---------|-----------|---------| 
-| **iPhone Admin** | 192.168.101.200 | iphone-admin-01.iot.enzmann.online | Admin | Home Assistant, Hue, Sonos | Hauptsteuerung |
-| **iPad Wohnzimmer** | 192.168.101.201 | ipad-wz-01.iot.enzmann.online | Familie | Home Assistant Dashboard | Wandmontiertes Control Panel |
-| **Android Tablet** | 192.168.101.202 | tablet-android-01.iot.enzmann.online | Familie | Küchen-Dashboard, Rezepte | Küchen-Terminal |
+| **iPhone Admin** | 192.168.101.200 | iphone-admin-01.iot.homelab.example | Admin | Home Assistant, Hue, Sonos | Hauptsteuerung |
+| **iPad Wohnzimmer** | 192.168.101.201 | ipad-wz-01.iot.homelab.example | Familie | Home Assistant Dashboard | Wandmontiertes Control Panel |
+| **Android Tablet** | 192.168.101.202 | tablet-android-01.iot.homelab.example | Familie | Küchen-Dashboard, Rezepte | Küchen-Terminal |
 
 ### Dashboard-Konfiguration
 

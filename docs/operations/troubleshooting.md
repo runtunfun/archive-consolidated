@@ -130,8 +130,8 @@ avahi-browse -at | grep "_http._tcp"
 **MQTT-Diagnose:**
 ```bash
 # MQTT Broker Erreichbarkeit
-mosquitto_pub -h mqtt-01.lab.enzmann.online -t test -m "hello"
-mosquitto_sub -h mqtt-01.lab.enzmann.online -t test
+mosquitto_pub -h mqtt-01.lab.homelab.example -t test -m "hello"
+mosquitto_sub -h mqtt-01.lab.homelab.example -t test
 
 # Home Assistant MQTT Integration
 # Developer Tools → Services → mqtt.publish
@@ -186,8 +186,8 @@ curl -X POST https://ccp.netcup.net/run/webservice/servers/endpoint.php \
 **DNS Challenge Verifikation:**
 ```bash
 # TXT Records für ACME Challenge prüfen
-dig TXT _acme-challenge.lab.enzmann.online
-dig TXT _acme-challenge.iot.enzmann.online @8.8.8.8
+dig TXT _acme-challenge.lab.homelab.example
+dig TXT _acme-challenge.iot.homelab.example @8.8.8.8
 
 # Let's Encrypt Staging für Tests
 # In Traefik Config: acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
@@ -213,17 +213,17 @@ docker service update --force traefik_traefik
 **DNS-Diagnose:**
 ```bash
 # Lokale DNS Auflösung testen
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig ha-prod-01.lab.enzmann.online @192.168.1.3
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig ha-prod-01.lab.homelab.example @192.168.1.3
 
 # Wildcard-Domain testen
-nslookup test.lab.enzmann.online 192.168.1.3
+nslookup test.lab.homelab.example 192.168.1.3
 ```
 
 **Traefik Router-Diagnose:**
 ```bash
 # Traefik Dashboard öffnen
-curl -k https://traefik-01.lab.enzmann.online/dashboard/
+curl -k https://traefik-01.lab.homelab.example/dashboard/
 
 # Service Labels überprüfen
 docker service inspect homeassistant_homeassistant | jq '.[0].Spec.Labels'
@@ -247,7 +247,7 @@ docker network inspect traefik | jq '.[0].Containers'
 ```bash
 # Service-Labels korrigieren
 docker service update \
-  --label-add "traefik.http.routers.ha.rule=Host(\`ha-prod-01.lab.enzmann.online\`)" \
+  --label-add "traefik.http.routers.ha.rule=Host(\`ha-prod-01.lab.homelab.example\`)" \
   --label-add "traefik.http.services.ha.loadbalancer.server.port=8123" \
   homeassistant_homeassistant
 
@@ -260,7 +260,7 @@ docker service update --force traefik_traefik
 ### Lokale Domain nicht auflösbar
 
 **Symptome:**
-- `nslookup ha-prod-01.lab.enzmann.online` schlägt fehl
+- `nslookup ha-prod-01.lab.homelab.example` schlägt fehl
 - Wildcard-Domains funktionieren nicht
 - Externe Domains OK, lokale nicht
 
@@ -275,8 +275,8 @@ docker logs $(docker ps -q -f name=unbound) --tail 50
 **DNS-Kette testen:**
 ```bash
 # Direkter Pi-hole Test
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig @192.168.1.3 ha-prod-01.lab.enzmann.online
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig @192.168.1.3 ha-prod-01.lab.homelab.example
 
 # Unbound-Chain Test (von Pi-hole Container aus)
 docker exec -it $(docker ps -q -f name=pihole) nslookup google.com 172.20.0.2
@@ -285,7 +285,7 @@ docker exec -it $(docker ps -q -f name=pihole) nslookup google.com 172.20.0.2
 **Pi-hole Konfiguration:**
 ```bash
 # Lokale DNS-Einträge prüfen
-# Web-Interface: https://pihole-01.lab.enzmann.online
+# Web-Interface: https://pihole-01.lab.homelab.example
 # Local DNS → DNS Records
 
 # Wildcard-Config prüfen
@@ -298,7 +298,7 @@ docker exec -it $(docker ps -q -f name=pihole) cat /etc/dnsmasq.d/02-lab-wildcar
 docker exec -it $(docker ps -q -f name=pihole) pihole restartdns
 
 # Wildcard-Domains neu konfigurieren
-docker exec -it $(docker ps -q -f name=pihole) sh -c "echo 'address=/lab.enzmann.online/192.168.1.48' > /etc/dnsmasq.d/02-lab-wildcard.conf"
+docker exec -it $(docker ps -q -f name=pihole) sh -c "echo 'address=/lab.homelab.example/192.168.1.48' > /etc/dnsmasq.d/02-lab-wildcard.conf"
 docker exec -it $(docker ps -q -f name=pihole) pihole restartdns
 ```
 

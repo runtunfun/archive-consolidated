@@ -128,9 +128,9 @@ Standard│IOT │Gäste
 ### 2.3 DNS-Naming-Konvention
 
 #### Domain-Schema
-- **Standard-LAN:** `[geraetetype]-[nummer].lab.enzmann.online`
-- **IOT-VLAN:** `[geraetetype]-[raum]-[nummer].iot.enzmann.online`
-- **Gäste-VLAN:** `[geraetetype]-[nummer].guest.enzmann.online`
+- **Standard-LAN:** `[geraetetype]-[nummer].lab.homelab.example`
+- **IOT-VLAN:** `[geraetetype]-[raum]-[nummer].iot.homelab.example`
+- **Gäste-VLAN:** `[geraetetype]-[nummer].guest.homelab.example`
 
 #### Gerätetypen (Präfixe)
 
@@ -166,14 +166,14 @@ Standard│IOT │Gäste
 #### Beispiele
 ```
 # Standard-LAN (Homelab)
-pve-01.lab.enzmann.online                   → Proxmox Host 1
-ha-prod-01.lab.enzmann.online               → Home Assistant Produktiv
-traefik-01.lab.enzmann.online               → Traefik Reverse Proxy
+pve-01.lab.homelab.example                   → Proxmox Host 1
+ha-prod-01.lab.homelab.example               → Home Assistant Produktiv
+traefik-01.lab.homelab.example               → Traefik Reverse Proxy
 
 # IOT-VLAN (Smart Home)
-shelly-dimmer-flur-01.iot.enzmann.online    → Shelly Dimmer im Flur
-hue-wz-03.iot.enzmann.online                → Hue Lampe im Wohnzimmer
-hm-temp-sz-01.iot.enzmann.online            → Temperatursensor Schlafzimmer
+shelly-dimmer-flur-01.iot.homelab.example    → Shelly Dimmer im Flur
+hue-wz-03.iot.homelab.example                → Hue Lampe im Wohnzimmer
+hm-temp-sz-01.iot.homelab.example            → Temperatursensor Schlafzimmer
 ```
 
 ### 2.4 UniFi-Konfiguration
@@ -185,7 +185,7 @@ hm-temp-sz-01.iot.enzmann.online            → Temperatursensor Schlafzimmer
    - Subnetz: 192.168.1.0/24
    - DHCP: Aktiviert
    - DNS: 192.168.1.3, 192.168.1.4
-   - Domain: lab.enzmann.online
+   - Domain: lab.homelab.example
 
 2. **WiFi-Netzwerk "Enzian":**
    - Sicherheit: WPA2/WPA3
@@ -199,7 +199,7 @@ hm-temp-sz-01.iot.enzmann.online            → Temperatursensor Schlafzimmer
    - Subnetz: 192.168.100.0/22
    - DHCP: Aktiviert
    - DNS: 192.168.1.3, 192.168.1.4
-   - Domain: iot.enzmann.online
+   - Domain: iot.homelab.example
 
 2. **WiFi-Netzwerk "Enzian-IOT":**
    - Sicherheit: WPA2/WPA3
@@ -213,7 +213,7 @@ hm-temp-sz-01.iot.enzmann.online            → Temperatursensor Schlafzimmer
    - Subnetz: 192.168.200.0/24
    - DHCP: Aktiviert
    - DNS: 192.168.1.3
-   - Domain: guest.enzmann.online
+   - Domain: guest.homelab.example
 
 2. **WiFi-Netzwerk "Enzian-Gast":**
    - Sicherheit: WPA2/WPA3 (einfaches Passwort)
@@ -282,8 +282,8 @@ hm-temp-sz-01.iot.enzmann.online            → Temperatursensor Schlafzimmer
 #### 3.1.2 IP-Adresszuweisung
 
 ```
-Pi-hole Primary:   192.168.1.3 → pihole-01.lab.enzmann.online
-Pi-hole Secondary: 192.168.1.4 → pihole-02.lab.enzmann.online
+Pi-hole Primary:   192.168.1.3 → pihole-01.lab.homelab.example
+Pi-hole Secondary: 192.168.1.4 → pihole-02.lab.homelab.example
 
 UniFi DHCP DNS-Server:
 Primary DNS:   192.168.1.3
@@ -320,7 +320,7 @@ services:
       # Let's Encrypt mit netcup DNS-Challenge
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@homelab.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       
       # Logging
@@ -347,7 +347,7 @@ services:
     labels:
       # Traefik Dashboard
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik-pi-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik-pi-${PI_NUMBER}.lab.homelab.example`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.routers.dashboard.middlewares=auth"
@@ -376,7 +376,7 @@ services:
     environment:
       TZ: 'Europe/Berlin'
       WEBPASSWORD: '${PIHOLE_PASSWORD}'
-      VIRTUAL_HOST: 'pihole-${PI_NUMBER}.lab.enzmann.online'
+      VIRTUAL_HOST: 'pihole-${PI_NUMBER}.lab.homelab.example'
       FTLCONF_LOCAL_IPV4: '${PI_IP}'
       PIHOLE_DNS_: '172.20.0.2#5053'  # Lokaler Unbound
     volumes:
@@ -391,7 +391,7 @@ services:
     labels:
       # Pi-hole über Traefik mit HTTPS
       - "traefik.enable=true"
-      - "traefik.http.routers.pihole.rule=Host(`pihole-${PI_NUMBER}.lab.enzmann.online`)"
+      - "traefik.http.routers.pihole.rule=Host(`pihole-${PI_NUMBER}.lab.homelab.example`)"
       - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     depends_on:
@@ -489,15 +489,15 @@ server:
 
 # Forward zones für lokale Domains
 forward-zone:
-    name: "lab.enzmann.online"
+    name: "lab.homelab.example"
     forward-addr: 172.20.0.3@53
 
 forward-zone:
-    name: "iot.enzmann.online"  
+    name: "iot.homelab.example"  
     forward-addr: 172.20.0.3@53
 
 forward-zone:
-    name: "guest.enzmann.online"
+    name: "guest.homelab.example"
     forward-addr: 172.20.0.3@53
 ```
 
@@ -523,7 +523,7 @@ cd /opt/homelab/dns-stack
 docker-compose up -d
 
 # 6. HTTPS-Zugriff testen
-curl -k https://pihole-01.lab.enzmann.online
+curl -k https://pihole-01.lab.homelab.example
 
 # 7. Als Primary DNS in UniFi eintragen (192.168.1.3)
 ```
@@ -553,37 +553,37 @@ docker-compose up -d
 
 ```bash
 # Core Infrastructure
-192.168.1.2    unifi-controller-01.lab.enzmann.online
-192.168.1.3    pihole-01.lab.enzmann.online
-192.168.1.4    pihole-02.lab.enzmann.online
+192.168.1.2    unifi-controller-01.lab.homelab.example
+192.168.1.3    pihole-01.lab.homelab.example
+192.168.1.4    pihole-02.lab.homelab.example
 
 # Homelab Core
-192.168.1.21   pve-01.lab.enzmann.online
-192.168.1.22   pve-02.lab.enzmann.online
-192.168.1.25   nas-01.lab.enzmann.online
+192.168.1.21   pve-01.lab.homelab.example
+192.168.1.22   pve-02.lab.homelab.example
+192.168.1.25   nas-01.lab.homelab.example
 
 # Homelab Services
-192.168.1.41   ha-prod-01.lab.enzmann.online
-192.168.1.48   traefik-01.lab.enzmann.online
-192.168.1.50   portainer-01.lab.enzmann.online
-192.168.1.51   grafana-01.lab.enzmann.online
+192.168.1.41   ha-prod-01.lab.homelab.example
+192.168.1.48   traefik-01.lab.homelab.example
+192.168.1.50   portainer-01.lab.homelab.example
+192.168.1.51   grafana-01.lab.homelab.example
 
 # IOT-Geräte (wichtigste)
-192.168.100.10  hm-ccu-uv-01.iot.enzmann.online
-192.168.101.1   hue-wz-bridge01.iot.enzmann.online
+192.168.100.10  hm-ccu-uv-01.iot.homelab.example
+192.168.101.1   hue-wz-bridge01.iot.homelab.example
 ```
 
 **Wildcard-Domains (via dnsmasq config):**
 
 ```bash
 # /etc/dnsmasq.d/02-lab-wildcard.conf
-address=/lab.enzmann.online/192.168.1.48
+address=/lab.homelab.example/192.168.1.48
 
 # /etc/dnsmasq.d/03-iot-wildcard.conf  
-address=/iot.enzmann.online/192.168.1.48
+address=/iot.homelab.example/192.168.1.48
 
 # /etc/dnsmasq.d/04-guest-wildcard.conf
-address=/guest.enzmann.online/192.168.1.48
+address=/guest.homelab.example/192.168.1.48
 ```
 
 ### 3.2 HTTPS & Reverse Proxy
@@ -591,7 +591,7 @@ address=/guest.enzmann.online/192.168.1.48
 #### 3.2.1 Traefik Übersicht
 
 Alle Homelab-Services werden über HTTPS mit echten Let's Encrypt Zertifikaten bereitgestellt:
-- **Domain:** enzmann.online (gehostet bei netcup)
+- **Domain:** homelab.example (gehostet bei netcup)
 - **Reverse Proxy:** Traefik mit automatischer SSL-Terminierung
 - **Zertifikate:** Let's Encrypt Wildcard via DNS-Challenge (netcup API)
 
@@ -624,7 +624,7 @@ services:
       # Let's Encrypt mit netcup DNS-Challenge für Wildcards
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@homelab.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       
       # Logging
@@ -648,7 +648,7 @@ services:
     labels:
       # Traefik Dashboard
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik-01.lab.enzmann.online`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik-01.lab.homelab.example`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.routers.dashboard.middlewares=auth"
@@ -692,7 +692,7 @@ NETCUP_API_PASSWORD=your-api-password
 **2. DNS-Struktur bei netcup:**
 ```
 # Wildcard für alle Services (automatisch von Traefik verwaltet)
-*.enzmann.online          → DNS-Challenge TXT Records
+*.homelab.example          → DNS-Challenge TXT Records
 
 # Keine manuellen A-Records für lokale Services nötig!
 # Traefik erstellt automatisch TXT-Records für Let's Encrypt
@@ -712,7 +712,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.enzmann.online`)"
+      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.homelab.example`)"
       - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
 
@@ -728,13 +728,13 @@ services:
   grafana:
     image: grafana/grafana:latest
     environment:
-      - GF_SERVER_ROOT_URL=https://grafana-01.lab.enzmann.online
+      - GF_SERVER_ROOT_URL=https://grafana-01.lab.homelab.example
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
     networks:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.enzmann.online`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.homelab.example`)"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 ```
@@ -799,7 +799,7 @@ HA_TZ=Europe/Berlin
 
 # Database Configuration
 HA_DB_TYPE=postgresql
-HA_DB_HOST=postgres-01.lab.enzmann.online
+HA_DB_HOST=postgres-01.lab.homelab.example
 HA_DB_NAME=homeassistant
 HA_DB_USER=homeassistant
 HA_DB_PASSWORD=CHANGE_ME_TO_SECURE_DB_PASSWORD
@@ -808,12 +808,12 @@ HA_DB_PASSWORD=CHANGE_ME_TO_SECURE_DB_PASSWORD
 HA_ADMIN_PASSWORD=CHANGE_ME_TO_SECURE_ADMIN_PASSWORD
 
 # Integrations
-MQTT_BROKER=mqtt-01.lab.enzmann.online
+MQTT_BROKER=mqtt-01.lab.homelab.example
 MQTT_USER=homeassistant
 MQTT_PASSWORD=CHANGE_ME_TO_SECURE_MQTT_PASSWORD
 
 # Monitoring
-INFLUXDB_HOST=influx-01.lab.enzmann.online
+INFLUXDB_HOST=influx-01.lab.homelab.example
 INFLUXDB_TOKEN=CHANGE_ME_TO_SECURE_INFLUX_TOKEN
 ```
 
@@ -824,7 +824,7 @@ INFLUXDB_TOKEN=CHANGE_ME_TO_SECURE_INFLUX_TOKEN
 labels:
   # Traefik Integration (falls Web-Interface vorhanden)
   - "traefik.enable=true"
-  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.enzmann.online`)"
+  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.homelab.example`)"
   - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=letsencrypt"
   - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${SERVICE_PORT}"
   
@@ -869,7 +869,7 @@ services:
     labels:
       # Traefik Labels
       - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.enzmann.online`)"
+      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.homelab.example`)"
       - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
       
@@ -961,7 +961,7 @@ services:
     image: grafana/grafana:${GRAFANA_VERSION}
     hostname: grafana-01
     environment:
-      GF_SERVER_ROOT_URL: "https://grafana-01.lab.enzmann.online"
+      GF_SERVER_ROOT_URL: "https://grafana-01.lab.homelab.example"
       GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD}"
       GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
     volumes:
@@ -972,7 +972,7 @@ services:
       - homelab-internal
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.enzmann.online`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.homelab.example`)"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       - "homelab.service.name=grafana"
@@ -1076,7 +1076,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer-01.lab.enzmann.online`)"
+      - "traefik.http.routers.portainer.rule=Host(`portainer-01.lab.homelab.example`)"
       - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "homelab.service.name=portainer"
@@ -1188,7 +1188,7 @@ MQTT_PASSWORD=CHANGE_ME_TO_SECURE_MQTT_PASSWORD
 gpg --full-generate-key
 # Auswahl: RSA (4096 bit), Gültigkeitsdauer: 2 Jahre
 # Name: Homelab Administration
-# Email: admin@enzmann.online
+# Email: admin@homelab.example
 
 # Key-ID ermitteln für Scripts
 gpg --list-secret-keys --keyid-format LONG
@@ -1516,48 +1516,48 @@ cd dns-stack && docker-compose up -d
 
 | Gerät | IP | DNS-Name | Öffentlicher Zugang | Notizen |
 |-------|----|---------|--------------------|---------|
-| **UniFi Controller** | 192.168.1.2 | unifi-controller-01.lab.enzmann.online | - | Controller VM/Hardware |
-| **Pi-hole Primary** | 192.168.1.3 | pihole-01.lab.enzmann.online | https://pihole-01.lab.enzmann.online | DNS + Ad-Blocking + Unbound |
-| **Pi-hole Secondary** | 192.168.1.4 | pihole-02.lab.enzmann.online | https://pihole-02.lab.enzmann.online | Redundante DNS (optional) |
-| **UniFi Switch Main** | 192.168.1.10 | switch-main-01.lab.enzmann.online | - | Hauptswitch Arbeitszimmer |
-| **UniFi AP Wohnzimmer** | 192.168.1.11 | ap-wz-01.lab.enzmann.online | - | Access Point Wohnzimmer |
-| **UniFi AP Schlafzimmer** | 192.168.1.12 | ap-sz-01.lab.enzmann.online | - | Access Point Schlafzimmer |
+| **UniFi Controller** | 192.168.1.2 | unifi-controller-01.lab.homelab.example | - | Controller VM/Hardware |
+| **Pi-hole Primary** | 192.168.1.3 | pihole-01.lab.homelab.example | https://pihole-01.lab.homelab.example | DNS + Ad-Blocking + Unbound |
+| **Pi-hole Secondary** | 192.168.1.4 | pihole-02.lab.homelab.example | https://pihole-02.lab.homelab.example | Redundante DNS (optional) |
+| **UniFi Switch Main** | 192.168.1.10 | switch-main-01.lab.homelab.example | - | Hauptswitch Arbeitszimmer |
+| **UniFi AP Wohnzimmer** | 192.168.1.11 | ap-wz-01.lab.homelab.example | - | Access Point Wohnzimmer |
+| **UniFi AP Schlafzimmer** | 192.168.1.12 | ap-sz-01.lab.homelab.example | - | Access Point Schlafzimmer |
 
 #### 6.1.2 Homelab Core (192.168.1.21 - 192.168.1.40)
 
 | Gerät | IP | DNS-Name | Öffentlicher Zugang | Notizen |
 |-------|----|---------|--------------------|---------|
-| **Proxmox Host 1** | 192.168.1.21 | pve-01.lab.enzmann.online | https://pve-01.lab.enzmann.online:8006 | Hauptserver |
-| **Proxmox Host 2** | 192.168.1.22 | pve-02.lab.enzmann.online | https://pve-02.lab.enzmann.online:8006 | Backup/Cluster (optional) |
-| **TrueNAS Scale** | 192.168.1.25 | nas-01.lab.enzmann.online | https://nas-01.lab.enzmann.online | Zentraler Storage |
+| **Proxmox Host 1** | 192.168.1.21 | pve-01.lab.homelab.example | https://pve-01.lab.homelab.example:8006 | Hauptserver |
+| **Proxmox Host 2** | 192.168.1.22 | pve-02.lab.homelab.example | https://pve-02.lab.homelab.example:8006 | Backup/Cluster (optional) |
+| **TrueNAS Scale** | 192.168.1.25 | nas-01.lab.homelab.example | https://nas-01.lab.homelab.example | Zentraler Storage |
 
 #### 6.1.3 Homelab Services (192.168.1.41 - 192.168.1.99)
 
 | Service | IP | DNS-Name | Öffentlicher Zugang | Kategorie | Notizen |
 |---------|----|---------|--------------------|-----------|---------|
-| **Home Assistant Prod** | 192.168.1.41 | ha-prod-01.lab.enzmann.online | https://ha-prod-01.lab.enzmann.online | IOT | Produktiv HA Instance |
-| **Home Assistant Test** | 192.168.1.42 | ha-test-01.lab.enzmann.online | - | IOT | Test/Development |
-| **Docker Swarm Manager** | 192.168.1.45 | docker-01.lab.enzmann.online | - | Core | Swarm Leader |
-| **Docker Swarm Worker 1** | 192.168.1.46 | docker-02.lab.enzmann.online | - | Core | Swarm Worker (optional) |
-| **Docker Swarm Worker 2** | 192.168.1.47 | docker-03.lab.enzmann.online | - | Core | Swarm Worker (optional) |
-| **Traefik Reverse Proxy** | 192.168.1.48 | traefik-01.lab.enzmann.online | https://traefik-01.lab.enzmann.online | Core | SSL-Terminierung |
-| **Portainer** | 192.168.1.50 | portainer-01.lab.enzmann.online | https://portainer-01.lab.enzmann.online | Management | Docker Management |
-| **Grafana** | 192.168.1.51 | grafana-01.lab.enzmann.online | https://grafana-01.lab.enzmann.online | Monitoring | Dashboard |
-| **InfluxDB** | 192.168.1.52 | influx-01.lab.enzmann.online | - | Monitoring | Time Series DB |
-| **MQTT Broker** | 192.168.1.55 | mqtt-01.lab.enzmann.online | - | IOT | Mosquitto |
-| **Prometheus** | 192.168.1.56 | prometheus-01.lab.enzmann.online | - | Monitoring | Metrics Collection |
-| **Node Exporter** | 192.168.1.57 | nodeexp-01.lab.enzmann.online | - | Monitoring | System Metrics |
-| **Loki** | 192.168.1.58 | loki-01.lab.enzmann.online | - | Monitoring | Log Aggregation |
-| **Jaeger** | 192.168.1.59 | jaeger-01.lab.enzmann.online | - | Monitoring | Distributed Tracing |
+| **Home Assistant Prod** | 192.168.1.41 | ha-prod-01.lab.homelab.example | https://ha-prod-01.lab.homelab.example | IOT | Produktiv HA Instance |
+| **Home Assistant Test** | 192.168.1.42 | ha-test-01.lab.homelab.example | - | IOT | Test/Development |
+| **Docker Swarm Manager** | 192.168.1.45 | docker-01.lab.homelab.example | - | Core | Swarm Leader |
+| **Docker Swarm Worker 1** | 192.168.1.46 | docker-02.lab.homelab.example | - | Core | Swarm Worker (optional) |
+| **Docker Swarm Worker 2** | 192.168.1.47 | docker-03.lab.homelab.example | - | Core | Swarm Worker (optional) |
+| **Traefik Reverse Proxy** | 192.168.1.48 | traefik-01.lab.homelab.example | https://traefik-01.lab.homelab.example | Core | SSL-Terminierung |
+| **Portainer** | 192.168.1.50 | portainer-01.lab.homelab.example | https://portainer-01.lab.homelab.example | Management | Docker Management |
+| **Grafana** | 192.168.1.51 | grafana-01.lab.homelab.example | https://grafana-01.lab.homelab.example | Monitoring | Dashboard |
+| **InfluxDB** | 192.168.1.52 | influx-01.lab.homelab.example | - | Monitoring | Time Series DB |
+| **MQTT Broker** | 192.168.1.55 | mqtt-01.lab.homelab.example | - | IOT | Mosquitto |
+| **Prometheus** | 192.168.1.56 | prometheus-01.lab.homelab.example | - | Monitoring | Metrics Collection |
+| **Node Exporter** | 192.168.1.57 | nodeexp-01.lab.homelab.example | - | Monitoring | System Metrics |
+| **Loki** | 192.168.1.58 | loki-01.lab.homelab.example | - | Monitoring | Log Aggregation |
+| **Jaeger** | 192.168.1.59 | jaeger-01.lab.homelab.example | - | Monitoring | Distributed Tracing |
 | **Reserve** | 192.168.1.60-99 | - | - | - | **40 weitere IPs verfügbar** |
 
 #### 6.1.4 Client Devices (192.168.1.201 - 192.168.1.220)
 
 | Gerät | IP | DNS-Name | Zugriff | Notizen |
 |-------|----|---------|---------|---------| 
-| **Admin Desktop** | 192.168.1.205 | desktop-admin-01.lab.enzmann.online | Kabelgebunden | Management PC |
-| **Admin Laptop** | 192.168.1.206 | laptop-admin-01.lab.enzmann.online | WiFi "Enzian" | Mobile Management |
-| **Drucker** | 192.168.1.210 | printer-01.lab.enzmann.online | WiFi "Enzian" | Netzwerkdrucker |
+| **Admin Desktop** | 192.168.1.205 | desktop-admin-01.lab.homelab.example | Kabelgebunden | Management PC |
+| **Admin Laptop** | 192.168.1.206 | laptop-admin-01.lab.homelab.example | WiFi "Enzian" | Mobile Management |
+| **Drucker** | 192.168.1.210 | printer-01.lab.homelab.example | WiFi "Enzian" | Netzwerkdrucker |
 | **Reserve** | 192.168.1.211-220 | - | - | **Weitere Laptops, Geräte** |
 
 ### 6.2 IOT-VLAN Inventar
@@ -1566,68 +1566,68 @@ cd dns-stack && docker-compose up -d
 
 | Gerät | IP | DNS-Name | Hersteller | Notizen |
 |-------|----|---------|-----------|---------| 
-| **Homematic CCU** | 192.168.100.10 | hm-ccu-uv-01.iot.enzmann.online | eQ-3 | Zentrale Steuerung |
-| **UniFi Switch IOT** | 192.168.100.11 | switch-uv-01.iot.enzmann.online | Ubiquiti | Hauptverteiler (optional) |
+| **Homematic CCU** | 192.168.100.10 | hm-ccu-uv-01.iot.homelab.example | eQ-3 | Zentrale Steuerung |
+| **UniFi Switch IOT** | 192.168.100.11 | switch-uv-01.iot.homelab.example | Ubiquiti | Hauptverteiler (optional) |
 
 #### 6.2.2 Flur (192.168.100.65 - 192.168.100.126)
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Notizen |
 |-------|----|---------|-----------|---------|---------| 
-| **Shelly 1 Deckenlampe** | 192.168.100.70 | shelly-1-flur-01.iot.enzmann.online | Allterco | Shelly 1 | Hauptlicht |
-| **Homematic Bewegungsmelder** | 192.168.100.71 | hm-motion-flur-01.iot.enzmann.online | eQ-3 | HmIP-SMI | Eingang |
-| **Homematic Türkontakt** | 192.168.100.72 | hm-door-flur-01.iot.enzmann.online | eQ-3 | HmIP-SWDO | Haustür |
+| **Shelly 1 Deckenlampe** | 192.168.100.70 | shelly-1-flur-01.iot.homelab.example | Allterco | Shelly 1 | Hauptlicht |
+| **Homematic Bewegungsmelder** | 192.168.100.71 | hm-motion-flur-01.iot.homelab.example | eQ-3 | HmIP-SMI | Eingang |
+| **Homematic Türkontakt** | 192.168.100.72 | hm-door-flur-01.iot.homelab.example | eQ-3 | HmIP-SWDO | Haustür |
 
 #### 6.2.3 Arbeitszimmer (192.168.100.129 - 192.168.100.190)
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Notizen |
 |-------|----|---------|-----------|---------|---------| 
-| **Shelly Dimmer** | 192.168.100.135 | shelly-dimmer-az-01.iot.enzmann.online | Allterco | Shelly Dimmer 2 | Schreibtischlampe |
-| **Hue Strip** | 192.168.100.136 | hue-az-01.iot.enzmann.online | Philips | Hue Lightstrip | Monitor-Backlight |
-| **Homematic Fenster** | 192.168.100.137 | hm-window-az-01.iot.enzmann.online | eQ-3 | HmIP-SWDO | Fenster Garten |
+| **Shelly Dimmer** | 192.168.100.135 | shelly-dimmer-az-01.iot.homelab.example | Allterco | Shelly Dimmer 2 | Schreibtischlampe |
+| **Hue Strip** | 192.168.100.136 | hue-az-01.iot.homelab.example | Philips | Hue Lightstrip | Monitor-Backlight |
+| **Homematic Fenster** | 192.168.100.137 | hm-window-az-01.iot.homelab.example | eQ-3 | HmIP-SWDO | Fenster Garten |
 
 #### 6.2.4 Schlafzimmer (192.168.100.193 - 192.168.100.254)
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Notizen |
 |-------|----|---------|-----------|---------|---------| 
-| **Hue Lampe Links** | 192.168.100.200 | hue-sz-01.iot.enzmann.online | Philips | Hue White and Color | Nachttischlampe |
-| **Hue Lampe Rechts** | 192.168.100.201 | hue-sz-02.iot.enzmann.online | Philips | Hue White and Color | Nachttischlampe |
-| **Homematic Fensterkontakt** | 192.168.100.202 | hm-window-sz-01.iot.enzmann.online | eQ-3 | HmIP-SWDO | Fenster Straße |
-| **Homematic Thermostat** | 192.168.100.203 | hm-thermo-sz-01.iot.enzmann.online | eQ-3 | HmIP-eTRV | Heizkörperthermostat |
+| **Hue Lampe Links** | 192.168.100.200 | hue-sz-01.iot.homelab.example | Philips | Hue White and Color | Nachttischlampe |
+| **Hue Lampe Rechts** | 192.168.100.201 | hue-sz-02.iot.homelab.example | Philips | Hue White and Color | Nachttischlampe |
+| **Homematic Fensterkontakt** | 192.168.100.202 | hm-window-sz-01.iot.homelab.example | eQ-3 | HmIP-SWDO | Fenster Straße |
+| **Homematic Thermostat** | 192.168.100.203 | hm-thermo-sz-01.iot.homelab.example | eQ-3 | HmIP-eTRV | Heizkörperthermostat |
 
 #### 6.2.5 Wohnzimmer (192.168.101.1 - 192.168.101.62)
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Notizen |
 |-------|----|---------|-----------|---------|---------| 
-| **Hue Bridge** | 192.168.101.1 | hue-wz-bridge01.iot.enzmann.online | Philips | Hue Bridge v2 | Zentrale Bridge |
-| **Sonos One** | 192.168.101.10 | sonos-wz-01.iot.enzmann.online | Sonos | Sonos One | Musikwiedergabe |
-| **Hue Deckenlampe** | 192.168.101.11 | hue-wz-01.iot.enzmann.online | Philips | Hue White Ambiance | Hauptbeleuchtung |
-| **Hue Stehlampe** | 192.168.101.12 | hue-wz-02.iot.enzmann.online | Philips | Hue Go | Ambientelicht |
-| **Samsung TV** | 192.168.101.15 | tv-wz-01.iot.enzmann.online | Samsung | QE55Q80A | Smart TV |
+| **Hue Bridge** | 192.168.101.1 | hue-wz-bridge01.iot.homelab.example | Philips | Hue Bridge v2 | Zentrale Bridge |
+| **Sonos One** | 192.168.101.10 | sonos-wz-01.iot.homelab.example | Sonos | Sonos One | Musikwiedergabe |
+| **Hue Deckenlampe** | 192.168.101.11 | hue-wz-01.iot.homelab.example | Philips | Hue White Ambiance | Hauptbeleuchtung |
+| **Hue Stehlampe** | 192.168.101.12 | hue-wz-02.iot.homelab.example | Philips | Hue Go | Ambientelicht |
+| **Samsung TV** | 192.168.101.15 | tv-wz-01.iot.homelab.example | Samsung | QE55Q80A | Smart TV |
 
 #### 6.2.6 Küche (192.168.101.65 - 192.168.101.126)
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Notizen |
 |-------|----|---------|-----------|---------|---------| 
-| **Shelly 1PM Dunstabzug** | 192.168.101.70 | shelly-pro1pm-kueche-01.iot.enzmann.online | Allterco | Shelly Pro 1PM | Dunstabzugsteuerung |
-| **Hue Unterbauleuchte** | 192.168.101.71 | hue-kueche-01.iot.enzmann.online | Philips | Hue Lightstrip | Arbeitsplatte |
-| **Sonos One SL** | 192.168.101.72 | sonos-kueche-01.iot.enzmann.online | Sonos | Sonos One SL | Küchenmusik |
-| **Homematic Temp** | 192.168.101.73 | hm-temp-kueche-01.iot.enzmann.online | eQ-3 | HmIP-STH | Raumtemperatur |
+| **Shelly 1PM Dunstabzug** | 192.168.101.70 | shelly-pro1pm-kueche-01.iot.homelab.example | Allterco | Shelly Pro 1PM | Dunstabzugsteuerung |
+| **Hue Unterbauleuchte** | 192.168.101.71 | hue-kueche-01.iot.homelab.example | Philips | Hue Lightstrip | Arbeitsplatte |
+| **Sonos One SL** | 192.168.101.72 | sonos-kueche-01.iot.homelab.example | Sonos | Sonos One SL | Küchenmusik |
+| **Homematic Temp** | 192.168.101.73 | hm-temp-kueche-01.iot.homelab.example | eQ-3 | HmIP-STH | Raumtemperatur |
 
 #### 6.2.7 Bad (192.168.101.129 - 192.168.101.190)
 
 | Gerät | IP | DNS-Name | Hersteller | Modell | Notizen |
 |-------|----|---------|-----------|---------|---------| 
-| **Shelly 1 Lüftung** | 192.168.101.135 | shelly-1-bad-01.iot.enzmann.online | Allterco | Shelly 1 | Lüftungssteuerung |
-| **Homematic Feuchte** | 192.168.101.136 | hm-humid-bad-01.iot.enzmann.online | eQ-3 | HmIP-STH | Luftfeuchtigkeit |
-| **Hue Spiegellampe** | 192.168.101.137 | hue-bad-01.iot.enzmann.online | Philips | Hue White | Spiegelbeleuchtung |
+| **Shelly 1 Lüftung** | 192.168.101.135 | shelly-1-bad-01.iot.homelab.example | Allterco | Shelly 1 | Lüftungssteuerung |
+| **Homematic Feuchte** | 192.168.101.136 | hm-humid-bad-01.iot.homelab.example | eQ-3 | HmIP-STH | Luftfeuchtigkeit |
+| **Hue Spiegellampe** | 192.168.101.137 | hue-bad-01.iot.homelab.example | Philips | Hue White | Spiegelbeleuchtung |
 
 #### 6.2.8 Mobile Clients (192.168.101.191 - 192.168.101.230)
 
 | Gerät | IP | DNS-Name | Hersteller | Notizen |
 |-------|----|---------|-----------|---------| 
-| **iPhone Admin** | 192.168.101.200 | iphone-admin-01.iot.enzmann.online | Apple | Home Assistant App |
-| **iPad Wohnzimmer** | 192.168.101.201 | ipad-wz-01.iot.enzmann.online | Apple | Dashboard, Sonos |
-| **Android Tablet** | 192.168.101.202 | tablet-android-01.iot.enzmann.online | Samsung | Küchen-Dashboard |
+| **iPhone Admin** | 192.168.101.200 | iphone-admin-01.iot.homelab.example | Apple | Home Assistant App |
+| **iPad Wohnzimmer** | 192.168.101.201 | ipad-wz-01.iot.homelab.example | Apple | Dashboard, Sonos |
+| **Android Tablet** | 192.168.101.202 | tablet-android-01.iot.homelab.example | Samsung | Küchen-Dashboard |
 | **Reserve** | 192.168.101.203-230 | - | - | **Weitere Mobile Geräte** |
 
 ### 6.3 Gäste-VLAN Inventar
@@ -1770,8 +1770,8 @@ docker network inspect traefik
 # UniFi Controller → Settings → Networks → Advanced → Multicast DNS
 
 # MQTT Broker Erreichbarkeit testen
-mosquitto_pub -h mqtt-01.lab.enzmann.online -t test -m "hello"
-mosquitto_sub -h mqtt-01.lab.enzmann.online -t test
+mosquitto_pub -h mqtt-01.lab.homelab.example -t test -m "hello"
+mosquitto_sub -h mqtt-01.lab.homelab.example -t test
 
 # Home Assistant Logs
 docker logs homeassistant_homeassistant_1 --tail 100
@@ -1798,11 +1798,11 @@ docker exec -it $(docker ps -q -f name=traefik) cat /letsencrypt/acme.json | jq 
 
 ```bash
 # DNS Auflösung testen (lokal)
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig ha-prod-01.lab.enzmann.online @192.168.1.3
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig ha-prod-01.lab.homelab.example @192.168.1.3
 
 # Traefik Dashboard prüfen
-curl -k https://traefik-01.lab.enzmann.online
+curl -k https://traefik-01.lab.homelab.example
 # Router und Services Status kontrollieren
 
 # Service Labels überprüfen
@@ -1816,8 +1816,8 @@ curl -v http://192.168.1.41:8123  # Direkter Service-Zugriff
 
 ```bash
 # DNS Challenge manuell testen
-dig TXT _acme-challenge.lab.enzmann.online
-dig TXT _acme-challenge.iot.enzmann.online
+dig TXT _acme-challenge.lab.homelab.example
+dig TXT _acme-challenge.iot.homelab.example
 
 # netcup DNS API manuell testen
 # (DNS-Record erstellen/löschen via API)
@@ -1839,11 +1839,11 @@ docker logs $(docker ps -q -f name=pihole) --tail 50
 docker logs $(docker ps -q -f name=unbound) --tail 50
 
 # DNS-Auflösung manuell testen
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
-dig @192.168.1.3 ha-prod-01.lab.enzmann.online
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
+dig @192.168.1.3 ha-prod-01.lab.homelab.example
 
 # Pi-hole Query-Log prüfen
-# Web-Interface: https://pihole-01.lab.enzmann.online → Query Log
+# Web-Interface: https://pihole-01.lab.homelab.example → Query Log
 ```
 
 **2. Unbound nicht erreichbar:**
@@ -1892,8 +1892,8 @@ docker exec -it $(docker ps -q -f name=pihole) pihole restartdns
 docker exec -it $(docker ps -q -f name=unbound) cat /opt/unbound/etc/unbound/unbound.conf | grep -A2 "forward-zone"
 
 # Wildcard-Test
-nslookup test.lab.enzmann.online 192.168.1.3
-nslookup test.iot.enzmann.online 192.168.1.3
+nslookup test.lab.homelab.example 192.168.1.3
+nslookup test.iot.homelab.example 192.168.1.3
 ```
 
 #### 7.2.4 VLAN-spezifische Probleme
@@ -1982,8 +1982,8 @@ free -h
 df -h
 
 # Service-spezifische Metriken
-curl http://influx-01.lab.enzmann.online:8086/health
-curl http://grafana-01.lab.enzmann.online:3000/api/health
+curl http://influx-01.lab.homelab.example:8086/health
+curl http://grafana-01.lab.homelab.example:3000/api/health
 ```
 
 #### 7.2.6 Quick-Fix Kommandos
@@ -2124,12 +2124,12 @@ docker stack deploy -c docker-compose.yml monitoring
 **8. Testen:**
 ```bash
 # DNS-Auflösung
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
 
 # HTTPS-Zugriff
-curl -k https://ha-prod-01.lab.enzmann.online
-curl -k https://grafana-01.lab.enzmann.online
-curl -k https://traefik-01.lab.enzmann.online
+curl -k https://ha-prod-01.lab.homelab.example
+curl -k https://grafana-01.lab.homelab.example
+curl -k https://traefik-01.lab.homelab.example
 ```
 
 #### Erweiterte Einrichtung (Hochverfügbarkeit)
@@ -2159,26 +2159,26 @@ Nach erfolgreichem Deployment sind folgende URLs verfügbar:
 
 #### Management-Interfaces
 ```
-https://pihole-01.lab.enzmann.online      # Pi-hole Admin (DNS-Management)
-https://traefik-01.lab.enzmann.online     # Traefik Dashboard (SSL/Routing)
-https://portainer-01.lab.enzmann.online   # Docker Management
-https://unifi-controller-01.lab.enzmann.online:8443  # UniFi Controller
-https://pve-01.lab.enzmann.online:8006    # Proxmox Web-Interface (optional)
-https://nas-01.lab.enzmann.online         # TrueNAS Management (optional)
+https://pihole-01.lab.homelab.example      # Pi-hole Admin (DNS-Management)
+https://traefik-01.lab.homelab.example     # Traefik Dashboard (SSL/Routing)
+https://portainer-01.lab.homelab.example   # Docker Management
+https://unifi-controller-01.lab.homelab.example:8443  # UniFi Controller
+https://pve-01.lab.homelab.example:8006    # Proxmox Web-Interface (optional)
+https://nas-01.lab.homelab.example         # TrueNAS Management (optional)
 ```
 
 #### Homelab-Services
 ```
-https://ha-prod-01.lab.enzmann.online     # Home Assistant (Smart Home)
-https://grafana-01.lab.enzmann.online     # Monitoring Dashboard
-http://influx-01.lab.enzmann.online:8086  # InfluxDB (keine HTTPS)
-http://mqtt-01.lab.enzmann.online:1883    # MQTT Broker (Port)
+https://ha-prod-01.lab.homelab.example     # Home Assistant (Smart Home)
+https://grafana-01.lab.homelab.example     # Monitoring Dashboard
+http://influx-01.lab.homelab.example:8086  # InfluxDB (keine HTTPS)
+http://mqtt-01.lab.homelab.example:1883    # MQTT Broker (Port)
 ```
 
 #### IOT-Geräte (Beispiele)
 ```
-https://hm-ccu-uv-01.iot.enzmann.online   # Homematic CCU
-https://hue-wz-bridge01.iot.enzmann.online # Hue Bridge
+https://hm-ccu-uv-01.iot.homelab.example   # Homematic CCU
+https://hue-wz-bridge01.iot.homelab.example # Hue Bridge
 # Weitere Geräte-IPs siehe Inventar (Kapitel 6)
 ```
 

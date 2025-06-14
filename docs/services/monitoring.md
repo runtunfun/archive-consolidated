@@ -44,7 +44,7 @@ graph TB
 ### Grafana
 - **Version:** Latest
 - **Port:** 3000 (HTTPS via Traefik)
-- **URL:** https://grafana-01.lab.enzmann.online
+- **URL:** https://grafana-01.lab.homelab.example
 - **Zweck:** Dashboard und Visualisierung
 
 ### InfluxDB
@@ -72,7 +72,7 @@ services:
     image: grafana/grafana:${GRAFANA_VERSION}
     hostname: grafana-01
     environment:
-      GF_SERVER_ROOT_URL: "https://grafana-01.lab.enzmann.online"
+      GF_SERVER_ROOT_URL: "https://grafana-01.lab.homelab.example"
       GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD}"
       GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel"
       GF_SECURITY_ALLOW_EMBEDDING: "true"
@@ -85,7 +85,7 @@ services:
       - homelab-internal
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.enzmann.online`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana-01.lab.homelab.example`)"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       - "homelab.service.name=grafana"

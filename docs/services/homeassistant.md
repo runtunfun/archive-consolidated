@@ -37,7 +37,7 @@ graph TB
 ### Home Assistant Core
 - **Version:** Latest Stable
 - **Port:** 8123 (HTTP)
-- **HTTPS:** Via Traefik (ha-prod-01.lab.enzmann.online)
+- **HTTPS:** Via Traefik (ha-prod-01.lab.homelab.example)
 - **Zweck:** Zentrale Smart Home Steuerung
 
 ### PostgreSQL
@@ -72,7 +72,7 @@ services:
     labels:
       # Traefik Labels
       - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.enzmann.online`)"
+      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.homelab.example`)"
       - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
       
@@ -191,7 +191,7 @@ history:
 ```yaml title="/config/configuration.yaml"
 # MQTT Configuration
 mqtt:
-  broker: mqtt-01.lab.enzmann.online
+  broker: mqtt-01.lab.homelab.example
   port: 1883
   username: !secret mqtt_user
   password: !secret mqtt_password
@@ -218,7 +218,7 @@ http:
 
 # Internal URL (für direkte IOT-Zugriffe)
 internal_url: "http://192.168.1.41:8123"
-external_url: "https://ha-prod-01.lab.enzmann.online"
+external_url: "https://ha-prod-01.lab.homelab.example"
 ```
 
 ## MQTT Broker Konfiguration
@@ -321,7 +321,7 @@ homematic:
 ```yaml title="InfluxDB Metrics Export"
 # InfluxDB Configuration
 influxdb:
-  host: influx-01.lab.enzmann.online
+  host: influx-01.lab.homelab.example
   port: 8086
   database: homeassistant
   username: !secret influxdb_user
@@ -453,7 +453,7 @@ docker exec homeassistant_homeassistant_1 nc -zv postgres-ha-01 5432
 docker exec homeassistant_mosquitto_1 mosquitto_pub -t test -m "hello"
 
 # Message-Flow testen
-mosquitto_sub -h mqtt-01.lab.enzmann.online -t homeassistant/# -v
+mosquitto_sub -h mqtt-01.lab.homelab.example -t homeassistant/# -v
 
 # User-Authentication prüfen
 docker exec homeassistant_mosquitto_1 cat /mosquitto/config/passwd

@@ -136,7 +136,7 @@ docker-compose up -d
 
 # Health-Check
 docker-compose ps
-nslookup ha-prod-01.lab.enzmann.online 192.168.1.3
+nslookup ha-prod-01.lab.homelab.example 192.168.1.3
 ```
 
 **UniFi Update-Prozess:**
@@ -196,9 +196,9 @@ check_service_health() {
 }
 
 # Service Health Checks
-check_service_health "https://ha-prod-01.lab.enzmann.online" "200"
-check_service_health "https://grafana-01.lab.enzmann.online" "200" 
-check_service_health "https://traefik-01.lab.enzmann.online" "200"
+check_service_health "https://ha-prod-01.lab.homelab.example" "200"
+check_service_health "https://grafana-01.lab.homelab.example" "200" 
+check_service_health "https://traefik-01.lab.homelab.example" "200"
 ```
 
 ### IOT-Geräte Updates
@@ -267,7 +267,7 @@ dig @192.168.1.3 google.com +stats | grep "Query time"
 
 # Certificate Expiry
 echo "🔒 Certificate Status:"
-echo | openssl s_client -connect ha-prod-01.lab.enzmann.online:443 2>/dev/null | openssl x509 -noout -dates
+echo | openssl s_client -connect ha-prod-01.lab.homelab.example:443 2>/dev/null | openssl x509 -noout -dates
 
 # Docker System Info
 echo "🐳 Docker System:"
@@ -288,7 +288,7 @@ ls -la /opt/homelab/secrets/encrypted-backups/ | head -5
 ls -la /opt/homelab/backup/ | head -5
 
 # Test GPG-Entschlüsselung
-echo "test" | gpg --encrypt -r admin@enzmann.online | gpg --decrypt
+echo "test" | gpg --encrypt -r admin@homelab.example | gpg --decrypt
 ```
 
 ### Monatliche Wartung (2 Stunden)

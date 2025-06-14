@@ -53,7 +53,7 @@ services:
       # Let's Encrypt mit netcup DNS-Challenge für Wildcards
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=netcup"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@enzmann.online"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@homelab.example"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       
       # Logging
@@ -77,7 +77,7 @@ services:
     labels:
       # Traefik Dashboard
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik-01.lab.enzmann.online`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik-01.lab.homelab.example`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.routers.dashboard.middlewares=auth"
@@ -128,7 +128,7 @@ labels:
   - "traefik.enable=true"
   
   # Routing-Regel (Host-basiert)
-  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.enzmann.online`)"
+  - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_NAME}-01.lab.homelab.example`)"
   
   # SSL-Zertifikat
   - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=letsencrypt"
@@ -153,7 +153,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.enzmann.online`)"
+      - "traefik.http.routers.homeassistant.rule=Host(`ha-prod-01.lab.homelab.example`)"
       - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
 

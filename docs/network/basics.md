@@ -54,9 +54,9 @@ Tertiary DNS:  8.8.8.8      # Fallback für externes DNS
 
 #### Domain-Schema
 
-- **Standard-LAN**: `[geraetetype]-[nummer].lab.enzmann.online`
-- **IOT-VLAN**: `[geraetetype]-[raum]-[nummer].iot.enzmann.online`
-- **Gäste-VLAN**: `[geraetetype]-[nummer].guest.enzmann.online`
+- **Standard-LAN**: `[geraetetype]-[nummer].lab.homelab.example`
+- **IOT-VLAN**: `[geraetetype]-[raum]-[nummer].iot.homelab.example`
+- **Gäste-VLAN**: `[geraetetype]-[nummer].guest.homelab.example`
 
 #### Gerätetypen (Präfixe)
 
@@ -102,14 +102,14 @@ uv        # Unterverteilung
 
 ```bash
 # Standard-LAN (Homelab)
-pve-01.lab.enzmann.online                   # Proxmox Host 1
-ha-prod-01.lab.enzmann.online               # Home Assistant Produktiv
-traefik-01.lab.enzmann.online               # Traefik Reverse Proxy
+pve-01.lab.homelab.example                   # Proxmox Host 1
+ha-prod-01.lab.homelab.example               # Home Assistant Produktiv
+traefik-01.lab.homelab.example               # Traefik Reverse Proxy
 
 # IOT-VLAN (Smart Home)
-shelly-dimmer-flur-01.iot.enzmann.online    # Shelly Dimmer im Flur
-hue-wz-03.iot.enzmann.online                # Hue Lampe im Wohnzimmer
-hm-temp-sz-01.iot.enzmann.online            # Temperatursensor Schlafzimmer
+shelly-dimmer-flur-01.iot.homelab.example    # Shelly Dimmer im Flur
+hue-wz-03.iot.homelab.example                # Hue Lampe im Wohnzimmer
+hm-temp-sz-01.iot.homelab.example            # Temperatursensor Schlafzimmer
 ```
 
 !!! tip "Konsistente Namensgebung"
