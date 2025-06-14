@@ -7,23 +7,23 @@ Das Homelab-Netzwerk basiert auf einer professionellen VLAN-Segmentierung mit dr
 ## Netzwerk-Architektur
 
 ```
-Internet (netcup Domain)
-         |
-    UniFi Gateway
-         |
-    ┌────┼────┐
-    │    │    │
-Standard│IOT │Gäste
-  VLAN  │VLAN│VLAN
-         │    │
-    Homelab│Smart│Guest
-    Services│Home│Access
-         │    │
-    Pi-hole │    │
-    + DNS   │    │
-         │    │
-    Docker  │    │
-    Swarm   │    │
+        Internet (netcup Domain)
+                   |
+              UniFi Gateway
+                   |
+           ┌───────┼───────┐
+           │       │       │
+       Standard   IOT    Gäste
+        VLAN     VLAN     VLAN
+           │       │       │
+       Homelab   Smart   Guest
+       Services  Home    Access
+           │       │       │
+        Pi-hole    │       │
+        + DNS      │       │
+           │       │       │
+        Docker     │       │
+        Swarm      │       │
 ```
 
 ## VLAN-Übersicht
