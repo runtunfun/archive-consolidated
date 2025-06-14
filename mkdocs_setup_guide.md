@@ -2,19 +2,124 @@
 
 ## 1. MkDocs Grundkonfiguration
 
-### Installation und Setup
+### WSL II (Debian) Vorbereitung
 
 ```bash
-# MkDocs und Theme installieren
+# System aktualisieren
+sudo apt update && sudo apt upgrade -y
+
+# Python und Git installieren (falls nicht vorhanden)
+sudo apt install -y python3 python3-pip python3-venv git
+
+# Arbeitsverzeichnis erstellen
+mkdir -p ~/projects/homelab-docs
+cd ~/projects/homelab-docs
+```
+
+### Git Repository initialisieren
+
+```bash
+# Git Repository initialisieren
+git init
+
+# Basis .gitignore erstellen
+cat > .gitignore << 'EOF'
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+site/
+
+# MkDocs
+site/
+.cache/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+EOF
+
+# Erste Struktur committen
+git add .gitignore
+git commit -m "Initial commit: Add .gitignore"
+```
+
+### Python Virtual Environment Setup
+
+```bash
+# Virtual Environment erstellen
+python3 -m venv venv
+
+# Virtual Environment aktivieren
+source venv/bin/activate
+
+# pip upgraden
+pip install --upgrade pip
+
+# MkDocs und Plugins installieren
 pip install mkdocs
 pip install mkdocs-material
 pip install mkdocs-mermaid2-plugin
 pip install mkdocs-table-reader-plugin
 pip install mkdocs-minify-plugin
 
-# Projekt initialisieren
-mkdocs new homelab-docs
-cd homelab-docs
+# Requirements-Datei für Reproduzierbarkeit erstellen
+pip freeze > requirements.txt
+
+# Requirements zu Git hinzufügen
+git add requirements.txt
+git commit -m "Add Python requirements"
+```
+
+### Projekt initialisieren
+
+```bash
+# MkDocs Projekt initialisieren (überschreibt Standard-Struktur)
+mkdocs new .
+
+# Git Status prüfen und Standard-Dateien committen
+git add .
+git commit -m "Initial MkDocs project structure"
+```
+
+### Aktivierungs-Script erstellen (Optional)
+
+```bash
+# Convenience-Script für einfache Aktivierung
+cat > activate_docs.sh << 'EOF'
+#!/bin/bash
+cd ~/projects/homelab-docs
+source venv/bin/activate
+echo "✅ Virtual Environment activated"
+echo "📚 MkDocs Commands:"
+echo "   mkdocs serve    # Local development server"
+echo "   mkdocs build    # Build static site"
+echo "   mkdocs --help   # Show all commands"
+EOF
+
+chmod +x activate_docs.sh
+
+# Script zu Git hinzufügen
+git add activate_docs.sh
+git commit -m "Add activation convenience script"
 ```
 
 ### mkdocs.yml Konfiguration
@@ -153,12 +258,31 @@ extra_css:
   - stylesheets/extra.css
 ```
 
-### Ordnerstruktur erstellen
+### Ordnerstruktur erstellen und versionieren
 
 ```bash
+# Dokumentationsstruktur erstellen
 mkdir -p docs/{planning,network,infrastructure,services,security,inventory,operations,appendix}
 mkdir -p docs/stylesheets
 mkdir -p docs/images
+
+# Basis-Dateien erstellen
+touch docs/index.md
+echo "# Bilder und Diagramme" > docs/images/README.md
+
+# Placeholder-Dateien für Navigation erstellen (werden später überschrieben)
+touch docs/planning/{overview,hardware,technology}.md
+touch docs/network/{basics,vlans,unifi,zones}.md
+touch docs/infrastructure/{dns,proxy,ssl}.md
+touch docs/services/{organization,homeassistant,monitoring,management}.md
+touch docs/security/{secrets,backup,git}.md
+touch docs/inventory/{standard-lan,iot-vlan,guest-vlan}.md
+touch docs/operations/{maintenance,troubleshooting,monitoring}.md
+touch docs/appendix/{deployment,urls,checklists,support}.md
+
+# Struktur zu Git hinzufügen
+git add docs/
+git commit -m "Create documentation structure"
 ```
 
 ### Extra CSS (docs/stylesheets/extra.css)
@@ -320,17 +444,116 @@ Das Ergebnis soll direkt in die MkDocs-Dokumentation kopierbar sein.
 
 ## 4. Finale Zusammenführung
 
-### Lokales Testing
+### Kapitel-Dateien integrieren
 
 ```bash
-# Dokumentation lokal testen
+# Virtual Environment aktivieren (falls nicht aktiv)
+source venv/bin/activate
+
+# Alle erhaltenen Markdown-Dateien in entsprechende Ordner kopieren
+# Beispiel für Planung:
+cp /path/to/received/overview.md docs/planning/
+cp /path/to/received/hardware.md docs/planning/
+cp /path/to/received/technology.md docs/planning/
+
+# Nach jedem Kapitel committen
+git add docs/planning/
+git commit -m "Add planning chapter documentation"
+
+# Diesen Vorgang für alle 8 Kapitel wiederholen
+```
+
+### WSL II spezifische Testing-Tipps
+
+```bash
+# Entwicklungsserver starten
 mkdocs serve
 
-# Build für Produktion
+# Output zeigt: Serving on http://127.0.0.1:8000/
+# In Windows Browser aufrufen: http://localhost:8000/
+
+# Alternativ: Spezifische IP binden für bessere WSL-Kompatibilität
+mkdocs serve --dev-addr=0.0.0.0:8000
+
+# Dann erreichbar unter: http://[WSL-IP]:8000/
+# WSL-IP ermitteln: ip addr show eth0
+```
+
+### Build und Deployment
+
+```bash
+# Dokumentation für Produktion builden
 mkdocs build
+
+# Überprüfen der generierten Dateien
+ls -la site/
+
+# Site-Ordner zu .gitignore hinzufügen (falls noch nicht)
+echo "site/" >> .gitignore
+
+# Vollständige Dokumentation committen
+git add .
+git commit -m "Complete homelab documentation"
+
+# Optional: Remote Repository hinzufügen
+git remote add origin https://github.com/username/homelab-docs.git
+git push -u origin main
 
 # Deploy (z.B. GitHub Pages)
 mkdocs gh-deploy
+```
+
+### Convenience Scripts für tägliche Nutzung
+
+```bash
+# Entwicklung-Script erstellen
+cat > dev.sh << 'EOF'
+#!/bin/bash
+cd ~/projects/homelab-docs
+source venv/bin/activate
+echo "🚀 Starting MkDocs development server..."
+mkdocs serve --dev-addr=0.0.0.0:8000
+EOF
+
+# Deploy-Script erstellen
+cat > deploy.sh << 'EOF'
+#!/bin/bash
+cd ~/projects/homelab-docs
+source venv/bin/activate
+echo "🔨 Building documentation..."
+mkdocs build
+echo "✅ Build complete. Files in ./site/"
+echo ""
+echo "📤 Deploy options:"
+echo "   mkdocs gh-deploy    # GitHub Pages"
+echo "   rsync -av site/ user@server:/var/www/docs/  # Own server"
+EOF
+
+# Scripts ausführbar machen
+chmod +x dev.sh deploy.sh
+
+# Scripts zu Git hinzufügen
+git add dev.sh deploy.sh
+git commit -m "Add convenience scripts for development and deployment"
+```
+
+### Backup und Wartung
+
+```bash
+# Requirements regelmäßig aktualisieren
+pip list --outdated
+pip install --upgrade mkdocs mkdocs-material
+
+# Nach Updates: Requirements neu generieren
+pip freeze > requirements.txt
+git add requirements.txt
+git commit -m "Update Python requirements"
+
+# Dokumentation regelmäßig sichern
+git push origin main
+
+# WSL-spezifisches Backup (Optional)
+cp -r ~/projects/homelab-docs /mnt/c/backup/homelab-docs-$(date +%Y%m%d)
 ```
 
 ### Index-Seite (docs/index.md)
@@ -381,4 +604,118 @@ Die Dokumentation ist in logische Bereiche strukturiert:
 - Proxmox + NAS + UniFi Ecosystem
 ```
 
+## 5. Täglicher Workflow
+
+### Dokumentation bearbeiten
+
+```bash
+# 1. Terminal öffnen und ins Projekt wechseln
+cd ~/projects/homelab-docs
+
+# 2. Virtual Environment aktivieren
+source venv/bin/activate
+
+# 3. Entwicklungsserver starten
+mkdocs serve --dev-addr=0.0.0.0:8000
+
+# 4. In anderem Terminal/Tab: Dateien bearbeiten
+# Änderungen werden automatisch im Browser aktualisiert
+
+# 5. Nach Änderungen: Git Workflow
+git add .
+git commit -m "Update documentation: beschreibung der änderung"
+git push origin main
+```
+
+### Schnell-Aktivierung für WSL
+
+```bash
+# Alias in .bashrc hinzufügen für schnellen Zugriff
+echo 'alias docs="cd ~/projects/homelab-docs && source venv/bin/activate"' >> ~/.bashrc
+source ~/.bashrc
+
+# Jetzt reicht: docs
+# Gefolgt von: mkdocs serve --dev-addr=0.0.0.0:8000
+```
+
+### Troubleshooting WSL II
+
+```bash
+# Falls mkdocs serve nicht erreichbar:
+# 1. WSL-IP ermitteln
+ip addr show eth0 | grep inet
+
+# 2. Windows Firewall prüfen (Windows PowerShell als Admin):
+# New-NetFirewallRule -DisplayName "WSL" -Direction Inbound -InterfaceAlias "vEthernet (WSL)" -Action Allow
+
+# 3. Alternative: Port-Forwarding (Windows PowerShell als Admin):
+# netsh interface portproxy add v4tov4 listenport=8000 listenaddress=0.0.0.0 connectport=8000 connectaddress=[WSL-IP]
+
+## 6. Kompletter Workflow - Zusammenfassung
+
+### Einmalige Einrichtung (ca. 15 Minuten)
+
+```bash
+# 1. Projekt-Setup
+mkdir -p ~/projects/homelab-docs && cd ~/projects/homelab-docs
+git init
+python3 -m venv venv
+source venv/bin/activate
+
+# 2. Dependencies installieren
+pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin mkdocs-table-reader-plugin mkdocs-minify-plugin
+pip freeze > requirements.txt
+
+# 3. MkDocs initialisieren und Struktur erstellen
+mkdocs new .
+mkdir -p docs/{planning,network,infrastructure,services,security,inventory,operations,appendix}
+mkdir -p docs/{stylesheets,images}
+
+# 4. Konfiguration (mkdocs.yml) und CSS erstellen
+# [mkdocs.yml und extra.css aus der Anleitung kopieren]
+
+# 5. Git Setup finalisieren
+git add .
+git commit -m "Initial MkDocs project setup"
+```
+
+### Dokumentation integrieren (einmalig nach Chat-Abschluss)
+
+```bash
+# 1. Alle 8 Kapitel-Dateien in entsprechende Ordner kopieren
+# 2. Index-Seite erstellen (Template aus Anleitung)
+# 3. Finaler Commit
+git add .
+git commit -m "Complete homelab documentation"
+git push origin main
+```
+
+### Tägliche Nutzung
+
+```bash
+# Schnellstart (nach Alias-Setup)
+docs                                    # cd + venv aktivieren
+mkdocs serve --dev-addr=0.0.0.0:8000  # Entwicklungsserver
+
+# Browser öffnen: http://localhost:8000/
+# Dokumentation bearbeiten → Auto-Reload im Browser
+# Git Workflow für Änderungen
+```
+
+### Deployment-Optionen
+
+```bash
+# GitHub Pages (empfohlen)
+mkdocs gh-deploy
+
+# Eigener Server
+mkdocs build
+rsync -av site/ user@server:/var/www/docs/
+
+# Docker Container (erweitert)
+# Dockerfile und docker-compose.yml erstellen
+```
+
 Diese Struktur ermöglicht es Ihnen, die Dokumentation modular zu erstellen und später nahtlos zusammenzufügen. Jeder Chat fokussiert sich auf einen spezifischen Bereich, behält aber die einheitliche Qualität und den technischen Tonfall bei.
+
+**🎯 Nach diesem Setup haben Sie eine vollständig funktionierende, versionierte und professionelle MkDocs-Dokumentation für Ihr Homelab!**
