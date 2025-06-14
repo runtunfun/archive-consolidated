@@ -265,6 +265,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Windows Zone.Identifier files (created when downloading from internet)
+*.Zone.Identifier
+*:Zone.Identifier
+
 # Linux
 *~
 
