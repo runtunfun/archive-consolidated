@@ -1,0 +1,2 @@
+find . -name "*.md" -o -name "*.yml" -o -name "*.yaml" | \
+  xargs sed -i 's/enzmann\.online/homelab.example/g'
