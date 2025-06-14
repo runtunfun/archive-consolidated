@@ -116,15 +116,10 @@ nav:
     - Checklisten: appendix/checklists.md
     - Support: appendix/support.md
 
-# Extra
+# Extra (FIXED: Removed problematic social icons)
 extra:
   version:
     provider: mike
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/username
-    - icon: fontawesome/solid/home
-      link: https://homelab.example.com
 
 # CSS
 extra_css:

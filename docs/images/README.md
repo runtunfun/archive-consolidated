@@ -1,1 +1,0 @@
-# Bilder und Diagramme
