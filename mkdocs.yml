@@ -1,1 +1,131 @@
-site_name: My Docs
+site_name: Homelab & IOT Infrastructure
+site_description: Professionelle Homelab-Infrastruktur mit integrierter Smart Home Verwaltung
+site_author: Admin
+site_url: https://homelab-docs.example.com
+
+# Repository
+repo_name: homelab-infrastructure
+repo_url: https://github.com/username/homelab-infrastructure
+edit_uri: edit/main/docs/
+
+# Theme
+theme:
+  name: material
+  language: de
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue grey
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue grey
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - navigation.footer
+
+  icon:
+    repo: fontawesome/brands/github
+
+# Plugins
+plugins:
+  - search:
+      lang: de
+  - mermaid2:
+      arguments:
+        theme: |
+          ^(localStorage.getItem('.__palette') || '').includes('slate') ? 'dark' : 'light'
+  - table-reader
+  - minify:
+      minify_html: true
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.keys
+  - tables
+  - footnotes
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+# Navigation
+nav:
+  - Home: index.md
+  - Planung:
+    - Übersicht & Ziele: planning/overview.md
+    - Hardware-Anforderungen: planning/hardware.md
+    - Technologie-Stack: planning/technology.md
+  - Netzwerk:
+    - Grundlagen: network/basics.md
+    - VLAN-Konfiguration: network/vlans.md
+    - UniFi Setup: network/unifi.md
+    - Zone Matrix: network/zones.md
+  - Infrastructure:
+    - DNS-Server: infrastructure/dns.md
+    - Reverse Proxy: infrastructure/proxy.md
+    - HTTPS & SSL: infrastructure/ssl.md
+  - Services:
+    - Organisation: services/organization.md
+    - Home Assistant: services/homeassistant.md
+    - Monitoring: services/monitoring.md
+    - Management: services/management.md
+  - Sicherheit:
+    - Secrets Management: security/secrets.md
+    - Backup & Recovery: security/backup.md
+    - Git Integration: security/git.md
+  - Inventar:
+    - Standard-LAN: inventory/standard-lan.md
+    - IOT-VLAN: inventory/iot-vlan.md
+    - Gäste-VLAN: inventory/guest-vlan.md
+  - Betrieb:
+    - Wartung: operations/maintenance.md
+    - Troubleshooting: operations/troubleshooting.md
+    - Monitoring: operations/monitoring.md
+  - Anhang:
+    - Deployment Guide: appendix/deployment.md
+    - URLs & Zugriffe: appendix/urls.md
+    - Checklisten: appendix/checklists.md
+    - Support: appendix/support.md
+
+# Extra
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/username
+    - icon: fontawesome/solid/home
+      link: https://homelab.example.com
+
+# CSS
+extra_css:
+  - stylesheets/extra.css
