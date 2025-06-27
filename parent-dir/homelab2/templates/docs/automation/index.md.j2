@@ -1,0 +1,77 @@
+{#
+Template: Automation Overview
+Description: Main automation documentation index
+Variables:
+  - site: Site configuration
+  - services: Service definitions
+  - ansible_env: Ansible environment
+#}
+
+# Infrastructure Automation
+
+Welcome to the automation documentation for {{ site.name | default("the homelab") }}.
+
+## 🏗️ Infrastructure as Code
+
+Our homelab infrastructure is fully automated using Ansible, providing:
+- **Consistent deployments** across all environments
+- **Version-controlled configuration**
+- **Repeatable infrastructure setup**
+- **Automated service deployment**
+
+## 📚 Documentation Sections
+
+- [**Ansible Overview**](ansible-overview.md) - Complete automation setup
+- [**Roles Documentation**](roles.md) - Available Ansible roles
+- [**Playbooks**](playbooks.md) - Automation playbooks
+- [**Inventories**](inventories.md) - Environment definitions
+
+## 🚀 Quick Start
+
+### System Setup
+```bash
+cd ansible
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/system-setup.yml
+```
+
+### Service Deployment  
+```bash
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/docker-services.yml
+```
+
+## 🎯 Common Tasks
+
+### Update All Systems
+```bash
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/system-update.yml
+```
+
+### Deploy Security Configuration
+```bash
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/security-setup.yml
+```
+
+### Service-Specific Deployments
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled %}
+```bash
+# Deploy {{ service_name | title }}
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/{{ service_name }}-deploy.yml
+```
+{% endif %}
+{% endfor %}
+
+## 📊 Infrastructure Status
+
+| Component | Status | Environment |
+|-----------|--------|-------------|
+| Automation | ✅ Active | {{ ansible_env | default("production") }} |
+| Services | {{ services | length }} configured | {{ services | selectattr("enabled") | list | length }} enabled |
+| Environments | Multiple | test, production |
+
+## 🔧 Configuration
+
+Central configuration is managed through:
+- `group_vars/all.yml` - Global variables
+- `inventories/*/group_vars/` - Environment-specific settings
+- External configuration files (this documentation system)

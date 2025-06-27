@@ -1,0 +1,244 @@
+{#
+Template: Ansible Playbooks
+Description: Documentation for all Ansible playbooks
+Variables:
+  - services: Service configuration
+  - ansible_env: Environment name
+#}
+
+# Ansible Playbooks
+
+This document describes all available Ansible playbooks for infrastructure automation.
+
+## 🎭 Main Playbooks
+
+### Site-wide Deployment
+| Playbook | Description | Target | Usage |
+|----------|-------------|--------|--------|
+| `site.yml` | Complete infrastructure deployment | All hosts | Initial setup, full deployment |
+| `system-setup.yml` | Basic system configuration | All hosts | Initial system preparation |
+| `security-setup.yml` | Security hardening | All hosts | Security configuration |
+
+### System Management
+| Playbook | Description | Schedule | Impact |
+|----------|-------------|----------|--------|
+| `system-update.yml` | System package updates | Daily | Low |
+| `system-cleanup.yml` | Cleanup and maintenance | Weekly | Low |
+| `backup-setup.yml` | Backup configuration | Monthly | Medium |
+
+## 🐳 Service Deployment Playbooks
+
+### Individual Services
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled %}
+| `{{ service_name }}-deploy.yml` | Deploy {{ service_config.description | default(service_name | title) }} | Service host | [{{ service_config.host }}](http://{{ service_config.host }}) |
+{% endif %}
+{% endfor %}
+
+### Service Groups
+| Playbook | Services | Purpose |
+|----------|----------|---------|
+| `monitoring-deploy.yml` | Prometheus, Grafana, Uptime Kuma | Complete monitoring stack |
+| `media-deploy.yml` | Jellyfin, Plex | Media server setup |
+| `productivity-deploy.yml` | Nextcloud, Vaultwarden | Productivity services |
+
+## 🎯 Usage Examples
+
+### Initial Infrastructure Setup
+```bash
+# Complete infrastructure deployment
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} site.yml
+
+# Step-by-step deployment
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} system-setup.yml
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} security-setup.yml
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} docker-services.yml
+```
+
+### Regular Maintenance
+```bash
+# Daily: System updates
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} system-update.yml
+
+# Weekly: System cleanup
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} system-cleanup.yml
+
+# Monthly: Security audit
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} security-audit.yml
+```
+
+### Service Management
+```bash
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled %}
+# Deploy {{ service_name | title }}
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} {{ service_name }}-deploy.yml
+
+{% endif %}
+{% endfor %}
+```
+
+### Emergency Procedures
+```bash
+# Stop all services
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} emergency-stop.yml
+
+# Restore from backup
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} restore-backup.yml
+
+# Security incident response
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} incident-response.yml
+```
+
+## 🏷️ Playbook Tags
+
+Use tags for selective execution:
+
+### System Tags
+- `system`: System-level tasks
+- `security`: Security-related tasks
+- `packages`: Package management
+- `users`: User management
+
+### Service Tags
+- `docker`: Docker-related tasks
+- `monitoring`: Monitoring services
+- `media`: Media services
+- `productivity`: Productivity tools
+
+### Operational Tags
+- `deploy`: Deployment tasks
+- `config`: Configuration updates
+- `restart`: Service restarts
+- `backup`: Backup operations
+
+### Tag Usage Examples
+```bash
+# Only security tasks
+ansible-playbook -i inventories/production site.yml --tags "security"
+
+# Everything except restarts
+ansible-playbook -i inventories/production site.yml --skip-tags "restart"
+
+# Only Docker services
+ansible-playbook -i inventories/production site.yml --tags "docker"
+```
+
+## 🔧 Playbook Variables
+
+### Global Variables
+Available in all playbooks through `group_vars/all.yml`:
+- `internal_domain`: {{ domain.internal }}
+- `external_domain`: {{ domain.external | default("Not configured") }}
+- Network configurations for all VLANs
+- Service configurations for all enabled services
+
+### Environment-Specific Variables
+Override global settings per environment:
+- Production: Enhanced security, full monitoring
+- Test: Minimal services, relaxed security
+- Development: Local paths, debug enabled
+
+## 📊 Execution Patterns
+
+### Safe Deployment Pattern
+```bash
+# 1. Test syntax
+ansible-playbook --syntax-check site.yml
+
+# 2. Dry run
+ansible-playbook -i inventories/test site.yml --check
+
+# 3. Deploy to test environment
+ansible-playbook -i inventories/test site.yml
+
+# 4. Deploy to production
+ansible-playbook -i inventories/production site.yml
+```
+
+### Rolling Updates Pattern
+```bash
+# Update one host at a time
+ansible-playbook -i inventories/production site.yml --serial 1
+
+# Update specific group
+ansible-playbook -i inventories/production site.yml --limit webservers
+```
+
+### Maintenance Window Pattern
+```bash
+# Stop services
+ansible-playbook -i inventories/production service-stop.yml
+
+# Perform maintenance
+ansible-playbook -i inventories/production maintenance.yml
+
+# Start services
+ansible-playbook -i inventories/production service-start.yml
+```
+
+## 🚨 Troubleshooting Playbooks
+
+### Common Issues and Solutions
+
+#### Playbook Hangs
+```bash
+# Add timeout and increase verbosity
+ansible-playbook -i inventories/production site.yml -vvv --timeout=60
+```
+
+#### Connection Issues
+```bash
+# Test connectivity first
+ansible -i inventories/production all -m ping
+
+# Use specific user
+ansible-playbook -i inventories/production site.yml -u ansible_user
+```
+
+#### Permission Problems
+```bash
+# Verify sudo access
+ansible -i inventories/production all -m shell -a "sudo whoami" --become
+
+# Check SSH key authentication
+ansible -i inventories/production all -m shell -a "whoami"
+```
+
+### Debug Mode
+```bash
+# Maximum verbosity
+ansible-playbook -i inventories/production site.yml -vvvv
+
+# Step through tasks
+ansible-playbook -i inventories/production site.yml --step
+
+# Start from specific task
+ansible-playbook -i inventories/production site.yml --start-at-task="Install Docker"
+```
+
+## 📈 Performance Optimization
+
+### Parallel Execution
+```yaml
+# In playbook
+strategy: free
+serial: 5  # Process 5 hosts at a time
+```
+
+### Fact Caching
+```yaml
+# In ansible.cfg
+fact_caching = redis
+fact_caching_timeout = 86400
+```
+
+### Connection Optimization
+```yaml
+# In inventory
+[all:vars]
+ansible_ssh_pipelining=true
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+```
+
+This playbook documentation ensures efficient and reliable infrastructure automation across all environments.

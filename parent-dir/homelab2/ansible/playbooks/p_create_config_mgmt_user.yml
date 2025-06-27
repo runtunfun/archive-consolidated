@@ -1,0 +1,5 @@
+# file: p_create_config_mgmt_user.yml
+---
+- hosts: all
+  roles:
+  - r_create_config_mgmt_user

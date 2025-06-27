@@ -1,0 +1,29 @@
+# Test Environment Overrides
+# Minimal configuration for testing
+
+ansible_env: "test"
+
+# Test-specific settings
+domain:
+  internal: "test.local"
+
+# Minimal services for testing
+services:
+  pihole:
+    enabled: true
+  traefik:
+    enabled: false
+  homeassistant:
+    enabled: false
+  monitoring:
+    prometheus:
+      enabled: false
+    grafana:
+      enabled: false
+
+# Reduced backup retention for testing
+backup:
+  local:
+    retention: "7 days"
+  offsite:
+    enabled: false

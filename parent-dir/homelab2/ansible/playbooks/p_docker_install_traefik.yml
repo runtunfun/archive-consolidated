@@ -1,0 +1,5 @@
+# file: p_docker_install_traefik.yml
+---
+- hosts: all
+  roles:
+  - r_docker_install_traefik

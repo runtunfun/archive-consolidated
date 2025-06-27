@@ -1,0 +1,156 @@
+{#
+Template: Ansible Roles
+Description: Documentation for all Ansible roles
+Variables:
+  - services: Service configuration
+  - domain: Domain settings
+#}
+
+# Ansible Roles
+
+This document describes all available Ansible roles in our infrastructure automation.
+
+## 🛠️ System Management Roles
+
+### Package Management
+| Role | Description | Usage | Frequency |
+|------|-------------|-------|-----------|
+| `r_apt_update` | System updates via APT | System maintenance | Daily |
+| `r_apt_software_cleanup` | Remove unused packages | Cleanup automation | Weekly |
+
+### User and Security Management
+| Role | Description | Usage | Frequency |
+|------|-------------|-------|-----------|
+| `r_create_config_mgmt_user` | Configuration management user | Initial setup | Once |
+| `r_configure_fail2ban` | Intrusion detection setup | Security hardening | Initial + updates |
+
+## 🐳 Container Platform Roles
+
+### Docker Infrastructure
+| Role | Description | Prerequisites | Platforms |
+|------|-------------|---------------|-----------|
+| `r_install_docker` | Docker & Docker Compose installation | Ubuntu/Debian | All servers |
+
+## 📦 Service Deployment Roles
+
+### Core Services
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled %}
+| `r_docker_install_{{ service_name }}` | {{ service_config.description | default(service_name | title + " deployment") }} | Docker | [{{ service_config.host }}](http://{{ service_config.host }}) |
+{% endif %}
+{% endfor %}
+
+## 🔧 Role Usage Examples
+
+### Complete System Setup
+```yaml
+---
+- name: Complete system setup
+  hosts: all
+  become: yes
+  roles:
+    # System preparation
+    - r_apt_update
+    - r_create_config_mgmt_user
+    
+    # Security hardening
+    - r_configure_fail2ban
+    
+    # Container platform
+    - r_install_docker
+    
+    # Services deployment
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled %}
+    - r_docker_install_{{ service_name }}
+{% endif %}
+{% endfor %}
+```
+
+### Selective Service Deployment
+```yaml
+---
+- name: Deploy monitoring services
+  hosts: monitoring_servers
+  become: yes
+  roles:
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled and 'monitoring' in service_name %}
+    - r_docker_install_{{ service_name }}
+{% endif %}
+{% endfor %}
+```
+
+### Security-Only Deployment
+```yaml
+---
+- name: Security hardening
+  hosts: all
+  become: yes
+  roles:
+    - r_configure_fail2ban
+    - r_apt_update
+```
+
+## 📝 Role Development Guidelines
+
+### Directory Structure
+Each role follows the standard Ansible structure:
+```
+roles/role_name/
+├── README.md              # Role documentation
+├── defaults/main.yml      # Default variables
+├── vars/main.yml          # Role variables
+├── tasks/main.yml         # Main tasks
+├── handlers/main.yml      # Handlers (service restarts, etc.)
+├── templates/             # Jinja2 templates
+├── files/                 # Static files
+├── meta/main.yml          # Role metadata and dependencies
+└── tests/                 # Role tests
+```
+
+### Variable Naming Convention
+- Role-specific variables: `rolename_variable`
+- Global variables: `global_variable`
+- Service-specific: `service_name_setting`
+
+### Best Practices
+1. **Idempotency**: Roles can be run multiple times safely
+2. **Error Handling**: Proper error handling and validation
+3. **Documentation**: Clear README with examples
+4. **Testing**: Include test scenarios
+5. **Dependencies**: Declare role dependencies in meta/main.yml
+
+## 🧪 Testing Roles
+
+### Local Testing
+```bash
+# Test role syntax
+ansible-playbook --syntax-check site.yml
+
+# Test with check mode (dry run)
+ansible-playbook -i inventories/test site.yml --check
+
+# Test specific role
+ansible-playbook -i inventories/test site.yml --tags "docker"
+```
+
+### Role Dependencies
+Some roles have dependencies on others:
+- Container services → `r_install_docker`
+- All services → `r_apt_update`
+- Security services → `r_configure_fail2ban`
+
+## 📊 Role Status and Maintenance
+
+### Role Lifecycle
+- **Development**: New roles in feature branches
+- **Testing**: Validation in test environment
+- **Production**: Deployed to production after testing
+- **Maintenance**: Regular updates and security patches
+
+### Update Schedule
+- **Security roles**: As needed (immediate for security issues)
+- **System roles**: Monthly updates
+- **Service roles**: With application updates
+- **All roles**: Quarterly review and optimization

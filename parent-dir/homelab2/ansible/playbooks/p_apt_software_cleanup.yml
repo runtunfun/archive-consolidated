@@ -1,0 +1,5 @@
+# file: p_apt_software_cleanup.yml
+---
+- hosts: all
+  roles:
+  - r_apt_software_cleanup

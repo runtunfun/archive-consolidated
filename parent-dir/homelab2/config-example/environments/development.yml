@@ -1,0 +1,33 @@
+# Development Environment Overrides
+# Local development and testing settings
+
+ansible_env: "development"
+
+domain:
+  internal: "dev.local"
+
+# Development-friendly settings
+services:
+  pihole:
+    enabled: true
+  traefik:
+    enabled: true
+  homeassistant:
+    enabled: true
+  monitoring:
+    prometheus:
+      enabled: true
+    grafana:
+      enabled: true
+
+# Local development settings
+docker:
+  compose_path: "./docker-compose"
+  data_path: "./docker-data"
+
+# Minimal backup for development
+backup:
+  local:
+    retention: "3 days"
+  offsite:
+    enabled: false

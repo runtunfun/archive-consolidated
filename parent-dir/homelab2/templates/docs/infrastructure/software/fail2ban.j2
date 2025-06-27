@@ -1,0 +1,14 @@
+sudo dpkg --list | grep -i fail2ban
+sudo apt-get install fail2ban
+
+sudo vi /etc/fail2ban/jail.local
+sudo cat /etc/fail2ban/jail.local
+[DEFAULT]
+backend = systemd
+
+sudo systemctl restart fail2ban.service
+sudo systemctl status fail2ban.service
+
+https://www.thomas-krenn.com/de/wiki/SSH_Login_unter_Debian_mit_fail2ban_absichern
+https://wiki.ubuntuusers.de/fail2ban/
+https://www.howtoforge.de/anleitung/installation-und-verwendung-von-fail2ban-unter-debian-12/

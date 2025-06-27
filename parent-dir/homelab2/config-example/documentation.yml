@@ -1,0 +1,47 @@
+# Documentation Configuration
+# Settings for the generated documentation site
+
+site:
+  name: "My Homelab Documentation"
+  description: "Comprehensive homelab infrastructure and services documentation"
+  author: "Your Name"
+  url: "https://your-username.github.io/homelab"
+  repository: "https://github.com/your-username/homelab"
+
+branding:
+  logo: "assets/logo.png"
+  favicon: "assets/favicon.ico"
+  primary_color: "indigo"
+  accent_color: "blue"
+  theme: "material"
+
+features:
+  search: true
+  dark_mode: true
+  edit_links: true
+  git_info: true
+  analytics: false
+  comments: false
+  
+social:
+  github: "your-username"
+  twitter: "your-handle"
+  linkedin: "your-profile"
+
+navigation:
+  show_automation: true
+  show_monitoring: true
+  show_security: true
+  show_planning: true
+  show_troubleshooting: true
+  
+content:
+  show_last_updated: true
+  show_edit_page: true
+  show_source_link: true
+  enable_pdf_export: false
+
+# Analytics (optional)
+analytics:
+  google_analytics: ""  # GA4 tracking ID
+  plausible: ""         # Plausible domain
