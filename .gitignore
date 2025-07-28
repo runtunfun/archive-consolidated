@@ -1,0 +1,31 @@
+# Ansible
+ansible/.ansible-vault-pass
+ansible/inventory/production/host_vars/
+ansible/inventory/staging/host_vars/
+*.retry
+
+# Scripts
+scripts/**/*.log
+scripts/**/tmp/
+
+# SSH Keys
+**/*_rsa
+**/*_rsa.pub
+**/id_*
+
+# Certificates
+**/*.pem
+**/*.crt
+**/*.key
+
+# Temporary files
+**/.DS_Store
+**/Thumbs.db
+**/*.tmp
+**/*.swp
+**/*.swo
+**/~*
+
+# Secrets
+**/secrets.yml
+**/credentials.yml
