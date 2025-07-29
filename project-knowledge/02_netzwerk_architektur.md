@@ -65,21 +65,26 @@ Multi-Location Homelab mit Zero-Trust VPN-Zugang über Internet-VPS und einheitl
 | **Homelab** | Docker Swarm | 192.168.1.50 | zugewiesen aus 10.1.0.0/24 | *.lab.enzmann.online<br>*.iot.enzmann.online |
 | **CamperVan** | HA Add-on/Docker | 192.168.50.10 | zugewiesen aus 10.2.0.0/24 | *.van.lafritzn.de |
 
-### 4.2 Service-Routing Homelab
-| Service | Lokale IP | HTTPS-URL | Traefik-Route |
-|---------|-----------|-----------|---------------|
-| **Proxmox** | 192.168.1.21:8006 | https://pve.lab.enzmann.online | traefik → 192.168.1.21:8006 |
-| **Home Assistant** | 192.168.1.45:8123 | https://ha.lab.enzmann.online | traefik → 192.168.1.45:8123 |
-| **Pi-hole** | 192.168.1.3:80 | https://dns.lab.enzmann.online | traefik → 192.168.1.3:80 |
-| **Unifi Controller** | 192.168.1.10:8443 | https://unifi.lab.enzmann.online | traefik → 192.168.1.10:8443 |
-| **IoT-Dashboard** | 192.168.1.46:3000 | https://dashboard.iot.enzmann.online | traefik → 192.168.1.46:3000 |
-| **Traefik Dashboard** | 192.168.1.50:8080 | https://traefik.lab.enzmann.online | - |
+### 4.2 Service-Discovery Prinzip
+**Homelab-Services:**
+- Alle Services nutzen konsistente Namenskonvention: `[location]-[service]-[nummer].[subdomain].[domain]`
+- Traefik-Labels automatisch generiert basierend auf Namensschema
+- Let's Encrypt Wildcard-Zertifikate für `*.lab.enzmann.online` und `*.iot.enzmann.online`
 
-### 4.3 Service-Routing CamperVan
-| Service | Lokale IP | HTTPS-URL | Traefik-Route |
-|---------|-----------|-----------|---------------|
-| **Home Assistant** | 192.168.50.10:8123 | https://ha.van.lafritzn.de | traefik → localhost:8123 |
-| **Traefik Dashboard** | 192.168.50.10:8080 | https://traefik.van.lafritzn.de | - |
+**CamperVan-Services:**
+- Vereinfachte Struktur: `[location]-[service]-[nummer].[domain]`
+- Separate Domain für Mobile-Installation: `*.van.lafritzn.de`
+
+**Beispiel-Service-Konfiguration:**
+```yaml
+# Docker-Compose Service-Labels
+labels:
+  - "traefik.enable=true"
+  - "traefik.http.routers.SERVICE_NAME.rule=Host(`FQDN`)"
+  - "traefik.http.routers.SERVICE_NAME.tls.certresolver=letsencrypt"
+```
+
+*Detaillierte Service-Zuordnungen siehe: [Homelab Infrastructure Inventory](homelab-inventory.ini)*
 
 ## 5. DNS-Architektur
 
@@ -91,15 +96,26 @@ Multi-Location Homelab mit Zero-Trust VPN-Zugang über Internet-VPS und einheitl
 | **runtunfun.de** | Hoster-3 | Let's Encrypt | Fallback/Redundanz |
 
 ### 5.2 DNS-Auflösung Split-Brain
-**Lokale Auflösung (Pi-hole):**
-- `lab.enzmann.online` → 192.168.1.50 (Traefik lokal)
-- `iot.enzmann.online` → 192.168.1.50 (Traefik lokal)
-- `van.lafritzn.de` → 192.168.50.10 (Traefik CamperVan)
 
-**VPN-Auflösung (über VPN-DNS):**
-- `lab.enzmann.online` → VPN-IP von Traefik
-- `iot.enzmann.online` → VPN-IP von Traefik
-- `van.lafritzn.de` → VPN-IP von CamperVan Pi
+**Konzept:**
+- **Lokale Clients:** DNS zeigt auf lokale IPs (192.168.x.x)
+- **VPN-Clients:** DNS zeigt auf VPN-IPs (10.x.x.x)
+- **Gleiche FQDNs:** Transparenter Zugriff unabhängig vom Standort
+
+**Namenskonvention:**
+```bash
+# Schema: [location]-[service]-[nummer].[subdomain].[domain]
+lab-traefik-01.lab.enzmann.online          # Homelab Services
+lab-dashboard-01.iot.enzmann.online        # IoT Services  
+van-ha-01.van.lafritzn.de                  # CamperVan Services
+```
+
+**DNS-Weiterleitung:**
+- **Lokale Auflösung:** Pi-hole → lokale Traefik-Instanz
+- **VPN-Auflösung:** VPN-DNS → VPN-IP der Traefik-Instanz
+- **Wildcard-Domains:** `*.lab.enzmann.online` → Traefik (automatische Service-Discovery)
+
+*Konkrete DNS-Einträge siehe: [Homelab Infrastructure Inventory](homelab-inventory.ini)*
 
 ## 6. Zertifikat-Management
 
@@ -135,27 +151,32 @@ certificatesResolvers:
 
 ### 7.1 Lokaler Zugriff (Homelab)
 ```
-Client (192.168.1.100) → https://ha.lab.enzmann.online
-→ Pi-hole DNS: 192.168.1.50
-→ Traefik (192.168.1.50:443)
-→ Home Assistant (192.168.1.45:8123)
+Client (Standard-LAN) → https://lab-ha-prod-01.lab.enzmann.online
+→ Pi-hole DNS: [TRAEFIK_LOCAL_IP]
+→ Traefik (Local Interface:443)
+→ Home Assistant (Service IP:8123)
 ```
 
 ### 7.2 VPN-Zugriff (extern)
 ```
-VPN-Client (10.1.0.15) → https://ha.lab.enzmann.online
-→ VPN-DNS: Traefik-VPN-IP
-→ Traefik (VPN-IP:443)
-→ Home Assistant (192.168.1.45:8123)
+VPN-Client (VPN-Netz) → https://lab-ha-prod-01.lab.enzmann.online
+→ VPN-DNS: [TRAEFIK_VPN_IP]
+→ Traefik (VPN Interface:443)
+→ Home Assistant (Service IP:8123)
 ```
 
 ### 7.3 CamperVan Remote-Zugriff
 ```
-VPN-Client → https://ha.van.lafritzn.de
+VPN-Client → https://van-ha-01.van.lafritzn.de
 → VPN-Route zu CamperVan Pi (VPN-IP)
-→ Traefik auf Pi
+→ Traefik auf Pi (VPN Interface)
 → Home Assistant (localhost:8123)
 ```
+
+**Dual-Homing Konzept:**
+- Services sind sowohl lokal als auch über VPN erreichbar
+- Gleiche FQDNs, unterschiedliche IP-Auflösung je nach Client-Standort
+- Transparenter Failover zwischen lokalen und VPN-Verbindungen
 
 ## 8. Sicherheitskonzept
 
@@ -173,28 +194,40 @@ VPN-Client → https://ha.van.lafritzn.de
 
 ## 9. Infrastructure as Code
 
-### 9.1 Ansible-Integration
+### 9.1 Ansible-Integration Konzept
 ```yaml
-# Beispiel: VPN-Client Installation
-- name: Install Pangolin client
-  shell: curl -sSL https://{{ vpn_server }}/install | sh
+# Inventory-basierte Automation
+ansible-playbook -i homelab-inventory.ini deploy-vpn-clients.yml
 
-- name: Authenticate VPN client
-  shell: newt auth --server {{ vpn_server }}
-  # Server weist automatisch VPN-IP zu
+# VPN-Client Installation (automatisch basierend auf Inventory)
+- name: Install VPN clients on designated hosts
+  hosts: vpn_clients
+  tasks:
+    - name: Install Pangolin client
+      shell: curl -sSL https://{{ vpn_server }}/install | sh
+      when: vpn_server is defined
+      
+    - name: Authenticate VPN client  
+      shell: newt auth --server {{ vpn_server }}
+      when: vpn_server is defined
 
-- name: Deploy Traefik with VPN support
-  docker_stack:
-    name: traefik
-    compose:
-      - traefik-compose.yml
+# Traefik-Route Generierung (basierend auf Inventory-Metadaten)
+- name: Generate Traefik labels
+  set_fact:
+    traefik_labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ inventory_hostname_short }}.rule=Host(`{{ https_url | regex_replace('https://') }}`)"
+      - "traefik.http.routers.{{ inventory_hostname_short }}.tls.certresolver=letsencrypt"
+  when: https_url is defined
 ```
 
 ### 9.2 Konfigurationsverwaltung
-- **Git-Repository:** Alle Ansible Playbooks und Konfigurationen
+- **Inventory-Datei:** `homelab-inventory.ini` - Single Source of Truth für alle IP-Zuweisungen
+- **Playbooks:** Automatische Service-Konfiguration basierend auf Inventory-Metadaten
 - **Secrets:** Ansible Vault für DNS-API-Keys und Zertifikate
-- **Versionierung:** Vollständig reproduzierbare Infrastruktur
-- **Dokumentation:** Markdown in Git-Repository
+- **Templates:** Jinja2-Templates nutzen Inventory-Variablen für Service-Generierung
+
+*Detaillierte Ansible-Repository-Struktur wird in separatem Planungs-Chat entwickelt*
 
 ## 10. Vorteile dieser Architektur
 
@@ -260,14 +293,42 @@ VPN-Client → https://ha.van.lafritzn.de
 
 **Hinweis:** Die aktuell definierten Services sind Zwischenschritte - im Projektverlauf werden weitere Services detailliert konfiguriert und hinzugefügt.
 
-## 12. Offene Punkte für Detailplanung
+## 12. Dokumentations-Architektur
 
-### 12.1 Nächste Module
+### 12.1 Dokument-Aufteilung
+**Diese Architektur-Dokumentation:**
+- Konzeptionelle Netzwerk-Architektur und Design-Prinzipien
+- VPN-Mesh-Konzept und Security-Modell  
+- Traefik/HTTPS-Integration und Zertifikat-Management
+- Implementierungs-Phasen und Deployment-Strategie
+
+**Homelab Infrastructure Inventory (homelab-inventory.ini):**
+- Konkrete IP-Zuweisungen und Hostnamen
+- Device-Metadaten (Hersteller, Modell, Protokoll, Raum)
+- Ansible-kompatible Gruppierungen und Variablen
+- Service-spezifische Konfiguration (Ports, URLs, VPN-Zuweisungen)
+
+### 12.2 Arbeitsweise
+1. **Architektur-Änderungen:** In diesem Dokument planen und dokumentieren
+2. **Konkrete Umsetzung:** IP-Zuweisungen und Device-Details im Inventory verwalten
+3. **Automation:** Ansible-Playbooks nutzen Inventory als Single Source of Truth
+4. **Wartung:** Beide Dokumente synchron halten, aber klare Trennung der Verantwortlichkeiten
+
+### 12.3 Vorteile der Trennung
+- **Wartbarkeit:** IP-Änderungen ohne Architektur-Updates
+- **Automation:** Inventory direkt von Scripts und Ansible nutzbar  
+- **Flexibilität:** Verschiedene Umgebungen (Prod/Test) mit eigenen Inventories
+- **Übersichtlichkeit:** Architektur bleibt konzeptionell und lesbar
+
+## 13. Offene Punkte für Detailplanung
+
+### 13.1 Nächste Module
 - [ ] **DNS-Provider APIs und Konfiguration** - als separates Modul angehen
 - [ ] **Monitoring-Stack Definition** - CheckMK Raw Edition als Zwischenlösung (aufgrund vorhandener Erfahrung), später optional Prometheus/Grafana
 - [ ] **Security Hardening Checklists** - VPS, Container, Netzwerk-Sicherheit
+- [ ] **Inventory-Synchronisation** - Scripts für automatische Updates zwischen Dokumentation und realem Netzwerk
 
-### 12.2 Backup-Strategie für VPN-Konfigurationen
+### 13.2 Backup-Strategie für VPN-Konfigurationen
 **Was muss gesichert werden:**
 - **VPN-Server Konfiguration** (Pangolin/Headscale auf VPS)
   - Server-Keys und Zertifikate
@@ -276,13 +337,16 @@ VPN-Client → https://ha.van.lafritzn.de
 - **Client-Konfigurationen**
   - Client-Keys und Auth-Tokens
   - Lokale VPN-Interface-Konfiguration
+- **Inventory-Konsistenz**
+  - VPN-IP-Zuweisungen mit tatsächlicher VPN-Konfiguration abgleichen
 
 **Backup-Ansatz:**
 - **VPS-Level:** Automatische VPS-Snapshots beim Hoster
-- **Konfigurations-Level:** Git-Repository mit Ansible-Playbooks
+- **Konfigurations-Level:** Git-Repository mit Ansible-Playbooks + Inventory
 - **Schlüssel-Level:** Verschlüsselte Sicherung der Private Keys
-- **Disaster Recovery:** Komplette Neuerstellung über Ansible möglich
+- **Disaster Recovery:** Komplette Neuerstellung über Ansible + Inventory möglich
 
-### 12.3 Spätere Planungsrunden
-- [ ] **Ansible-Repository-Struktur** - eigener Chat für detaillierte Entwicklung
-- [ ] **Disaster Recovery Procedures** - eigener Chat für Notfall-Szenarien
+### 13.3 Implementation Ready
+Die Architektur ist vollständig dokumentiert und bereit für die praktische Umsetzung. Die nächsten Schritte erfolgen in separaten, spezialisierten Planungsrunden.
+
+*Siehe: [00_Planungsrunden.md](00_Planungsrunden.md) für detaillierte Aufgabenliste und Planungsmodule*
