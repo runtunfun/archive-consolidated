@@ -26,6 +26,9 @@ scripts/**/tmp/
 **/*.swo
 **/~*
 
+# Windows Zone Identifier files
+**/*:Zone.Identifier
+
 # Secrets
 **/secrets.yml
 **/credentials.yml
