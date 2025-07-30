@@ -8,32 +8,32 @@
 
 [homelab_infrastructure]
 # UniFi Network Infrastructure (192.168.1.2 - 192.168.1.20)
-lab-unifi-controller-01 ansible_host=192.168.1.2 domain=lab.enzmann.online https_url=https://lab-unifi-controller-01.lab.enzmann.online manufacturer=Ubiquiti category=network
-lab-pihole-01 ansible_host=192.168.1.3 domain=lab.enzmann.online https_url=https://lab-pihole-01.lab.enzmann.online manufacturer=Raspberry category=dns vpn_client=true vpn_server=ds9.enzmann.online
-lab-pihole-02 ansible_host=192.168.1.4 domain=lab.enzmann.online https_url=https://lab-pihole-02.lab.enzmann.online manufacturer=Raspberry category=dns vpn_client=true vpn_server=ds9.enzmann.online
-lab-switch-main-01 ansible_host=192.168.1.10 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi Switch 24"
-lab-ap-wz-01 ansible_host=192.168.1.11 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi AP U6 Pro" location=wohnzimmer
-lab-ap-sz-01 ansible_host=192.168.1.12 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi AP U6 Lite" location=schlafzimmer
+unifi-controller-01 ansible_host=192.168.1.2 domain=lab.enzmann.online https_url=https://unifi-controller-01.lab.enzmann.online manufacturer=Ubiquiti category=network
+pihole-01 ansible_host=192.168.1.3 domain=lab.enzmann.online https_url=https://pihole-01.lab.enzmann.online manufacturer=Raspberry category=dns vpn_client=true vpn_server=ds9.enzmann.online
+pihole-02 ansible_host=192.168.1.4 domain=lab.enzmann.online https_url=https://pihole-02.lab.enzmann.online manufacturer=Raspberry category=dns vpn_client=true vpn_server=ds9.enzmann.online
+switch-main-01 ansible_host=192.168.1.10 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi Switch 24"
+ap-wz-01 ansible_host=192.168.1.11 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi AP U6 Pro" location=wohnzimmer
+ap-sz-01 ansible_host=192.168.1.12 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi AP U6 Lite" location=schlafzimmer
 
 [homelab_compute]
 # Homelab Core Hosts (192.168.1.21 - 192.168.1.40)
-lab-pve-01 ansible_host=192.168.1.21 domain=lab.enzmann.online https_url=https://lab-pve-01.lab.enzmann.online:8006 category=compute role=proxmox_primary vpn_client=true vpn_server=ds9.enzmann.online
-lab-pve-02 ansible_host=192.168.1.22 domain=lab.enzmann.online https_url=https://lab-pve-02.lab.enzmann.online:8006 category=compute role=proxmox_secondary vpn_client=true vpn_server=ds9.enzmann.online
-lab-nas-01 ansible_host=192.168.1.25 domain=lab.enzmann.online https_url=https://lab-nas-01.lab.enzmann.online category=storage role=nas_primary
+pve-01 ansible_host=192.168.1.21 domain=lab.enzmann.online https_url=https://pve-01.lab.enzmann.online:8006 category=compute role=proxmox_primary vpn_client=true vpn_server=ds9.enzmann.online
+pve-02 ansible_host=192.168.1.22 domain=lab.enzmann.online https_url=https://pve-02.lab.enzmann.online:8006 category=compute role=proxmox_secondary vpn_client=true vpn_server=ds9.enzmann.online
+nas-01 ansible_host=192.168.1.25 domain=lab.enzmann.online https_url=https://nas-01.lab.enzmann.online category=storage role=nas_primary
 
 [homelab_services]
 # Docker Swarm Services (192.168.1.41 - 192.168.1.99)
-lab-ha-prod-01 ansible_host=192.168.1.41 domain=lab.enzmann.online https_url=https://lab-ha-prod-01.lab.enzmann.online category=iot role=home_assistant_prod docker_service=homeassistant vpn_client=true vpn_server=ds9.enzmann.online
-lab-ha-test-01 ansible_host=192.168.1.42 domain=lab.enzmann.online https_url=https://lab-ha-test-01.lab.enzmann.online category=iot role=home_assistant_test docker_service=homeassistant_test
-lab-docker-manager-01 ansible_host=192.168.1.45 domain=lab.enzmann.online category=compute role=docker_swarm_manager
-lab-docker-worker-01 ansible_host=192.168.1.46 domain=lab.enzmann.online category=compute role=docker_swarm_worker
-lab-docker-worker-02 ansible_host=192.168.1.47 domain=lab.enzmann.online category=compute role=docker_swarm_worker
-lab-traefik-01 ansible_host=192.168.1.50 domain=lab.enzmann.online https_url=https://lab-traefik-01.lab.enzmann.online category=core role=reverse_proxy docker_service=traefik vpn_client=true vpn_server=ds9.enzmann.online
-lab-portainer-01 ansible_host=192.168.1.51 domain=lab.enzmann.online https_url=https://lab-portainer-01.lab.enzmann.online category=management role=docker_management docker_service=portainer
-lab-grafana-01 ansible_host=192.168.1.52 domain=lab.enzmann.online https_url=https://lab-grafana-01.lab.enzmann.online category=monitoring role=dashboard docker_service=grafana
-lab-influx-01 ansible_host=192.168.1.53 domain=lab.enzmann.online category=monitoring role=timeseries_db docker_service=influxdb
-lab-prometheus-01 ansible_host=192.168.1.54 domain=lab.enzmann.online category=monitoring role=metrics_collector docker_service=prometheus
-lab-mqtt-01 ansible_host=192.168.1.55 domain=lab.enzmann.online category=iot role=mqtt_broker docker_service=mosquitto port=1883
+ha-prod-01 ansible_host=192.168.1.41 domain=lab.enzmann.online https_url=https://ha-prod-01.lab.enzmann.online category=iot role=home_assistant_prod docker_service=homeassistant vpn_client=true vpn_server=ds9.enzmann.online
+ha-test-01 ansible_host=192.168.1.42 domain=lab.enzmann.online https_url=https://ha-test-01.lab.enzmann.online category=iot role=home_assistant_test docker_service=homeassistant_test
+docker-manager-01 ansible_host=192.168.1.45 domain=lab.enzmann.online category=compute role=docker_swarm_manager
+docker-worker-01 ansible_host=192.168.1.46 domain=lab.enzmann.online category=compute role=docker_swarm_worker
+docker-worker-02 ansible_host=192.168.1.47 domain=lab.enzmann.online category=compute role=docker_swarm_worker
+traefik-01 ansible_host=192.168.1.50 domain=lab.enzmann.online https_url=https://traefik-01.lab.enzmann.online category=core role=reverse_proxy docker_service=traefik vpn_client=true vpn_server=ds9.enzmann.online
+portainer-01 ansible_host=192.168.1.51 domain=lab.enzmann.online https_url=https://portainer-01.lab.enzmann.online category=management role=docker_management docker_service=portainer
+grafana-01 ansible_host=192.168.1.52 domain=lab.enzmann.online https_url=https://grafana-01.lab.enzmann.online category=monitoring role=dashboard docker_service=grafana
+influx-01 ansible_host=192.168.1.53 domain=lab.enzmann.online category=monitoring role=timeseries_db docker_service=influxdb
+prometheus-01 ansible_host=192.168.1.54 domain=lab.enzmann.online category=monitoring role=metrics_collector docker_service=prometheus
+mqtt-01 ansible_host=192.168.1.55 domain=lab.enzmann.online category=iot role=mqtt_broker docker_service=mosquitto port=1883
 
 # =============================================================================
 # IOT DEVICES (192.168.100.0/22)
@@ -95,9 +95,9 @@ mobile-tablet-android-01 ansible_host=192.168.101.202 domain=iot.enzmann.online 
 # =============================================================================
 
 [campervan]
-van-lte-router-01 ansible_host=192.168.50.1 domain=van.lafritzn.de manufacturer=Teltonika category=network model="RUT955" device_type=lte_gateway
-van-ha-01 ansible_host=192.168.50.10 domain=van.lafritzn.de https_url=https://van-ha-01.van.lafritzn.de manufacturer=Raspberry category=iot_controller role=home_assistant vpn_client=true vpn_server=ds9.lafritzn.de
-van-traefik-01 ansible_host=192.168.50.10 domain=van.lafritzn.de https_url=https://van-traefik-01.van.lafritzn.de category=core role=reverse_proxy
+lte-router-01 ansible_host=192.168.50.1 domain=van.lafritzn.de manufacturer=Teltonika category=network model="RUT955" device_type=lte_gateway
+ha-01 ansible_host=192.168.50.10 domain=van.lafritzn.de https_url=https://ha-01.van.lafritzn.de manufacturer=Raspberry category=iot_controller role=home_assistant vpn_client=true vpn_server=ds9.lafritzn.de
+traefik-01 ansible_host=192.168.50.10 domain=van.lafritzn.de https_url=https://traefik-01.van.lafritzn.de category=core role=reverse_proxy
 
 # =============================================================================
 # VPS INFRASTRUCTURE (External)
@@ -196,17 +196,17 @@ homelab_services
 campervan
 
 [https_services]
-lab-pihole-01
-lab-pihole-02
-lab-pve-01
-lab-pve-02
-lab-nas-01
-lab-ha-prod-01
-lab-traefik-01
-lab-portainer-01
-lab-grafana-01
-van-ha-01
-van-traefik-01
+pihole-01
+pihole-02
+pve-01
+pve-02
+nas-01
+ha-prod-01
+traefik-01
+portainer-01
+grafana-01
+ha-01
+traefik-01
 
 [traefik_routes:children]
 https_services
