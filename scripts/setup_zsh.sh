@@ -56,3 +56,24 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # change Theme "powerlevel10k/powerlevel10k" and plugin "git zsh-autosuggestions"
 # cp ~/.zshrc ~/.zshrc.after-oh-my-zsh
 # cp ~/.zshrc.pre-oh-my-zsh ~/.zshrc
+
+# WSL-specific Windows configuration
+if grep -qi microsoft /proc/version; then
+    echo "WSL detected - configuring Windows Terminal and fonts..."
+    
+    # Download Meslo Nerd Font
+    mkdir -p /tmp/fonts
+    cd /tmp/fonts
+    curl -fLo "MesloLGS NF Regular.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+    curl -fLo "MesloLGS NF Bold.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+    curl -fLo "MesloLGS NF Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+    curl -fLo "MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+    
+    # Call PowerShell script for Windows-specific configuration
+    powershell.exe -ExecutionPolicy Bypass -File "$(wslpath -w "$(dirname "$0")/setup_windows.ps1")"
+    
+    # Clean up
+    rm -rf /tmp/fonts
+    
+    echo "Windows Terminal configuration completed. Please restart Windows Terminal."
+fi
