@@ -26,3 +26,18 @@ Created: $(date)
 ## Next Steps
 This archive serves as historical reference. 
 New development should use the cleaned-up homelab v2 structure.
+
+## Archive Contents Overview
+
+- `archived-ansible-project/` - 31 files from ansible-project
+- `archived-dotfiles-private/` - 21 files from dotfiles_private
+- `archived-homelab/` - 21 files from homelab
+- `archived-homelab-config/` - 1 files from homelab-config
+- `archived-homelab-docs/` - 42 files from homelab-docs
+- `archived-infrastructure/` - 95 files from Infrastructure
+- `archived-tools/` - 2 files from tools
+
+## Git History Stats
+
+Total commits: 174
+Archive size: 8.4M
