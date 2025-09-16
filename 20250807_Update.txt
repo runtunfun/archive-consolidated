@@ -1,0 +1,73 @@
+Dotfiles Update - 07.08.2025
+=============================
+
+ZUSAMMENFASSUNG
+===============
+Erweiterte Setup-Skripte für konsistente Entwicklungsumgebung zwischen WSL und nativem Linux.
+Das Projekt unterstützt jetzt vollautomatische Windows Terminal und Font-Konfiguration aus WSL heraus.
+
+ERSTELLTE DATEIEN
+=================
+- scripts/setup_windows.ps1
+  PowerShell-Skript für Windows-spezifische Konfiguration
+  - Font-Installation mit Registry-Registrierung  
+  - Windows Terminal Konfiguration
+  - Automatische Backups der bestehenden Einstellungen
+
+- templates/windows_terminal_settings.json
+  Template für Windows Terminal Einstellungen
+  - Optimiert für WSL mit Meslo Nerd Font
+  - Powerlevel10k-kompatible Farbschemata
+  - Praktische Tastenkürzel
+
+ERWEITERTE DATEI
+================
+- scripts/setup_zsh.sh (Zeilen 60-79)
+  Neue WSL-Erkennung und Windows-Integration
+  - Automatische Microsoft-Kernel-Erkennung
+  - Font-Download von GitHub
+  - PowerShell-Skript-Aufruf über wslpath
+  - Cleanup nach Installation
+
+FUNKTIONALITÄT
+===============
+✓ Automatische WSL-Erkennung via /proc/version
+✓ Font-Download: Meslo Nerd Fonts (Regular, Bold, Italic, Bold Italic)  
+✓ Font-Installation: Systemweite Installation mit Registry-Eintrag
+✓ Windows Terminal Konfiguration: Fonts, Theme, WSL als Standard-Profile
+✓ Backup-System: Automatische Sicherung bestehender Terminal-Einstellungen
+✓ Cross-Platform: Funktioniert sowohl in WSL als auch nativem Linux
+
+VERWENDUNG
+==========
+Einfacher Befehl für komplette Einrichtung:
+./scripts/setup_zsh.sh
+
+Das Script führt automatisch durch:
+1. Paket-Installation (curl, git, wget, yadm, zsh, etc.)
+2. Oh-My-Zsh Installation
+3. Powerlevel10k Theme Installation  
+4. ZSH Autosuggestions Plugin
+5. Bei WSL: Windows Terminal + Font-Konfiguration
+
+SYSTEMUNTERSTÜTZUNG
+===================
+Linux-Distributionen:
+- Debian/Ubuntu (apt-get)
+- RedHat/CentOS/Fedora (yum) 
+- openSUSE (zypper)
+
+Windows-Integration:
+- WSL 1 & WSL 2
+- Windows Terminal
+- PowerShell 5.1+
+
+TECHNISCHE DETAILS
+==================
+WSL-Erkennung: grep -qi microsoft /proc/version
+Font-Pfad: /tmp/fonts (temporär) → C:\Windows\Fonts (permanent)
+Registry-Pfad: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts
+Backup-Format: settings.json.backup.YYYYMMDD_HHMMSS
+
+Das Setup gewährleistet eine einheitliche, professionelle Entwicklungsumgebung 
+zwischen WSL und nativem Linux mit optimaler Windows Terminal Integration.
