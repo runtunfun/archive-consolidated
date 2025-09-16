@@ -1,0 +1,38 @@
+---
+# tasks file for r_docker_install_pihole
+- name: "install pihole"
+  block:
+  - name: "ensure data/docker/pihole exists"
+    ansible.builtin.file:
+      path: /data/docker/pihole
+      state: directory
+      group: 'docker'
+      mode: '0775'
+
+  - name: "Template docker-compose"
+    ansible.builtin.template:
+      src: "{{ role_path }}/files/docker-compose.yml"
+      dest: /data/docker/pihole/docker-compose.yml
+      group: docker
+      mode: 0775
+
+  - name: "Tear down existing services"
+    docker_compose:
+      project_src: /data/docker/pihole
+      state: absent
+      remove_orphans: true
+
+  - name: "Create and start services"
+    community.docker.docker_compose:
+      project_src: /data/docker/pihole
+
+  rescue:
+    - name: "fail"
+      ansible.builtin.debug:
+        msg: "install pihole failed"
+
+  tags:
+    - install_pihole
+
+  become: true
+  become_user: root

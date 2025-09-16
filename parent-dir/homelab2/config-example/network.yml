@@ -1,0 +1,42 @@
+# Network Configuration
+# Adjust these values to match your actual network setup
+
+domain:
+  internal: "lab.local"
+  external: "example.com"  # Optional: your public domain
+
+networks:
+  management:
+    vlan_id: 10
+    subnet: "192.168.10.0/24"
+    gateway: "192.168.10.1"
+    description: "Management and infrastructure services"
+  
+  iot:
+    vlan_id: 20
+    subnet: "192.168.20.0/24"
+    gateway: "192.168.20.1"
+    description: "IoT devices and home automation"
+  
+  guest:
+    vlan_id: 30
+    subnet: "192.168.30.0/24"
+    gateway: "192.168.30.1"
+    description: "Guest network access"
+
+dns:
+  primary: "192.168.10.10"      # Usually your Pi-hole
+  secondary: "192.168.10.11"    # Backup DNS or second Pi-hole
+  
+unifi:
+  controller: "192.168.10.5"
+  devices:
+    - name: "USG-Pro"
+      model: "UniFi Security Gateway Pro"
+      ip: "192.168.10.1"
+    - name: "Switch-Main"
+      model: "UniFi Switch 24"
+      ip: "192.168.10.2"
+    - name: "AP-Living"
+      model: "UniFi AC Pro"
+      ip: "192.168.10.3"

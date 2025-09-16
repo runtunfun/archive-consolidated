@@ -1,0 +1,230 @@
+{#
+Template: Ansible Overview
+Description: Detailed Ansible setup documentation
+Variables:
+  - site: Site configuration
+  - domain: Domain settings
+  - networks: Network configuration
+  - services: Service definitions
+  - ansible_env: Environment name
+#}
+
+# Ansible Automation Overview
+
+This document provides a comprehensive overview of the Ansible automation setup for {{ site.name | default("the homelab") }}.
+
+## 🏗️ Infrastructure as Code Philosophy
+
+Our infrastructure follows the Infrastructure as Code (IaC) principles:
+
+- **Version Control**: All configuration is stored in Git
+- **Reproducibility**: Infrastructure can be recreated from scratch
+- **Documentation**: Code serves as living documentation
+- **Testing**: Changes can be tested before production deployment
+- **Collaboration**: Team members can review and contribute
+
+## 📁 Repository Structure
+
+```
+ansible/
+├── playbooks/              # Main automation playbooks
+│   ├── site.yml            # Main site deployment
+│   ├── system-setup.yml    # Initial system configuration
+│   ├── security-setup.yml  # Security hardening
+│   └── service-*.yml       # Service-specific deployments
+├── roles/                  # Reusable automation roles
+│   ├── r_apt_update/       # System package management
+│   ├── r_install_docker/   # Docker installation
+│   ├── r_configure_fail2ban/ # Security configuration
+│   └── r_docker_install_*/ # Service deployment roles
+├── inventories/            # Environment definitions
+│   ├── production/         # Production servers
+│   ├── test/              # Testing environment
+│   └── development/       # Development setup
+└── group_vars/            # Configuration variables
+    ├── all.yml            # Global configuration
+    └── */                 # Group-specific variables
+```
+
+## 🎯 Core Commands
+
+### System Management
+```bash
+# Update all systems
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/system-update.yml
+
+# Deploy security configurations
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/security-setup.yml
+
+# Check system status
+ansible -i inventories/{{ ansible_env | default("production") }} all -m ping
+```
+
+### Service Deployment
+```bash
+# Deploy all services
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/site.yml
+
+# Deploy specific services
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled %}
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/{{ service_name }}-deploy.yml
+{% endif %}
+{% endfor %}
+```
+
+### Dry Run and Testing
+```bash
+# Test without making changes
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/site.yml --check
+
+# Verbose output for debugging
+ansible-playbook -i inventories/{{ ansible_env | default("production") }} playbooks/site.yml -vvv
+```
+
+## 🔧 Configuration Management
+
+### Global Variables
+Central configuration is managed in `group_vars/all.yml`:
+
+```yaml
+# Domain configuration
+internal_domain: "{{ domain.internal }}"
+external_domain: "{{ domain.external | default('') }}"
+
+# Network configuration
+{% for network_name, network_config in networks.items() %}
+{{ network_name }}_vlan: {{ network_config.vlan_id }}
+{{ network_name }}_subnet: "{{ network_config.subnet }}"
+{{ network_name }}_gateway: "{{ network_config.gateway }}"
+{% endfor %}
+
+# Service configuration
+{% for service_name, service_config in services.items() %}
+{% if service_config.enabled %}
+{{ service_name }}_enabled: true
+{{ service_name }}_host: "{{ service_config.host }}"
+{{ service_name }}_ip: "{{ service_config.ip }}"
+{% endif %}
+{% endfor %}
+```
+
+### Environment-Specific Configuration
+Each environment can override global settings:
+
+- `inventories/production/group_vars/all.yml` - Production overrides
+- `inventories/test/group_vars/all.yml` - Test environment settings
+- `inventories/development/group_vars/all.yml` - Development configuration
+
+## 🛡️ Security Considerations
+
+### SSH Key Management
+```bash
+# Generate SSH key for Ansible
+ssh-keygen -t ed25519 -f ~/.ssh/ansible_key
+
+# Deploy public key to servers
+ssh-copy-id -i ~/.ssh/ansible_key.pub user@server
+```
+
+### Vault for Secrets
+```bash
+# Create encrypted vault file
+ansible-vault create group_vars/all/vault.yml
+
+# Edit existing vault
+ansible-vault edit group_vars/all/vault.yml
+
+# Run playbook with vault
+ansible-playbook -i inventories/production playbooks/site.yml --ask-vault-pass
+```
+
+## 📊 Monitoring and Maintenance
+
+### Regular Tasks
+- **Daily**: Automated security updates
+- **Weekly**: Full system updates via Ansible
+- **Monthly**: Security audit and role updates
+- **Quarterly**: Infrastructure review and optimization
+
+### Health Checks
+```bash
+# Check all services are running
+ansible -i inventories/{{ ansible_env | default("production") }} all -m service -a "name=docker state=started"
+
+# Verify disk space
+ansible -i inventories/{{ ansible_env | default("production") }} all -m shell -a "df -h"
+
+# Check system load
+ansible -i inventories/{{ ansible_env | default("production") }} all -m shell -a "uptime"
+```
+
+## 🔄 Development Workflow
+
+### Making Changes
+1. **Create branch**: `git checkout -b feature/new-service`
+2. **Develop locally**: Test in development environment
+3. **Test staging**: Deploy to test environment
+4. **Code review**: Create pull request
+5. **Deploy production**: Merge and deploy
+
+### Testing Strategy
+```bash
+# Test syntax
+ansible-playbook --syntax-check playbooks/site.yml
+
+# Test with check mode
+ansible-playbook -i inventories/test playbooks/site.yml --check
+
+# Deploy to test environment
+ansible-playbook -i inventories/test playbooks/site.yml
+
+# Deploy to production
+ansible-playbook -i inventories/production playbooks/site.yml
+```
+
+## 📚 Best Practices
+
+### Role Development
+- Keep roles focused and single-purpose
+- Use meaningful variable names
+- Include comprehensive README files
+- Write idempotent tasks
+- Use handlers for service restarts
+
+### Playbook Organization
+- Group related tasks into roles
+- Use descriptive playbook names
+- Include task documentation
+- Implement proper error handling
+- Use tags for selective execution
+
+### Security Guidelines
+- Never store secrets in plain text
+- Use Ansible Vault for sensitive data
+- Regularly update roles and playbooks
+- Implement least privilege access
+- Monitor automation logs
+
+## 🚨 Troubleshooting
+
+### Common Issues
+- **Connection failures**: Check SSH keys and network connectivity
+- **Permission errors**: Verify sudo access and user privileges
+- **Service failures**: Check service logs and dependencies
+- **Variable errors**: Validate YAML syntax and variable definitions
+
+### Debug Commands
+```bash
+# Verbose output
+ansible-playbook -vvv playbooks/site.yml
+
+# Connection testing
+ansible -m ping all
+
+# Gather system facts
+ansible -m setup hostname
+
+# Check specific service
+ansible -m service -a "name=docker" hostname
+```

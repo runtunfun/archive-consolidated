@@ -1,0 +1,43 @@
+# Production Environment Overrides
+# These settings override the base configuration for production
+
+ansible_env: "production"
+
+# Production-specific domain (if different)
+domain:
+  internal: "homelab.local"
+  external: "yourdomain.com"
+
+# Production network settings (example: different subnets)
+networks:
+  management:
+    subnet: "10.0.10.0/24"
+    gateway: "10.0.10.1"
+  iot:
+    subnet: "10.0.20.0/24"
+    gateway: "10.0.20.1"
+
+# Enable all monitoring in production
+services:
+  monitoring:
+    prometheus:
+      enabled: true
+      retention: "90d"
+    grafana:
+      enabled: true
+    uptime_kuma:
+      enabled: true
+
+# Production-specific backup settings
+backup:
+  local:
+    retention: "90 days"
+  offsite:
+    retention: "2 years"
+
+# Enhanced security for production
+security:
+  fail2ban: true
+  ufw: true
+  automatic_updates: true
+  ssh_key_only: true

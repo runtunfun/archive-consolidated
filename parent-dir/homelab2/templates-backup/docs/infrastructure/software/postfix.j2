@@ -1,0 +1,62 @@
+sudo apt-get install postfix
+sudo vi /etc/postfix/main.cf
+
+sudo grep -v ^# /etc/postfix/main.cf
+smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+compatibility_level = 3.6
+sender_canonical_maps = regexp:/etc/postfix/sender_canonical
+smtpd_tls_security_level = may
+smtp_tls_security_level = encrypt
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtp_use_tls = yes
+smtp_tls_wrappermode = yes
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = olc.runtunfun.de
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = $myhostname, olc.runtunfun.de, localhost.runtunfun.de, localhost
+relayhost = mx2f20.netcup.net:465
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+virtual_alias_maps = lmdb:/etc/postfix/virtual
+
+sudo vi /etc/postfix/sasl_passwd
+sudo postmap /etc/postfix/sasl_passwd
+sudo chown root:root /etc/postfix/sasl_passwd /etc/postfix/sasl_passwd.db
+sudo chmod 0600 /etc/postfix/sasl_passwd /etc/postfix/sasl_passwd.db
+sudo grep -v ^# /etc/postfix/sasl_passwd
+mx2f20.netcup.net:465 server@runtunfun.de:[PASSWORD]
+
+sudo vi /etc/postfix/sender_canonical
+sudo postmap /etc/postfix/sender_canonical
+sudo grep -v ^# /etc/postfix/sender_canonical
+/.+@olc.runtunfun.de/ server@runtunfun.de
+/.+@runtunfun.de/ server@runtunfun.de
+
+sudo vi /etc/postfix/virtual
+sudo cat /etc/postfix/virtual
+server@runtunfun.de Server olc.runtunfun.de
+
+sudo vi /etc/aliases
+sudo newaliases
+sudo grep -v ^# /etc/aliases
+postmaster:     root
+webmaster:      root
+root: runtunfun@gmail.com
+
+sudo service postfix restart
+sudo service postfix status
+sudo journalctl -u postfix -xe -f
+   
+https://forum.netcup.de/administration-eines-server-vserver/server-konfiguration/imap-pop3/14335-postfix-f%C3%BCr-smtp-%C3%BCber-netcup-email/
+https://wiki.archlinux.org/title/Postfix

@@ -1,0 +1,92 @@
+# Services Configuration
+# Enable/disable services and configure their details
+
+services:
+  pihole:
+    enabled: true
+    host: "pihole.lab.local"
+    ip: "192.168.10.10"
+    admin_port: 8080
+    description: "Network-wide ad blocking and DNS server"
+    version: "latest"
+    
+  traefik:
+    enabled: true
+    host: "traefik.lab.local"
+    ip: "192.168.10.11"
+    dashboard_port: 8080
+    description: "Reverse proxy with automatic SSL certificates"
+    version: "v2.10"
+    
+  homeassistant:
+    enabled: true
+    host: "ha.lab.local"
+    ip: "192.168.10.20"
+    port: 8123
+    description: "Home automation platform"
+    version: "latest"
+    
+  portainer:
+    enabled: true
+    host: "portainer.lab.local"
+    ip: "192.168.10.21"
+    port: 9000
+    description: "Docker container management"
+    
+  monitoring:
+    prometheus:
+      enabled: true
+      host: "prometheus.lab.local"
+      ip: "192.168.10.30"
+      port: 9090
+      description: "Metrics collection and alerting"
+    
+    grafana:
+      enabled: true
+      host: "grafana.lab.local"
+      ip: "192.168.10.31"
+      port: 3000
+      description: "Metrics visualization and dashboards"
+      
+    uptime_kuma:
+      enabled: true
+      host: "uptime.lab.local"
+      ip: "192.168.10.32"
+      port: 3001
+      description: "Service uptime monitoring"
+
+  media:
+    plex:
+      enabled: false
+      host: "plex.lab.local"
+      ip: "192.168.10.40"
+      port: 32400
+      description: "Media server"
+      
+    jellyfin:
+      enabled: true
+      host: "jellyfin.lab.local"
+      ip: "192.168.10.41"
+      port: 8096
+      description: "Open source media server"
+
+  productivity:
+    nextcloud:
+      enabled: true
+      host: "nextcloud.lab.local"
+      ip: "192.168.10.50"
+      port: 80
+      description: "File sharing and collaboration"
+      
+    vaultwarden:
+      enabled: true
+      host: "vault.lab.local"
+      ip: "192.168.10.51"
+      port: 8080
+      description: "Password manager (Bitwarden compatible)"
+
+docker:
+  registry: "registry.lab.local"
+  compose_path: "/opt/docker-compose"
+  data_path: "/opt/docker-data"
+  network: "homelab"

@@ -1,0 +1,5 @@
+# file: p_apt_update.yml
+---
+- hosts: all
+  roles:
+  - r_apt_update

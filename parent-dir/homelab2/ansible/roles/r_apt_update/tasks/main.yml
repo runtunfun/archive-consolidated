@@ -1,0 +1,26 @@
+---
+# tasks file for r_apt_update
+- name: "update apt and all packages to their latest version"
+  block:
+  - name: "Update apt to its latest version"
+    ansible.builtin.apt:
+      name: "apt"
+      state: latest
+      update_cache: true
+
+  - name: "Update all packages to their latest version"
+    ansible.builtin.apt:
+      name: "apt"
+      state: latest
+      update_cache: true
+
+  rescue:
+    - name: "fail"
+      ansible.builtin.debug:
+        msg: "apr update failed"
+
+  tags:
+    - apt_update
+
+  become: true
+  become_user: root
