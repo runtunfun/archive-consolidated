@@ -1,0 +1,623 @@
+stefan@olc:~$ mkdir pangolin
+stefan@olc:~$ cd pangolin
+stefan@olc:~/pangolin$ wget -O installer "https://github.com/fosrl/pangolin/releases/download/1.0.1/installer_linux_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')" && chmod +x ./installer
+-bash: wget: command not found
+stefan@olc:~/pangolin$ sudo apt-get update
+[sudo] password for stefan:
+Hit:1 https://download.docker.com/linux/debian bookworm InRelease
+Hit:2 http://security.debian.org/debian-security bookworm-security InRelease
+Hit:3 http://deb.debian.org/debian bookworm InRelease
+Hit:4 http://deb.debian.org/debian bookworm-updates InRelease
+Hit:5 https://packages.cisofy.com/community/lynis/deb stable InRelease
+Reading package lists... Done
+stefan@olc:~/pangolin$ sudo apt-get install wget
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  wget
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 984 kB of archives.
+After this operation, 3,692 kB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian bookworm/main amd64 wget amd64 1.21.3-1+b2 [984 kB]
+Fetched 984 kB in 0s (9,619 kB/s)
+Selecting previously unselected package wget.
+(Reading database ... 35296 files and directories currently installed.)
+Preparing to unpack .../wget_1.21.3-1+b2_amd64.deb ...
+Unpacking wget (1.21.3-1+b2) ...
+Setting up wget (1.21.3-1+b2) ...
+stefan@olc:~/pangolin$ wget -O installer "https://github.com/fosrl/pangolin/releases/download/1.0.1/installer_linux_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')" && chmod +x ./installer
+--2025-03-10 20:13:37--  https://github.com/fosrl/pangolin/releases/download/1.0.1/installer_linux_amd64
+Resolving github.com (github.com)... 140.82.121.3
+Connecting to github.com (github.com)|140.82.121.3|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://objects.githubusercontent.com/github-production-release-asset-2e65be/863835427/2f4943bf-8cd3-45b0-8d8f-13234925da42?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250310%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250310T191337Z&X-Amz-Expires=300&X-Amz-Signature=2b3e8eace8e351a9eddbfb70c751126497f5af8106bb1e8c3edc26ba047c3213&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dinstaller_linux_amd64&response-content-type=application%2Foctet-stream [following]
+--2025-03-10 20:13:37--  https://objects.githubusercontent.com/github-production-release-asset-2e65be/863835427/2f4943bf-8cd3-45b0-8d8f-13234925da42?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250310%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250310T191337Z&X-Amz-Expires=300&X-Amz-Signature=2b3e8eace8e351a9eddbfb70c751126497f5af8106bb1e8c3edc26ba047c3213&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dinstaller_linux_amd64&response-content-type=application%2Foctet-stream
+Resolving objects.githubusercontent.com (objects.githubusercontent.com)... 185.199.109.133, 185.199.110.133, 185.199.108.133, ...
+Connecting to objects.githubusercontent.com (objects.githubusercontent.com)|185.199.109.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 5255401 (5.0M) [application/octet-stream]
+Saving to: ‘installer’
+
+installer                          100%[================================================================>]   5.01M  23.5MB/s    in 0.2s
+
+2025-03-10 20:13:38 (23.5 MB/s) - ‘installer’ saved [5255401/5255401]
+
+stefan@olc:~/pangolin$ sudo ./installer
+
+=== Basic Configuration ===
+Enter your base domain (no subdomain e.g. example.com): runtunfun.de
+Enter the domain for the Pangolin dashboard (default: pangolin.runtunfun.de): pg.runtunfun.de
+Enter email for Let's Encrypt certificates: runtunfun@gmail.com
+Do you want to use Gerbil to allow tunned connections (yes/no) (default: yes):
+
+=== Admin User Configuration ===
+Enter admin user email (default: admin@runtunfun.de): runtunfun@gmail.com
+Create admin user password:
+Confirm admin user password:
+
+=== Security Settings ===
+Disable signup without invite (yes/no) (default: yes):
+Disable users from creating organizations (yes/no) (default: no): yes
+
+=== Email Configuration ===
+Enable email functionality (yes/no) (default: no): yes
+Enter SMTP host:
+Enter SMTP port (default 587) (default: 587):
+Enter SMTP username:
+Enter SMTP password:
+Enter no-reply email address:
+
+=== Starting installation ===
+Would you like to install and start the containers? (yes/no) (default: yes):
+Starting containers...
+Using 'docker compose' command to pull containers...
+[+] Pulling 25/25
+ ✔ gerbil Pulled                                                                                                                       8.7s
+   ✔ 9cb31e2e37ea Pull complete                                                                                                        6.3s
+   ✔ 0f890e730b30 Pull complete                                                                                                        6.5s
+   ✔ d769b24bf685 Pull complete                                                                                                        6.6s
+   ✔ d6e42e66b7a4 Pull complete                                                                                                        6.6s
+   ✔ 4b9f016be772 Pull complete                                                                                                        6.7s
+ ✔ traefik Pulled                                                                                                                      5.7s
+   ✔ f18232174bc9 Pull complete                                                                                                        1.0s
+   ✔ 660f734330e4 Pull complete                                                                                                        1.3s
+   ✔ 0af947afec58 Pull complete                                                                                                        3.6s
+   ✔ b6438ad7918f Pull complete                                                                                                        3.6s
+ ✔ pangolin Pulled                                                                                                                    30.7s
+   ✔ 905fb610ce71 Pull complete                                                                                                       11.7s
+   ✔ 2a055f0c83be Pull complete                                                                                                       11.8s
+   ✔ 0416551166ae Pull complete                                                                                                       11.8s
+   ✔ ef021364bf2a Pull complete                                                                                                       11.8s
+   ✔ 6514879339b2 Pull complete                                                                                                       11.9s
+   ✔ 171d9007279d Pull complete                                                                                                       11.9s
+   ✔ f8a1c78dbf8f Pull complete                                                                                                       27.0s
+   ✔ f4b912511408 Pull complete                                                                                                       28.4s
+   ✔ 11cf5f496fd1 Pull complete                                                                                                       28.4s
+   ✔ 6eec6b720905 Pull complete                                                                                                       28.5s
+   ✔ 3a3afe886379 Pull complete                                                                                                       28.5s
+   ✔ 38cbaa7ec400 Pull complete                                                                                                       28.5s
+   ✔ 905683c047e4 Pull complete                                                                                                       28.5s
+Using 'docker compose' command to start containers...
+[+] Running 4/4
+ ✔ Network pangolin    Created                                                                                                         0.1s
+ ✘ Container pangolin  Error                                                                                                           5.6s
+ ✔ Container gerbil    Created                                                                                                         0.0s
+ ✔ Container traefik   Created                                                                                                         0.0s
+dependency failed to start: container pangolin is unhealthy
+
+=== Crowdsec Install ===
+Would you like to install Crowdsec? (yes/no) (default: yes): yes
+Stopping containers...
+[+] Running 4/4
+ ✔ Container traefik   Removed                                                                                                         0.0s
+ ✔ Container gerbil    Removed                                                                                                         0.1s
+ ✔ Container pangolin  Removed                                                                                                         0.0s
+ ✔ Network pangolin    Removed                                                                                                         0.1s
+Traefik log volume is already configured
+Starting containers...
+[+] Running 11/11
+ ✔ crowdsec Pulled                                                                                                                    10.7s
+   ✔ 1f3e46996e29 Pull complete                                                                                                        0.9s
+   ✔ 8322c8afb0c2 Pull complete                                                                                                        1.2s
+   ✔ a68bfc77f4d5 Pull complete                                                                                                        2.9s
+   ✔ c2c8d5ab7f82 Pull complete                                                                                                        2.9s
+   ✔ e77eb1364cb5 Pull complete                                                                                                        2.9s
+   ✔ d61e88dfb405 Pull complete                                                                                                        3.0s
+   ✔ f981a2efda76 Pull complete                                                                                                        5.6s
+   ✔ 19a7c96cba2f Pull complete                                                                                                        5.6s
+   ✔ ff882c4c30a5 Pull complete                                                                                                        5.6s
+   ✔ e93a5b2b27bf Pull complete                                                                                                        8.7s
+[+] Running 5/5
+ ✔ Network pangolin    Created                                                                                                         0.1s
+ ✘ Container pangolin  Error                                                                                                          16.5s
+ ✔ Container crowdsec  Started                                                                                                         0.8s
+ ✔ Container gerbil    Created                                                                                                         0.0s
+ ✔ Container traefik   Created                                                                                                         0.0s
+dependency failed to start: container pangolin is unhealthy
+Installation complete!
+stefan@olc:~/pangolin$ docker ps -a
+CONTAINER ID   IMAGE                           COMMAND                  CREATED          STATUS                             PORTS                                         NAMES
+ea07770f3802   traefik:v3.3.3                  "/entrypoint.sh --co…"   27 seconds ago   Created                                                                          traefik
+3864b491c484   fosrl/gerbil:1.0.0              "/entrypoint.sh --re…"   27 seconds ago   Created                                                                          gerbil
+8164247af15d   fosrl/pangolin:1.0.1            "docker-entrypoint.s…"   28 seconds ago   Up 1 second (health: starting)                                                   pangolin
+c0f248ac44c5   crowdsecurity/crowdsec:latest   "/bin/bash /docker_s…"   28 seconds ago   Up 27 seconds (health: starting)   0.0.0.0:6060->6060/tcp, [::]:6060->6060/tcp   crowdsec
+af491a1bf6c6   hello-world                     "/hello"                 8 days ago       Exited (0) 8 days ago                                                            gallant_pike
+0dbc7ccedb23   hello-world                     "/hello"                 8 days ago       Exited (0) 8 days ago                                                            quizzical_chandrasekhar
+stefan@olc:~/pangolin$ docker logs -f pangolin
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+
+> @fosrl/pangolin@0.0.0 start
+> NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+
+Starting migrations from version 1.0.1
+Migrations to run:
+All migrations completed successfully
+/app/server/lib/config.ts:199
+            throw new Error(`Invalid configuration file: ${errors}`);
+                  ^
+
+
+Error: Invalid configuration file: Validation error: Invalid email at "email.no_reply"
+    at Config.loadConfig (/app/server/lib/config.ts:199:19)
+    at new Config (/app/server/lib/config.ts:159:14)
+    at <anonymous> (/app/server/lib/config.ts:256:23)
+
+Node.js v20.18.3
+stefan@olc:~/pangolin$ ls -la
+total 5164
+drwxr-xr-x 3 stefan stefan    4096 Mar 10 20:16 .
+drwx------ 4 stefan stefan    4096 Mar 10 20:13 ..
+drwxr-xr-x 8 root   root      4096 Mar 10 20:16 config
+-rw-r--r-- 1 root   root      7150 Mar 10 20:16 config.tar.gz
+-rw-r--r-- 1 root   root      2292 Mar 10 20:16 docker-compose.yml
+-rw-r--r-- 1 root   root      1601 Mar 10 20:16 docker-compose.yml.backup
+-rwxr-xr-x 1 stefan stefan 5255401 Mar 10 16:13 installer
+stefan@olc:~/pangolin$ cd config
+stefan@olc:~/pangolin/config$ ls -la
+total 36
+drwxr-xr-x  8 root   root   4096 Mar 10 20:16 .
+drwxr-xr-x  3 stefan stefan 4096 Mar 10 20:16 ..
+-rw-r--r--  1 root   root   1478 Mar 10 20:15 config.yml
+drwxr-xr-x 15 root   root   4096 Mar 10 20:16 crowdsec
+drwxr-xr-x  5 root   root   4096 Mar 10 20:16 crowdsec_logs
+drwxr-xr-x  2 root   root   4096 Mar 10 20:16 db
+drwxr-xr-x  2 root   root   4096 Mar 10 20:15 letsencrypt
+drwxr-xr-x  2 root   root   4096 Mar 10 20:15 logs
+drwxr-xr-x  3 root   root   4096 Mar 10 20:16 traefik
+stefan@olc:~/pangolin/config$ sudo vi config.yml
+stefan@olc:~/pangolin/config$ cd ..
+stefan@olc:~/pangolin$ pwd
+/home/stefan/pangolin
+stefan@olc:~/pangolin$ ls -la
+total 5164
+drwxr-xr-x 3 stefan stefan    4096 Mar 10 20:16 .
+drwx------ 4 stefan stefan    4096 Mar 10 20:13 ..
+drwxr-xr-x 8 root   root      4096 Mar 10 20:18 config
+-rw-r--r-- 1 root   root      7150 Mar 10 20:16 config.tar.gz
+-rw-r--r-- 1 root   root      2292 Mar 10 20:16 docker-compose.yml
+-rw-r--r-- 1 root   root      1601 Mar 10 20:16 docker-compose.yml.backup
+-rwxr-xr-x 1 stefan stefan 5255401 Mar 10 16:13 installer
+stefan@olc:~/pangolin$ docker compose down
+[+] Running 5/5
+ ✔ Container traefik   Removed                                                                                                         0.0s
+ ✔ Container crowdsec  Removed                                                                                                         0.2s
+ ✔ Container gerbil    Removed                                                                                                         0.0s
+ ✔ Container pangolin  Removed                                                                                                         0.0s
+ ✔ Network pangolin    Removed                                                                                                         0.1s
+stefan@olc:~/pangolin$ docker compose up -d
+[+] Running 5/5
+ ✔ Network pangolin    Created                                                                                                         0.1s
+ ✔ Container pangolin  Healthy                                                                                                         8.6s
+ ✔ Container crowdsec  Started                                                                                                         0.6s
+ ✔ Container gerbil    Started                                                                                                         8.0s
+ ✔ Container traefik   Started                                                                                                         8.8s
+stefan@olc:~/pangolin$ docker compose logs
+traefik  | {"level":"info","version":"3.3.3","time":"2025-03-10T19:19:06Z","message":"Traefik version 3.3.3 built on 2025-01-31T14:55:01Z"}
+traefik  | {"level":"info","time":"2025-03-10T19:19:06Z","message":"\nStats collection is disabled.\nHelp us improve Traefik by turning this feature on :)\nMore details on: https://doc.traefik.io/traefik/contributing/data-collection/\n"}
+traefik  | {"level":"info","plugins":["badger","crowdsec"],"time":"2025-03-10T19:19:06Z","message":"Loading plugins..."}
+traefik  | {"level":"info","plugins":["badger","crowdsec"],"time":"2025-03-10T19:19:07Z","message":"Plugins loaded."}
+traefik  | {"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider aggregator *aggregator.ProviderAggregator"}
+traefik  | {"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *file.Provider"}
+traefik  | {"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *traefik.Provider"}
+traefik  | {"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *http.Provider"}
+traefik  | {"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *acme.ChallengeTLSALPN"}
+traefik  | {"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *acme.Provider"}
+traefik  | {"level":"info","providerName":"letsencrypt.acme","acmeCA":"https://acme-v02.api.letsencrypt.org/directory","time":"2025-03-10T19:19:07Z","message":"Testing certificate renew..."}
+traefik  | {"level":"info","providerName":"letsencrypt.acme","time":"2025-03-10T19:19:09Z","message":"Register..."}
+crowdsec  | Local agent already registered
+crowdsec  | Check if lapi needs to register an additional agent
+crowdsec  | sqlite database permissions updated
+crowdsec  | /etc/crowdsec was found in a volume
+crowdsec  | Running hub update
+crowdsec  | Skipping hub update, index file is recent
+crowdsec  | /var/lib/crowdsec/data was found in a volume
+crowdsec  | Running hub upgrade
+crowdsec  | Running: cscli  parsers install "crowdsecurity/docker-logs"
+crowdsec  | Nothing to do.
+crowdsec  | Running: cscli  parsers install "crowdsecurity/cri-logs"
+crowdsec  | Nothing to do.
+crowdsec  | Running: cscli  collections install "crowdsecurity/traefik"
+crowdsec  | Nothing to do.
+crowdsec  | Running: cscli  collections install "crowdsecurity/appsec-virtual-patching"
+crowdsec  | Nothing to do.
+crowdsec  | Running: cscli  collections install "crowdsecurity/appsec-generic-rules"
+crowdsec  | Nothing to do.
+crowdsec  | Running: cscli  parsers install "crowdsecurity/whitelists"
+crowdsec  | Nothing to do.
+crowdsec  | time="2025-03-10T19:19:01Z" level=info msg="Enabled feature flags: none"
+crowdsec  | time="2025-03-10T19:19:01Z" level=info msg="Crowdsec v1.6.5-72b4354b"
+crowdsec  | time="2025-03-10T19:19:01Z" level=info msg="Loading prometheus collectors"
+crowdsec  | time="2025-03-10T19:19:01Z" level=info msg="Loading CAPI manager"
+crowdsec  | time="2025-03-10T19:19:03Z" level=info msg="CAPI manager configured successfully"
+crowdsec  | time="2025-03-10T19:19:03Z" level=info msg="Start push to CrowdSec Central API (interval: 17s once, then 10s)"
+crowdsec  | time="2025-03-10T19:19:03Z" level=info msg="Starting community-blocklist update"
+crowdsec  | time="2025-03-10T19:19:03Z" level=info msg="Start sending metrics to CrowdSec Central API (interval: 31m48s once, then 30m0s)"
+crowdsec  | time="2025-03-10T19:19:03Z" level=info msg="CrowdSec Local API listening on 0.0.0.0:8080"
+crowdsec  | time="2025-03-10T19:19:03Z" level=info msg="capi metrics: sending"
+crowdsec  | time="2025-03-10T19:19:03Z" level=info msg="Loading grok library /etc/crowdsec/patterns"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Loading enrich plugins"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Successfully registered enricher 'GeoIpCity'"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Successfully registered enricher 'GeoIpASN'"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Successfully registered enricher 'IpToRange'"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Successfully registered enricher 'reverse_dns'"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Successfully registered enricher 'ParseDate'"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Successfully registered enricher 'UnmarshalJSON'"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Loading parsers from 10 files"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s00-raw/cri-logs.yaml stage=s00-raw
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s00-raw/docker-logs.yaml stage=s00-raw
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Loaded 2 parser nodes" file=/etc/crowdsec/parsers/s00-raw/syslog-logs.yaml stage=s00-raw
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s01-parse/appsec-logs.yaml stage=s01-parse
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="capi/community-blocklist : 0 explicit deletions"
+crowdsec  | time="2025-03-10T19:19:05Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s01-parse/sshd-logs.yaml stage=s01-parse
+crowdsec  | time="2025-03-10T19:19:05Z" level=warning msg="sqlite is not using WAL mode, LAPI might become unresponsive when inserting the community blocklist"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s01-parse/traefik-logs.yaml stage=s01-parse
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s02-enrich/dateparse-enrich.yaml stage=s02-enrich
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s02-enrich/geoip-enrich.yaml stage=s02-enrich
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s02-enrich/http-logs.yaml stage=s02-enrich
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 1 parser nodes" file=/etc/crowdsec/parsers/s02-enrich/whitelists.yaml stage=s02-enrich
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 11 nodes from 3 stages"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="No postoverflow parsers to load"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loading 49 scenario files"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=wild-sea name=crowdsecurity/apache_log4j2_cve-2021-44228
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=dry-waterfall name=crowdsecurity/fortinet-cve-2018-13379
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=purple-star name=crowdsecurity/CVE-2022-46169-bf
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=twilight-cherry name=crowdsecurity/CVE-2022-46169-cmd
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=summer-sound name=crowdsecurity/CVE-2022-44877
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=frosty-feather name=crowdsecurity/CVE-2024-38475
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Parsed.request'" cfg=frosty-feather name=crowdsecurity/CVE-2024-38475
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=patient-sun name=crowdsecurity/http-path-traversal-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.http_path'" cfg=patient-sun name=crowdsecurity/http-path-traversal-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=wandering-night name=crowdsecurity/http-sqli-probbing-detection
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Parsed.http_args'" cfg=wandering-night name=crowdsecurity/http-sqli-probbing-detection
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=muddy-butterfly name=crowdsecurity/CVE-2022-41082
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=wandering-pond name=crowdsecurity/jira_cve-2021-26086
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=morning-water name=crowdsecurity/http-cve-2021-42013
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=solitary-morning name=crowdsecurity/CVE-2024-9474
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=green-feather name=crowdsecurity/http-cve-2021-41773
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=bold-dew name=crowdsecurity/ssh-slow-bf
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=damp-field name=crowdsecurity/ssh-slow-bf_user-enum
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.target_user'" cfg=damp-field name=crowdsecurity/ssh-slow-bf_user-enum
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=misty-hill name=crowdsecurity/CVE-2023-49103
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=green-darkness name=crowdsecurity/CVE-2023-22518
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=late-hill name=crowdsecurity/CVE-2022-37042
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=green-shadow name=crowdsecurity/http-backdoors-attempts
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Parsed.file_name'" cfg=green-shadow name=crowdsecurity/http-backdoors-attempts
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=cool-moon name=crowdsecurity/http-open-proxy
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=autumn-shadow name=crowdsecurity/CVE-2022-35914
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=damp-frost name=crowdsecurity/http-xss-probbing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Parsed.http_args'" cfg=damp-frost name=crowdsecurity/http-xss-probbing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=broken-frost name=crowdsecurity/fortinet-cve-2022-40684
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=divine-resonance name=crowdsecurity/vmware-vcenter-vmsa-2021-0027
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=silent-fog name=crowdsecurity/appsec-vpatch
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.rule_name'" cfg=silent-fog name=crowdsecurity/appsec-vpatch
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=late-bush name=crowdsecurity/CVE-2017-9841
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=holy-hill name=ltsich/http-w00tw00t
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=throbbing-field name=crowdsecurity/CVE-2023-22515
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=red-rain name=crowdsecurity/CVE-2022-41697
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=snowy-shape name=crowdsecurity/http-crawl-non_statics
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Parsed.file_name'" cfg=snowy-shape name=crowdsecurity/http-crawl-non_statics
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=silent-sea name=crowdsecurity/http-cve-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.http_path'" cfg=silent-sea name=crowdsecurity/http-cve-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=little-paper name=crowdsecurity/grafana-cve-2021-43798
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=long-bush name=crowdsecurity/CVE-2022-42889
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=muddy-surf name=crowdsecurity/ssh-bf
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=little-pine name=crowdsecurity/ssh-bf_user-enum
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.target_user'" cfg=little-pine name=crowdsecurity/ssh-bf_user-enum
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=withered-field name=crowdsecurity/http-bad-user-agent
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=morning-waterfall name=crowdsecurity/http-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.http_path'" cfg=morning-waterfall name=crowdsecurity/http-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=twilight-dew name=crowdsecurity/spring4shell_cve-2022-22965
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=morning-forest name=crowdsecurity/ssh-cve-2024-6387
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=summer-sun name=crowdsecurity/thinkphp-cve-2018-20062
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=dawn-firefly name=crowdsecurity/http-admin-interface-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.http_path'" cfg=dawn-firefly name=crowdsecurity/http-admin-interface-probing
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=wispy-resonance name=crowdsecurity/CVE-2022-26134
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=winter-snow name=crowdsecurity/f5-big-ip-cve-2020-5902
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=autumn-sound name=crowdsecurity/appsec-native
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.rule_name'" cfg=autumn-sound name=crowdsecurity/appsec-native
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=throbbing-waterfall name=crowdsecurity/vmware-cve-2022-22954
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=wandering-pond name=crowdsecurity/CVE-2024-0012
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=delicate-resonance name=crowdsecurity/pulse-secure-sslvpn-cve-2019-11510
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=patient-fog name=crowdsecurity/http-generic-bf
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=patient-glitter name=LePresidente/http-generic-401-bf
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=red-water name=LePresidente/http-generic-403-bf
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=crimson-rain name=crowdsecurity/http-sensitive-files
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Parsed.request'" cfg=crimson-rain name=crowdsecurity/http-sensitive-files
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding leaky bucket" cfg=green-brook name=crowdsecurity/http-wordpress-scan
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Compiling distinct 'evt.Meta.http_path'" cfg=green-brook name=crowdsecurity/http-wordpress-scan
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=snowy-leaf name=crowdsecurity/CVE-2019-18935
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding trigger bucket" cfg=crimson-sun name=crowdsecurity/netgear_rce
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 54 scenarios"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-3273 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-41713 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2021-22941 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-34362 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-24489 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-38816 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-51567 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-8963 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-git-config to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2019-1003030 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2020-11738 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-41082 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-38205 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2018-10562 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2019-12989 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-34102 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-6205 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-23897 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-27954 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-29973 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/generic-freemarker-ssti to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-47218 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-50164 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-6553 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/generic-wordpress-uploads-php to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-22515 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-4577 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-51378 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-connectwise-auth-bypass to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2018-13379 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-44877 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-22965 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-33617 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-3519 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-9465 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-symfony-profiler to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/base-config to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-0012 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-1212 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-28121 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-42793 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-7028 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-27198 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-27348 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-28255 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2020-17496 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-40044 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-env-access to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-3272 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-8190 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-46169 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-7593 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2020-5902 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-22954 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2021-3129 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-35082 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-27956 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-29824 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2018-20062 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2021-26086 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-49070 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-52301 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2018-1000861 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-46805 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-23752 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-22024 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-28987 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-9474 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-35914 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-1389 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-27926 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-20198 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-35078 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-32113 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2017-9841 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2022-26134 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-38856 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2023-22527 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2024-29849 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-laravel-debug-mode to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding crowdsecurity/vpatch-CVE-2019-18935 to appsec rules"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="loading acquisition file : /etc/crowdsec/acquis.yaml"
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding file /var/log/auth.log to datasources" type=file
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding file /var/log/syslog to datasources" type=file
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Adding file /var/log/traefik/access.log to datasources" type=file
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Cache duration for auth not set, using default: 1m0s" name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="loading /etc/crowdsec/appsec-configs/appsec-default.yaml" component=appsec_config name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 0 outofband rules" component=appsec_config name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="loading inband rule crowdsecurity/base-config" component=appsec_config name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="loading inband rule crowdsecurity/vpatch-*" component=appsec_config name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="loading inband rule crowdsecurity/generic-*" component=appsec_config name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Loaded 81 inband rules" component=appsec_config name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:06Z" level=info msg="Created 1 appsec runners" name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="crowdsecurity/community-blocklist : added 51128 entries, deleted 0 entries (alert:1)"
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="Start pull from CrowdSec Central API (interval: 1h57m56s once, then 2h0m0s)"
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="127.0.0.1 - [Mon, 10 Mar 2025 19:19:11 UTC] \"POST /v1/watchers/login HTTP/1.1 200 4.856234168s \"crowdsec/v1.6.5-72b4354b-docker\" \""
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="Starting processing data"
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="1 appsec runner to start" name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="creating TCP server on 0.0.0.0:7422" name=myAppSecComponent type=appsec
+crowdsec  | time="2025-03-10T19:19:11Z" level=warning msg="/var/log/auth.log is a directory, ignoring it." type=file
+crowdsec  | time="2025-03-10T19:19:11Z" level=warning msg="/var/log/syslog is a directory, ignoring it." type=file
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="Appsec Runner ready to process event" name=myAppSecComponent runner_uuid=bd9b2aed-8abc-4d49-b8e7-605cbe157933 type=appsec
+crowdsec  | time="2025-03-10T19:19:11Z" level=info msg="127.0.0.1 - [Mon, 10 Mar 2025 19:19:11 UTC] \"POST /v1/usage-metrics HTTP/1.1 201 4.685335ms \"crowdsec/v1.6.5-72b4354b-docker\" \""
+crowdsec  | time="2025-03-10T19:19:27Z" level=info msg="172.18.0.4 - [Mon, 10 Mar 2025 19:19:27 UTC] \"GET /v1/decisions?ip=80.187.85.3&banned=true HTTP/1.1 403 17.352236ms \"Crowdsec-Bouncer-Traefik-Plugin/1.X.X\" \""
+crowdsec  | time="2025-03-10T19:19:31Z" level=info msg="172.18.0.4 - [Mon, 10 Mar 2025 19:19:31 UTC] \"GET /v1/decisions?ip=80.187.85.3&banned=true HTTP/1.1 403 490.529µs \"Crowdsec-Bouncer-Traefik-Plugin/1.X.X\" \""
+crowdsec  | time="2025-03-10T19:19:39Z" level=info msg="172.18.0.4 - [Mon, 10 Mar 2025 19:19:39 UTC] \"GET /v1/decisions?ip=80.187.85.3&banned=true HTTP/1.1 403 855.865µs \"Crowdsec-Bouncer-Traefik-Plugin/1.X.X\" \""
+gerbil    | INFO: 2025/03/10 19:19:04 Fetching remote config from http://pangolin:3001/api/v1/gerbil/get-config
+gerbil    | INFO: 2025/03/10 19:19:04 Created WireGuard interface wg0
+gerbil    | INFO: 2025/03/10 19:19:04 Assigned IP address 100.89.128.1/24 to interface wg0
+gerbil    | INFO: 2025/03/10 19:19:04 Attempting to delete existing MSS clamping rule for chain INPUT
+gerbil    | INFO: 2025/03/10 19:19:04 Attempting to delete existing MSS clamping rule for chain OUTPUT
+gerbil    | INFO: 2025/03/10 19:19:04 Attempting to delete existing MSS clamping rule for chain FORWARD
+gerbil    | INFO: 2025/03/10 19:19:04 Adding MSS clamping rule for chain INPUT
+gerbil    | INFO: 2025/03/10 19:19:04 Successfully added and verified MSS clamping rule for chain INPUT
+gerbil    | INFO: 2025/03/10 19:19:04 Adding MSS clamping rule for chain OUTPUT
+gerbil    | INFO: 2025/03/10 19:19:04 Successfully added and verified MSS clamping rule for chain OUTPUT
+gerbil    | INFO: 2025/03/10 19:19:04 Adding MSS clamping rule for chain FORWARD
+gerbil    | INFO: 2025/03/10 19:19:04 Successfully added and verified MSS clamping rule for chain FORWARD
+gerbil    | INFO: 2025/03/10 19:19:04 WireGuard interface wg0 created and configured
+gerbil    | INFO: 2025/03/10 19:19:04 Starting server on :3003
+pangolin  |
+pangolin  | > @fosrl/pangolin@0.0.0 start
+pangolin  | > NODE_OPTIONS=--enable-source-maps NODE_ENV=development ENVIRONMENT=prod sh -c 'node dist/migrations.mjs && node dist/server.mjs'
+pangolin  |
+pangolin  | Starting migrations from version 1.0.1
+pangolin  | Migrations to run:
+pangolin  | All migrations completed successfully
+pangolin  | 2025-03-10T19:19:00.482Z [warn]: Email SMTP configuration is missing. Emails will not be sent.
+pangolin  | 2025-03-10T19:19:00.928Z [info]: Server admin (runtunfun@gmail.com) created
+pangolin  | 2025-03-10T19:19:02.129Z [info]: API server is running on http://localhost:3000
+pangolin  | 2025-03-10T19:19:02.129Z [info]: Internal server is running on http://localhost:3001
+pangolin  | 2025-03-10T19:19:02.346Z [info]: Next.js server is running on http://localhost:3002
+pangolin  | 2025-03-10T19:19:04.406Z [info]: Created new exit node Exit Node jdKQxDaK with address 100.89.128.1/24 and port 51820
+stefan@olc:~/pangolin$ docker logs -f traefik
+{"level":"info","version":"3.3.3","time":"2025-03-10T19:19:06Z","message":"Traefik version 3.3.3 built on 2025-01-31T14:55:01Z"}
+{"level":"info","time":"2025-03-10T19:19:06Z","message":"\nStats collection is disabled.\nHelp us improve Traefik by turning this feature on :)\nMore details on: https://doc.traefik.io/traefik/contributing/data-collection/\n"}
+{"level":"info","plugins":["badger","crowdsec"],"time":"2025-03-10T19:19:06Z","message":"Loading plugins..."}
+{"level":"info","plugins":["badger","crowdsec"],"time":"2025-03-10T19:19:07Z","message":"Plugins loaded."}
+{"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider aggregator *aggregator.ProviderAggregator"}
+{"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *file.Provider"}
+{"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *traefik.Provider"}
+{"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *http.Provider"}
+{"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *acme.ChallengeTLSALPN"}
+{"level":"info","time":"2025-03-10T19:19:07Z","message":"Starting provider *acme.Provider"}
+{"level":"info","providerName":"letsencrypt.acme","acmeCA":"https://acme-v02.api.letsencrypt.org/directory","time":"2025-03-10T19:19:07Z","message":"Testing certificate renew..."}
+{"level":"info","providerName":"letsencrypt.acme","time":"2025-03-10T19:19:09Z","message":"Register..."}
+^Cstefan@olc:~/pangolin$

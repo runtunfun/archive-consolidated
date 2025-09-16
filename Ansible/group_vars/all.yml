@@ -1,0 +1,15 @@
+---
+#file: group_vars/all.yml
+config_mgmt_user:
+  name: ansible
+  home_dir: /home/ansible
+  group: ansible
+  comment: "ansible automation user"
+  uid: 61065
+  gid: 61065
+  sudo_file: ansible
+  sudo_entry: "ansible ALL=(ALL) NOPASSWD: ALL"
+checkmk_user: checkmk
+useful_software:
+  - fail2ban
+  - yadm

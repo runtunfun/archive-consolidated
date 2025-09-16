@@ -1,0 +1,12 @@
+$ sudo grep -i mail /etc/apt/apt.conf.d/50unattended-upgrades
+// Send email to this address for problems or packages upgrades
+// If empty or unset then no email is sent, make sure that you
+// have a working mail setup on your system. A package that provides
+// 'mailx' must be installed. E.g. "user@example.com"
+//Unattended-Upgrade::Mail "";
+Unattended-Upgrade::Mail "root";
+// If this is not set, then any legacy MailOnlyOnError (boolean) value
+//Unattended-Upgrade::MailReport "on-change";
+Unattended-Upgrade::MailReport "on-change";
+
+https://wiki.debian.org/UnattendedUpgrades

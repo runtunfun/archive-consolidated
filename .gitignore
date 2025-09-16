@@ -1,0 +1,32 @@
+# Cache objects
+packer_cache/
+
+# Crash log
+crash.log
+
+# For built boxes
+*.box
+
+#General excludes
+.ansible
+.vagrant
+.bash_history
+*.img
+*.ipf
+.lesshst
+*.log
+nohup.*
+*.old
+*.out
+out/*
+*.ova
+*.ovf
+*.retry
+*.swp
+*.xml
+*hosts.csv
+awx_working_dir
+data/*
+!.keep
+!.gitkeep
+*.mp4
