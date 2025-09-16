@@ -1,0 +1,8 @@
+site_name: Infrastructure Management Documentation
+repo_url: https://github.com/infra-mgmt/infrastructure-management
+edit_uri: '?query=docs/'
+theme: readthedocs
+plugins:
+  - search
+  - mkdocstrings
+  - mkdocs-nav-weight
