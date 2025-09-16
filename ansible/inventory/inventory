@@ -1,0 +1,235 @@
+# Homelab Infrastructure Inventory
+# Format: Ansible-Inventory compatible INI file
+# Usage: Can be used directly with Ansible or parsed by custom scripts
+
+# =============================================================================
+# HOMELAB CORE INFRASTRUCTURE (192.168.1.0/24)
+# =============================================================================
+
+[homelab_infrastructure]
+# UniFi Network Infrastructure (192.168.1.2 - 192.168.1.20)
+unifi-controller-01 ansible_host=192.168.1.2 domain=lab.enzmann.online https_url=https://unifi-controller-01.lab.enzmann.online manufacturer=Ubiquiti category=network
+pihole-01 ansible_host=192.168.1.3 domain=lab.enzmann.online https_url=https://pihole-01.lab.enzmann.online manufacturer=Raspberry category=dns vpn_client=true vpn_server=ds9.enzmann.online
+pihole-02 ansible_host=192.168.1.4 domain=lab.enzmann.online https_url=https://pihole-02.lab.enzmann.online manufacturer=Raspberry category=dns vpn_client=true vpn_server=ds9.enzmann.online
+switch-main-01 ansible_host=192.168.1.10 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi Switch 24"
+ap-wz-01 ansible_host=192.168.1.11 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi AP U6 Pro" location=wohnzimmer
+ap-sz-01 ansible_host=192.168.1.12 domain=lab.enzmann.online manufacturer=Ubiquiti category=network model="UniFi AP U6 Lite" location=schlafzimmer
+
+[homelab_compute]
+# Homelab Core Hosts (192.168.1.21 - 192.168.1.40)
+pve-01 ansible_host=192.168.1.21 domain=lab.enzmann.online https_url=https://pve-01.lab.enzmann.online:8006 category=compute role=proxmox_primary vpn_client=true vpn_server=ds9.enzmann.online
+pve-02 ansible_host=192.168.1.22 domain=lab.enzmann.online https_url=https://pve-02.lab.enzmann.online:8006 category=compute role=proxmox_secondary vpn_client=true vpn_server=ds9.enzmann.online
+nas-01 ansible_host=192.168.1.25 domain=lab.enzmann.online https_url=https://nas-01.lab.enzmann.online category=storage role=nas_primary
+
+[homelab_services]
+# Docker Swarm Services (192.168.1.41 - 192.168.1.99)
+ha-prod-01 ansible_host=192.168.1.41 domain=lab.enzmann.online https_url=https://ha-prod-01.lab.enzmann.online category=iot role=home_assistant_prod docker_service=homeassistant vpn_client=true vpn_server=ds9.enzmann.online
+ha-test-01 ansible_host=192.168.1.42 domain=lab.enzmann.online https_url=https://ha-test-01.lab.enzmann.online category=iot role=home_assistant_test docker_service=homeassistant_test
+docker-manager-01 ansible_host=192.168.1.45 domain=lab.enzmann.online category=compute role=docker_swarm_manager
+docker-worker-01 ansible_host=192.168.1.46 domain=lab.enzmann.online category=compute role=docker_swarm_worker
+docker-worker-02 ansible_host=192.168.1.47 domain=lab.enzmann.online category=compute role=docker_swarm_worker
+traefik-01 ansible_host=192.168.1.50 domain=lab.enzmann.online https_url=https://traefik-01.lab.enzmann.online category=core role=reverse_proxy docker_service=traefik vpn_client=true vpn_server=ds9.enzmann.online
+portainer-01 ansible_host=192.168.1.51 domain=lab.enzmann.online https_url=https://portainer-01.lab.enzmann.online category=management role=docker_management docker_service=portainer
+grafana-01 ansible_host=192.168.1.52 domain=lab.enzmann.online https_url=https://grafana-01.lab.enzmann.online category=monitoring role=dashboard docker_service=grafana
+influx-01 ansible_host=192.168.1.53 domain=lab.enzmann.online category=monitoring role=timeseries_db docker_service=influxdb
+prometheus-01 ansible_host=192.168.1.54 domain=lab.enzmann.online category=monitoring role=metrics_collector docker_service=prometheus
+mqtt-01 ansible_host=192.168.1.55 domain=lab.enzmann.online category=iot role=mqtt_broker docker_service=mosquitto port=1883
+
+# =============================================================================
+# IOT DEVICES (192.168.100.0/22)
+# =============================================================================
+
+[iot_central]
+# Unterverteilung - Central Control (192.168.100.1 - 192.168.100.62)
+uv-hm-ccu-01 ansible_host=192.168.100.10 domain=iot.enzmann.online https_url=https://uv-hm-ccu-01.iot.enzmann.online manufacturer=eQ-3 category=iot_controller model="Homematic CCU3" protocol=homematic
+uv-switch-iot-01 ansible_host=192.168.100.11 domain=iot.enzmann.online manufacturer=Ubiquiti category=network model="UniFi Switch Flex Mini" location=unterverteilung
+
+[iot_flur]
+# Flur (192.168.100.65 - 192.168.100.126)
+flur-shelly-1-01 ansible_host=192.168.100.70 domain=iot.enzmann.online manufacturer=Allterco category=switch model="Shelly 1" protocol=wifi room=flur device_type=ceiling_light
+flur-hm-motion-01 ansible_host=192.168.100.71 domain=iot.enzmann.online manufacturer=eQ-3 category=sensor model="HmIP-SMI" protocol=homematic room=flur device_type=motion_sensor
+flur-hm-door-01 ansible_host=192.168.100.72 domain=iot.enzmann.online manufacturer=eQ-3 category=sensor model="HmIP-SWDO" protocol=homematic room=flur device_type=door_sensor location=haustuer
+
+[iot_arbeitszimmer]
+# Arbeitszimmer (192.168.100.129 - 192.168.100.190)
+az-shelly-dimmer-01 ansible_host=192.168.100.135 domain=iot.enzmann.online manufacturer=Allterco category=dimmer model="Shelly Dimmer 2" protocol=wifi room=arbeitszimmer device_type=desk_light
+az-hue-strip-01 ansible_host=192.168.100.136 domain=iot.enzmann.online manufacturer=Philips category=lighting model="Hue Lightstrip Plus" protocol=zigbee room=arbeitszimmer device_type=monitor_backlight
+az-hm-window-01 ansible_host=192.168.100.137 domain=iot.enzmann.online manufacturer=eQ-3 category=sensor model="HmIP-SWDO" protocol=homematic room=arbeitszimmer device_type=window_sensor location=garten
+
+[iot_schlafzimmer]
+# Schlafzimmer (192.168.100.193 - 192.168.100.254)
+sz-hue-01 ansible_host=192.168.100.200 domain=iot.enzmann.online manufacturer=Philips category=lighting model="Hue White and Color" protocol=zigbee room=schlafzimmer device_type=bedside_lamp location=links
+sz-hue-02 ansible_host=192.168.100.201 domain=iot.enzmann.online manufacturer=Philips category=lighting model="Hue White and Color" protocol=zigbee room=schlafzimmer device_type=bedside_lamp location=rechts
+sz-hm-window-01 ansible_host=192.168.100.202 domain=iot.enzmann.online manufacturer=eQ-3 category=sensor model="HmIP-SWDO" protocol=homematic room=schlafzimmer device_type=window_sensor location=strasse
+sz-hm-thermo-01 ansible_host=192.168.100.203 domain=iot.enzmann.online manufacturer=eQ-3 category=climate model="HmIP-eTRV" protocol=homematic room=schlafzimmer device_type=radiator_thermostat
+
+[iot_wohnzimmer]
+# Wohnzimmer (192.168.101.1 - 192.168.101.62)
+wz-hue-bridge-01 ansible_host=192.168.101.1 domain=iot.enzmann.online https_url=https://wz-hue-bridge-01.iot.enzmann.online manufacturer=Philips category=iot_controller model="Hue Bridge v2" protocol=zigbee
+wz-sonos-01 ansible_host=192.168.101.10 domain=iot.enzmann.online manufacturer=Sonos category=audio model="Sonos One" protocol=wifi room=wohnzimmer device_type=smart_speaker
+wz-hue-ceiling-01 ansible_host=192.168.101.11 domain=iot.enzmann.online manufacturer=Philips category=lighting model="Hue White Ambiance" protocol=zigbee room=wohnzimmer device_type=ceiling_light
+wz-hue-floor-01 ansible_host=192.168.101.12 domain=iot.enzmann.online manufacturer=Philips category=lighting model="Hue Go" protocol=zigbee room=wohnzimmer device_type=ambient_light
+wz-tv-01 ansible_host=192.168.101.15 domain=iot.enzmann.online manufacturer=Samsung category=entertainment model="QE55Q80A" protocol=wifi room=wohnzimmer device_type=smart_tv
+
+[iot_kueche]
+# Küche (192.168.101.65 - 192.168.101.126)
+kueche-shelly-pro1pm-01 ansible_host=192.168.101.70 domain=iot.enzmann.online manufacturer=Allterco category=switch model="Shelly Pro 1PM" protocol=wifi room=kueche device_type=exhaust_fan
+kueche-hue-strip-01 ansible_host=192.168.101.71 domain=iot.enzmann.online manufacturer=Philips category=lighting model="Hue Lightstrip Plus" protocol=zigbee room=kueche device_type=under_cabinet
+kueche-sonos-01 ansible_host=192.168.101.72 domain=iot.enzmann.online manufacturer=Sonos category=audio model="Sonos One SL" protocol=wifi room=kueche device_type=smart_speaker
+kueche-hm-temp-01 ansible_host=192.168.101.73 domain=iot.enzmann.online manufacturer=eQ-3 category=sensor model="HmIP-STH" protocol=homematic room=kueche device_type=temperature_sensor
+
+[iot_bad]
+# Bad (192.168.101.129 - 192.168.101.190)
+bad-shelly-1-01 ansible_host=192.168.101.135 domain=iot.enzmann.online manufacturer=Allterco category=switch model="Shelly 1" protocol=wifi room=bad device_type=ventilation
+bad-hm-humid-01 ansible_host=192.168.101.136 domain=iot.enzmann.online manufacturer=eQ-3 category=sensor model="HmIP-STH" protocol=homematic room=bad device_type=humidity_sensor
+bad-hue-mirror-01 ansible_host=192.168.101.137 domain=iot.enzmann.online manufacturer=Philips category=lighting model="Hue White" protocol=zigbee room=bad device_type=mirror_light
+
+[iot_mobile]
+# Mobile Devices (192.168.101.191 - 192.168.101.230)
+mobile-iphone-admin-01 ansible_host=192.168.101.200 domain=iot.enzmann.online manufacturer=Apple category=mobile model="iPhone" protocol=wifi device_type=smartphone app=home_assistant
+mobile-ipad-wz-01 ansible_host=192.168.101.201 domain=iot.enzmann.online manufacturer=Apple category=mobile model="iPad" protocol=wifi room=wohnzimmer device_type=tablet app=dashboard
+mobile-tablet-android-01 ansible_host=192.168.101.202 domain=iot.enzmann.online manufacturer=Samsung category=mobile model="Galaxy Tab" protocol=wifi room=kueche device_type=tablet app=dashboard
+
+# =============================================================================
+# CAMPERVAN INFRASTRUCTURE (192.168.50.0/24)
+# =============================================================================
+
+[campervan]
+lte-router-01 ansible_host=192.168.50.1 domain=van.lafritzn.de manufacturer=Teltonika category=network model="RUT955" device_type=lte_gateway
+ha-01 ansible_host=192.168.50.10 domain=van.lafritzn.de https_url=https://ha-01.van.lafritzn.de manufacturer=Raspberry category=iot_controller role=home_assistant vpn_client=true vpn_server=ds9.lafritzn.de
+traefik-01 ansible_host=192.168.50.10 domain=van.lafritzn.de https_url=https://traefik-01.van.lafritzn.de category=core role=reverse_proxy
+
+# =============================================================================
+# VPS INFRASTRUCTURE (External)
+# =============================================================================
+
+[vpn_servers]
+vps-enzmann ansible_host=ds9.enzmann.online domain=enzmann.online category=vpn role=pangolin_server vpn_network=10.1.0.0/24 provider=hoster_1
+vps-lafritzn ansible_host=ds9.lafritzn.de domain=lafritzn.de category=vpn role=pangolin_server vpn_network=10.2.0.0/24 provider=hoster_2
+vps-runtunfun ansible_host=ds9.runtunfun.de domain=runtunfun.de category=vpn role=headscale_server vpn_network=100.64.0.0/24 provider=hoster_3
+
+# =============================================================================
+# GROUP VARIABLES
+# =============================================================================
+
+[homelab_infrastructure:vars]
+ansible_user=pi
+ansible_ssh_private_key_file=~/.ssh/homelab_raspberry
+os_family=debian
+
+[homelab_compute:vars]
+ansible_user=root
+ansible_ssh_private_key_file=~/.ssh/homelab_proxmox
+os_family=debian
+
+[homelab_services:vars]
+ansible_user=docker
+ansible_ssh_private_key_file=~/.ssh/homelab_docker
+os_family=debian
+docker_swarm=true
+
+[iot_central:vars]
+ansible_user=admin
+protocol_support=multiple
+
+[iot_flur:vars]
+room=flur
+ansible_user=admin
+
+[iot_arbeitszimmer:vars]
+room=arbeitszimmer
+ansible_user=admin
+
+[iot_schlafzimmer:vars]
+room=schlafzimmer
+ansible_user=admin
+
+[iot_wohnzimmer:vars]
+room=wohnzimmer
+ansible_user=admin
+
+[iot_kueche:vars]
+room=kueche
+ansible_user=admin
+
+[iot_bad:vars]
+room=bad
+ansible_user=admin
+
+[iot_mobile:vars]
+device_category=mobile
+protocol=wifi
+
+[campervan:vars]
+ansible_user=pi
+ansible_ssh_private_key_file=~/.ssh/homelab_campervan
+location=mobile
+
+[vpn_servers:vars]
+ansible_user=root
+ansible_ssh_private_key_file=~/.ssh/homelab_vps
+os_family=debian
+
+# =============================================================================
+# DERIVED GROUPS
+# =============================================================================
+
+[homelab:children]
+homelab_infrastructure
+homelab_compute
+homelab_services
+
+[iot_devices:children]
+iot_central
+iot_flur
+iot_arbeitszimmer
+iot_schlafzimmer
+iot_wohnzimmer
+iot_kueche
+iot_bad
+iot_mobile
+
+[vpn_clients:children]
+homelab_infrastructure
+homelab_compute
+homelab_services
+campervan
+
+[https_services]
+pihole-01
+pihole-02
+pve-01
+pve-02
+nas-01
+ha-prod-01
+traefik-01
+portainer-01
+grafana-01
+ha-01
+traefik-01
+
+[traefik_routes:children]
+https_services
+
+# =============================================================================
+# NETWORK SEGMENTS
+# =============================================================================
+
+[standard_lan]
+# 192.168.1.0/24
+homelab_infrastructure
+homelab_compute  
+homelab_services
+
+[iot_vlan]
+# 192.168.100.0/22
+iot_devices
+
+[campervan_lan]
+# 192.168.50.0/24
+campervan
+
+[vpn_mesh]
+# 10.x.0.0/24 + 100.64.0.0/24
+vpn_servers
+vpn_clients

@@ -1,0 +1,132 @@
+Hardening Debian
+
+https://medium.com/@anshumaansingh10jan/comprehensive-vm-hardening-guide-using-openscap-and-ansible-88bd93186ddd
+https://ansible-lockdown.readthedocs.io/en/latest/
+https://www.lockdownenterprise.com/docs/getting-started-with-lockdown#GH_AL_RH9_cis
+https://github.com/ansible-lockdown/DEBIAN12-CIS?tab=readme-ov-file
+https://www.server-world.info/en/note?os=Debian_12&p=openscap
+
+
+debian-cis2
+    1  sudo -i
+    2  su -
+    3  sudo -i
+    4  sudo apt list --installed | sort -u
+    5  sudo uname -n > /home/stefan/20250209_fresh-install-list-packages
+    6  sudo apt list --installed | sort -u >> /home/stefan/20250209_fresh-install-list-packages
+    7  wc -l /home/stefan/20250209_fresh-install-list-packages
+    8  sudo apt install ansible -y
+    9  uname -n > /home/stefan/20250209_ansible-installed-list-packages
+   10  sudo apt list --installed | sort -u >> /home/stefan/20250209_ansible-installed-list-packages
+   11  wc -l /home/stefan/20250209_ansible-installed-list-packages
+   12  sudo apt-get install apache2
+   13  sudo apt install libopenscap8
+   14  apt seach openscap
+   15  apt search openscap
+   16  sudo apt install libopenscap25
+   17  python --version
+   18  python2 --version
+   19  python3 --version
+   20  mkdir ansible-lockdown
+   21  cd ansible-lockdown/
+   22  sudo apt install git
+   23  git clone https://github.com/ansible-lockdown/DEBIAN12-CIS.git
+   24  cd DEBIAN12-CIS/
+   25  ls
+   26  cat site.yml
+   27  ansible-playbook -i "localhost," site.yml --connection=local
+   28  vi README.md
+   29  ansible-playbook -i "localhost," site.yml --connection=local -list-tags
+   30  ansible-playbook -i "localhost," site.yml -list-tags
+   31  ansible-playbook site.yml -list-tags
+   32  apt list --installed | grep fail2ban
+   33  apt search fail2ban
+
+debian-cis2-openscap
+    1  su -
+    2  sudo -i
+    3  sudo uname -n > /home/stefan/20250209_fresh-install-list-packages
+    4  sudo apt list --installed | sort -u >> /home/stefan/20250209_fresh-install-list-packages
+    5  wc -l /home/stefan/20250209_fresh-install-list-packages
+    6  sudo apt install ansible -y
+    7  uname -n > /home/stefan/20250209_ansible-installed-list-packages
+    8  sudo apt list --installed | sort -u >> /home/stefan/20250209_ansible-installed-list-packages
+    9  sudo apt install libopenscap25
+   10  wget https://www.debian.org/security/oval/oval-definitions-$(lsb_release -cs).xml.bz2
+   11  bunzip oval-definitions-$(lsb_release -cs).xml.bz2
+   12  sudo apt install bunzip
+   13  apt search bunzip
+   14  sudo apt install libio-compress-perl
+   15  bunzip oval-definitions-$(lsb_release -cs).xml.bz2
+   16  bunzip2 oval-definitions-$(lsb_release -cs).xml.bz2
+   17  cd ansible-lockdown/
+   18  sudo apt install git
+   19  git clone https://github.com/ansible-lockdown/DEBIAN12-CIS.git
+   20  cd
+   21  ls
+   22  history
+
+debian-openscap
+    1  su -
+    2  sudo -i
+    3  sudo uname -n > /home/stefan/20250209_fresh-install-list-packages
+    4  sudo apt list --installed | sort -u >> /home/stefan/20250209_fresh-install-list-packages
+    5  wc -l /home/stefan/20250209_fresh-install-list-packages
+    6  sudo apt install ansible -y
+    7  uname -n > /home/stefan/20250209_ansible-installed-list-packages
+    8  sudo apt list --installed | sort -u >> /home/stefan/20250209_ansible-installed-list-packages
+    9  sudo apt install libopenscap25sudo apt install libopenscap25
+   10  sudo apt install libopenscap25
+   11  apt search scap-security-guide
+   12  sudo apt install ssg-base
+   13  pwd
+   14  sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_server --fetch-remote-resources --results before-hardening-results.xml --results-arf before-hardening-arf-results.xml --report before-hardening-report.html scap-security-guide-0.1.65/ssg_debian12-ds.xml
+   15  sudo find / -iname ssg-debian*
+   16  sudo find / -iname *ssg-debian*
+   17  ls
+   18  apt search ssg-debian
+   19  sudo apt install ssg-debian
+   20  sudo find / -iname *ssg-debian*
+   21  sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_server --fetch-remote-resources --results before-hardening-results.xml --results-arf before-hardening-arf-results.xml --report before-hardening-report.html /usr/share/xml/scap/ssg/content/ssg_debian11-ds.xml
+   22  sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_server --fetch-remote-resources --results before-hardening-results.xml --results-arf before-hardening-arf-results.xml --report before-hardening-report.html scap-security-guide-0.1.73/ssg-ubuntu2204-ds.xml
+   23  sudo -i
+   24  sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_server --fetch-remote-resources
+   25  sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_server --fetch-remote-resources --results before-hardening-results.xml --results-arf before-hardening-arf-results.xml --report before-hardening-report.html
+   26  wget https://www.debian.org/security/oval/oval-definitions-$(lsb_release -cs).xml.bz2
+   27  sudo apt install libio-compress-perl
+   28  bunzip2 oval-definitions-$(lsb_release -cs).xml.bz2
+   29  oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis_level2_server --fetch-remote-resources --results before-hardening-results.xml --results-arf before-hardening-arf-results.xml --report before-hardening-report.html /usr/share/xml/scap/ssg/content/ssg-debian11-ds.xml
+   30  oscap info "/usr/share/xml/scap/ssg/content/ssg-debian11-ds.xml"
+   31  ls
+   32  history
+
+debian-openscap-cis2
+    1  su -
+    2  sudo -i
+    3  sudo uname -n > /home/stefan/20250209_fresh-install-list-packages
+    4  sudo apt list --installed | sort -u >> /home/stefan/20250209_fresh-install-list-packages
+    5  wc -l /home/stefan/20250209_fresh-install-list-packages
+    6  sudo apt install ansible -y
+    7  uname -n > /home/stefan/20250209_ansible-installed-list-packages
+    8  sudo apt list --installed | sort -u >> /home/stefan/20250209_ansible-installed-list-packages
+    9  sudo apt install libopenscap25
+   10  sudo apt install ssg-base
+   11  sudo apt install ssg-debian
+   12  wget https://www.debian.org/security/oval/oval-definitions-$(lsb_release -cs).xml.bz2
+   13  sudo apt install libio-compress-perl
+   14  bunzip2 oval-definitions-$(lsb_release -cs).xml.bz2
+   15  ls
+   16  oscap oval eval --report report.html oval-definitions-$(lsb_release -cs).xml
+   17  cd ansible-lockdown/
+   18  git clone https://github.com/ansible-lockdown/DEBIAN12-CIS.git
+   19  apt search git
+   20  sudo apt install git
+   21  git clone https://github.com/ansible-lockdown/DEBIAN12-CIS.git
+   22  ls
+   23  cd
+   24  ls
+   25  vi report.html
+   26  clear
+   27  history
+
+
