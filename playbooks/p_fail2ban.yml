@@ -1,0 +1,5 @@
+---
+- name: Configure fail2ban
+  hosts: all
+  roles:
+    - role_fail2ban
