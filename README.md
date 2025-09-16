@@ -27,6 +27,17 @@ Created: $(date)
 This archive serves as historical reference. 
 New development should use the cleaned-up homelab v2 structure.
 
+
+## Extension Phase - Additional Repositories
+
+### Ansible Roles & Automation
+- `archived-ansible-hardening/` - Debian 11 hardening playbooks
+- `archived-ansible-postinstall/` - Debian 11 post-installation automation
+- `archived-ansible-wireguard/` - WireGuard VPN setup automation
+
+### Historical Archives
+- `archived-homelab-old/` - Previous homelab archive (nested)
+- `archived-infra-mgmt/` - Infrastructure management tools
 ## Archive Contents Overview
 
 - `archived-ansible-project/` - 31 files from ansible-project
@@ -41,3 +52,7 @@ New development should use the cleaned-up homelab v2 structure.
 
 Total commits: 174
 Archive size: 8.4M
+
+### Extension History
+- Extended on: Tue Sep 16 11:59:30 AM CEST 2025
+- Added repositories: 2
