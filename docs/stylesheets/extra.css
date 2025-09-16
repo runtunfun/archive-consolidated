@@ -1,0 +1,32 @@
+/* Custom styles for technical documentation */
+.md-typeset h1 {
+  color: var(--md-primary-fg-color);
+}
+
+.md-typeset .admonition.estimate {
+  border-color: #ff9800;
+}
+
+.md-typeset .admonition.estimate > .admonition-title {
+  background-color: rgba(255, 152, 0, 0.1);
+  border-color: #ff9800;
+}
+
+.md-typeset .admonition.estimate > .admonition-title::before {
+  background-color: #ff9800;
+  mask-image: var(--md-admonition-icon--abstract);
+}
+
+/* Code block improvements */
+.md-typeset .highlight .filename {
+  background: var(--md-code-bg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  font-size: 0.85em;
+  font-weight: 500;
+  padding: 0.5em 1em;
+}
+
+/* Table improvements */
+.md-typeset table:not([class]) th {
+  background-color: var(--md-default-fg-color--lightest);
+}

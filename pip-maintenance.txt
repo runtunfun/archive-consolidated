@@ -1,0 +1,14 @@
+# Requirements regelmäßig aktualisieren
+pip list --outdated
+pip install --upgrade mkdocs mkdocs-material
+
+# Nach Updates: Requirements neu generieren
+pip freeze > requirements.txt
+git add requirements.txt
+git commit -m "Update Python requirements"
+
+# Dokumentation regelmäßig sichern
+git push origin main
+
+# WSL-spezifisches Backup (Optional)
+cp -r ~/projects/homelab-docs /mnt/c/backup/homelab-docs-$(date +%Y%m%d)
