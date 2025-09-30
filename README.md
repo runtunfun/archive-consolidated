@@ -9,6 +9,7 @@ Consolidated archive of multiple homelab-related repositories with full Git hist
 - `archived-infrastructure/` - Infrastructure definitions and configs
 - `archived-homelab/` - Main homelab repository
 - `archived-homelab-config/` - Configuration files and templates
+- `archived-homelab-old/` - Artefacts from claude
 
 ### Documentation & Tools  
 - `archived-homelab-docs/` - Project documentation
